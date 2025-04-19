@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class DangKyUI extends JDialog {
     public DangKyUI(JFrame parent) {
-//        super(parent, "Đăng ký", true);
+
         setSize(800, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());

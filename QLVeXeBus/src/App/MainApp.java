@@ -1,8 +1,12 @@
 // UI: Main Application
-package UI;
+package App;
 
+import UI.*;
+import UI.VeCuaToiUI;
 import javax.swing.*;
 import java.awt.*;
+
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class MainApp extends JFrame {
     public MainApp() {
@@ -19,6 +23,7 @@ public class MainApp extends JFrame {
         tabbedPane.add("Tài khoản", new TaiKhoanUI());
 
         add(tabbedPane);
+        
     }
 
     public static void main(String[] args) {
