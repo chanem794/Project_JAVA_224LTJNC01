@@ -1,6 +1,6 @@
 package UI;
 
-import dao.VeCuaToiDAO;
+import Data_Access_Layer.VeCuaToiDAO;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

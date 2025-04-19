@@ -5,21 +5,21 @@ import java.awt.*;
 
 public class DangNhapUI extends JDialog {
     public DangNhapUI(JFrame parent) {
-        setSize(800, 550); // tăng chiều rộng để chia 2 phần
+        setSize(800, 550);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
         setResizable(false);
 
-        // Phần 1: Panel trái chứa ảnh
+
         JLabel imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
-        ImageIcon icon = new ImageIcon(getClass().getResource("/Image/DangNhap.jpg"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Resource/DangNhap.jpg"));
         Image scaledImage = icon.getImage().getScaledInstance(330, 550, Image.SCALE_SMOOTH);
         imageLabel.setIcon(new ImageIcon(scaledImage));
         add(imageLabel, BorderLayout.WEST);
 
-        // Phần 2: Giao diện đăng nhập hiện tại ở bên phải
+
         Dimension fullWidthButtonSize = new Dimension(340, 45);
         Dimension inputFieldSize = new Dimension(340, 40);
 
@@ -46,7 +46,6 @@ public class DangNhapUI extends JDialog {
         mainPanel.add(phonePanel);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Mật khẩu
         JPanel matKhauPanel = new JPanel(new BorderLayout(5, 5));
         matKhauPanel.setMaximumSize(inputFieldSize);
         JLabel lblMatKhau = new JLabel("  Mật khẩu:        ");
@@ -60,7 +59,7 @@ public class DangNhapUI extends JDialog {
         mainPanel.add(matKhauPanel);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Nút đăng nhập
+
         JButton btnDangNhap = new JButton("Đăng nhập");
         btnDangNhap.setBackground(Color.RED);
         btnDangNhap.setForeground(Color.WHITE);
@@ -72,13 +71,11 @@ public class DangNhapUI extends JDialog {
         mainPanel.add(btnDangNhap);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // hoặc
         JLabel lblHoac = new JLabel("hoặc", JLabel.CENTER);
         lblHoac.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(lblHoac);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Zalo
         JButton btnZalo = new JButton("Nhận OTP trên Zalo");
         btnZalo.setBackground(Color.BLUE);
         btnZalo.setForeground(Color.WHITE);
@@ -90,9 +87,8 @@ public class DangNhapUI extends JDialog {
         mainPanel.add(btnZalo);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Google
         JButton btnGoogle = new JButton("Đăng nhập với Google");
-        ImageIcon googleIcon = new ImageIcon(getClass().getResource("/Image/Google.png"));
+        ImageIcon googleIcon = new ImageIcon(getClass().getResource("/Resource/Google.png"));
         Image scaledGoogle = googleIcon.getImage().getScaledInstance(34, 24, Image.SCALE_SMOOTH);
         btnGoogle.setIcon(new ImageIcon(scaledGoogle));
         btnGoogle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -102,9 +98,8 @@ public class DangNhapUI extends JDialog {
         mainPanel.add(btnGoogle);
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Apple
         JButton btnApple = new JButton("Đăng nhập với Apple");
-        ImageIcon appleIcon = new ImageIcon(getClass().getResource("/Image/Apple.png"));
+        ImageIcon appleIcon = new ImageIcon(getClass().getResource("/Resource/Apple.png"));
         Image scaledApple = appleIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         btnApple.setIcon(new ImageIcon(scaledApple));
         btnApple.setAlignmentX(Component.CENTER_ALIGNMENT);

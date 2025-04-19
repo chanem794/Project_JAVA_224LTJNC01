@@ -1,7 +1,7 @@
-// UI: Trang Chủ (Giao diện desktop giống mobile nhưng có các chuyến đi nổi bật)
 package UI;
 
-import dao.TrangChuDAO;
+import Business_Logic_Layer.TinhBLL;
+import Business_Logic_Layer.TrangChuBLL;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
@@ -11,11 +11,15 @@ public class TrangChuUI extends JPanel {
     private JComboBox<String> cboTu, cboDen;
     private JTextField txtNgay;
     private JTextArea areaKetQua;
+    private TinhBLL tinhBLL;
+    private TrangChuBLL trangChuBLL;
 
     public TrangChuUI() {
         setLayout(new BorderLayout(10, 10));
+        tinhBLL = new TinhBLL();
+        trangChuBLL = new TrangChuBLL();
 
-        // Phần chọn tuyến xe
+        // Panel chọn điểm đi/đến và ngày
         JPanel panelChon = new JPanel();
         panelChon.setLayout(new BoxLayout(panelChon, BoxLayout.Y_AXIS));
 
@@ -27,13 +31,17 @@ public class TrangChuUI extends JPanel {
         lblSubtitle.setFont(new Font("Arial", Font.PLAIN, 14));
         panelChon.add(lblSubtitle);
 
+        // Lấy danh sách tỉnh
+        ArrayList<String> dsTinh = tinhBLL.getDanhSachTinh();
+        String[] tinhArray = dsTinh.toArray(new String[0]);
+
         JPanel tuDenPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         tuDenPanel.add(new JLabel("Từ:"));
-        cboTu = new JComboBox<>(new String[] {"Đà Nẵng", "Hà Nội", "Hồ Chí Minh"});
+        cboTu = new JComboBox<>(tinhArray);
         tuDenPanel.add(cboTu);
 
         tuDenPanel.add(new JLabel("Đến:"));
-        cboDen = new JComboBox<>(new String[] {"Hà Nội", "Huế", "Quảng Ngãi"});
+        cboDen = new JComboBox<>(tinhArray);
         tuDenPanel.add(cboDen);
         panelChon.add(tuDenPanel);
 
@@ -61,9 +69,9 @@ public class TrangChuUI extends JPanel {
 
         add(panelChon, BorderLayout.NORTH);
 
-        // Vùng hiển thị chuyến đi nổi bật
+        // Panel kết quả
         JPanel uuDaiPanel = new JPanel(new BorderLayout());
-        JLabel lblUuDai = new JLabel("\uD83C\uDF1F Các chuyến đi nổi bật", JLabel.LEFT);
+        JLabel lblUuDai = new JLabel("\uD83C\uDF1F Kết quả tìm kiếm", JLabel.LEFT);
         lblUuDai.setFont(new Font("Arial", Font.BOLD, 18));
         uuDaiPanel.add(lblUuDai, BorderLayout.NORTH);
 
@@ -73,15 +81,24 @@ public class TrangChuUI extends JPanel {
 
         add(uuDaiPanel, BorderLayout.CENTER);
 
-        // Load dữ liệu khi nhấn tìm kiếm
-        btnTimKiem.addActionListener(e -> hienThiChuyenDiNoiBat());
+        // Sự kiện tìm kiếm
+        btnTimKiem.addActionListener(e -> timKiemChuyenDi());
     }
 
-    private void hienThiChuyenDiNoiBat() {
+    private void timKiemChuyenDi() {
+        String tu = (String) cboTu.getSelectedItem();
+        String den = (String) cboDen.getSelectedItem();
+        String ngay = txtNgay.getText();
+
+        // Gọi BLL để tìm chuyến đi
+        ArrayList<String> dsChuyenDi = trangChuBLL.timKiemChuyenDi(tu, den, ngay);
         areaKetQua.setText("");
-        ArrayList<String> ds = TrangChuDAO.layDanhSachChuyenDiNoiBat();
-        for (String chuyen : ds) {
-            areaKetQua.append("- " + chuyen + "\n");
+        if (dsChuyenDi.isEmpty()) {
+            areaKetQua.append("Không tìm thấy chuyến đi phù hợp.\n");
+        } else {
+            for (String chuyen : dsChuyenDi) {
+                areaKetQua.append("- " + chuyen + "\n");
+            }
         }
     }
 }

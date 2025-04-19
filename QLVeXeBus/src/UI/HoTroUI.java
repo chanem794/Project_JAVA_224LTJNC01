@@ -23,7 +23,7 @@ public class HoTroUI extends JPanel {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Ảnh minh họa
-        ImageIcon image = new ImageIcon("support.png"); // ảnh cần lưu cùng thư mục với project
+        ImageIcon image = new ImageIcon("support.png");
         JLabel imgLabel = new JLabel(image);
         imgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(imgLabel);

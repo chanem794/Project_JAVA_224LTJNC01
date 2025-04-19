@@ -11,11 +11,10 @@ public class DangKyUI extends JDialog {
         setLayout(new BorderLayout());
         setResizable(false);
 
-        // Panel trái chứa ảnh
         JLabel imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
-        ImageIcon icon = new ImageIcon(getClass().getResource("/Image/DangNhap.jpg"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Resource/DangNhap.jpg"));
         Image scaledImage = icon.getImage().getScaledInstance(380, 600, Image.SCALE_SMOOTH);
         imageLabel.setIcon(new ImageIcon(scaledImage));
         add(imageLabel, BorderLayout.WEST);
@@ -98,7 +97,7 @@ public class DangKyUI extends JDialog {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JButton btnGoogle = new JButton("Đăng ký với Google");
-        ImageIcon googleIcon = new ImageIcon(getClass().getResource("/Image/Google.png"));
+        ImageIcon googleIcon = new ImageIcon(getClass().getResource("/Resource/Google.png"));
         Image scaledGoogle = googleIcon.getImage().getScaledInstance(34, 24, Image.SCALE_SMOOTH);
         btnGoogle.setIcon(new ImageIcon(scaledGoogle));
         btnGoogle.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -109,7 +108,7 @@ public class DangKyUI extends JDialog {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JButton btnApple = new JButton("Đăng ký với Apple");
-        ImageIcon appleIcon = new ImageIcon(getClass().getResource("/Image/Apple.png"));
+        ImageIcon appleIcon = new ImageIcon(getClass().getResource("/Resource/Apple.png"));
         Image scaledApple = appleIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         btnApple.setIcon(new ImageIcon(scaledApple));
         btnApple.setAlignmentX(Component.CENTER_ALIGNMENT);
