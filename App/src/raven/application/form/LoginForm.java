@@ -8,7 +8,7 @@ import raven.application.Application;
  *
  * @author Raven
  */
-public class LoginForm extends javax.swing.JPanel {
+public class LoginForm extends javax.swing.JPanel { 
 
     public LoginForm() {
         initComponents();
@@ -27,7 +27,7 @@ public class LoginForm extends javax.swing.JPanel {
         cmdLogin.putClientProperty(FlatClientProperties.STYLE, ""
                 + "borderWidth:0;"
                 + "focusWidth:0");
-        txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Số điện thoại");
+        txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "User Name");
         txtPass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Password");
     }
 
@@ -39,17 +39,23 @@ public class LoginForm extends javax.swing.JPanel {
         lbTitle = new javax.swing.JLabel();
         lbUser = new javax.swing.JLabel();
         txtUser = new javax.swing.JTextField();
+        lbPass = new javax.swing.JLabel();
+        txtPass = new javax.swing.JPasswordField();
         cmdLogin = new javax.swing.JButton();
 
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Đăng nhập");
+        lbTitle.setText("Login");
         panelLogin1.add(lbTitle);
 
-        lbUser.setText("Số điện thoại");
+        lbUser.setText("User Name");
         panelLogin1.add(lbUser);
         panelLogin1.add(txtUser);
 
-        cmdLogin.setText("Tiếp tục");
+        lbPass.setText("Password");
+        panelLogin1.add(lbPass);
+        panelLogin1.add(txtPass);
+
+        cmdLogin.setText("Login");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdLoginActionPerformed(evt);
@@ -71,7 +77,7 @@ public class LoginForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(68, 68, 68)
                 .addComponent(panelLogin1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -81,9 +87,11 @@ public class LoginForm extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdLogin;
+    private javax.swing.JLabel lbPass;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbUser;
     private raven.application.form.PanelLogin panelLogin1;
+    private javax.swing.JPasswordField txtPass;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }
