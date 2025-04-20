@@ -18,7 +18,7 @@ import raven.toast.Notifications;
  *
  * @author Raven
  */
-public class Application extends javax.swing.JFrame {
+public class Application extends javax.swing.JFrame { 
 
     private static Application app;
     private final MainForm mainForm;
