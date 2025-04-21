@@ -10,6 +10,9 @@ import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.toast.Notifications;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 /**
  *
  * @author dinhk
@@ -141,7 +144,26 @@ public class InfoForm extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng chọn ngày sinh");
             return;
         }
-        Application.login();
+        if (!ngaysinh.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Ngày sinh phải có định dạng DD/MM/YYYY");
+            return;
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            java.util.Date birthDate = sdf.parse(ngaysinh);
+            String email = Application.getCurrentEmail();
+            if (Application.getUserService().updateUserInfo(email, ten, birthDate)) {
+                Application.login();
+            } else {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Không thể cập nhật thông tin");
+            }
+        } catch (ParseException e) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Ngày sinh không hợp lệ");
+        } catch (SQLException e) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi kết nối cơ sở dữ liệu");
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_cmdLoginActionPerformed
 
     private void cmdQuaylaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdQuaylaiActionPerformed

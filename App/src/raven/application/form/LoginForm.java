@@ -5,6 +5,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.toast.Notifications;
 
+import java.sql.SQLException;
 /**
  *
  * @author Raven
@@ -31,7 +32,7 @@ public class LoginForm extends javax.swing.JPanel {
         cmdRegister.putClientProperty(FlatClientProperties.STYLE, ""
                 + "borderWidth:0;"
                 + "focusWidth:0");
-        txtSodienthoai.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Số Điện Thoại");
+        txtEmail.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "your_mail@example.com");
     }
 
     @SuppressWarnings("unchecked")
@@ -40,8 +41,8 @@ public class LoginForm extends javax.swing.JPanel {
 
         panelLogin1 = new raven.application.form.PanelLogin();
         lbTitle = new javax.swing.JLabel();
-        lbSodienthoai = new javax.swing.JLabel();
-        txtSodienthoai = new javax.swing.JTextField();
+        lbEmail = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
         cmdLogin = new javax.swing.JButton();
         lbSodienthoai1 = new javax.swing.JLabel();
         cmdRegister = new javax.swing.JButton();
@@ -50,9 +51,9 @@ public class LoginForm extends javax.swing.JPanel {
         lbTitle.setText("Đăng nhập");
         panelLogin1.add(lbTitle);
 
-        lbSodienthoai.setText("Số điện thoại");
-        panelLogin1.add(lbSodienthoai);
-        panelLogin1.add(txtSodienthoai);
+        lbEmail.setText("Email");
+        panelLogin1.add(lbEmail);
+        panelLogin1.add(txtEmail);
 
         cmdLogin.setText("Tiếp tục");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -92,12 +93,21 @@ public class LoginForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
-        String phone = txtSodienthoai.getText().trim();
-        if (phone.isEmpty()) {
-            Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng nhập số điện thoại");
+        String email = txtEmail.getText().trim();
+        if (email.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng nhập email");
             return;
         }
-        Application.showOTPForm(this, false); // Luồng đăng nhập
+        try {
+            if (Application.getUserService().processLogin(email)) {
+                Application.showOTPForm(this, false, email);
+            } else {
+                Notifications.getInstance().show(Notifications.Type.WARNING, "Email không tồn tại hoặc gửi OTP thất bại");
+            }
+        } catch (SQLException e) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi kết nối cơ sở dữ liệu");
+            e.printStackTrace();
+        }
 
     }//GEN-LAST:event_cmdLoginActionPerformed
 
@@ -109,10 +119,10 @@ public class LoginForm extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdLogin;
     private javax.swing.JButton cmdRegister;
-    private javax.swing.JLabel lbSodienthoai;
+    private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbSodienthoai1;
     private javax.swing.JLabel lbTitle;
     private raven.application.form.PanelLogin panelLogin1;
-    private javax.swing.JTextField txtSodienthoai;
+    private javax.swing.JTextField txtEmail;
     // End of variables declaration//GEN-END:variables
 }

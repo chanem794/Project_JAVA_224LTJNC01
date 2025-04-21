@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.toast.Notifications;
 
+import java.sql.SQLException;
 /**
  *
  * @author dinhk
@@ -121,10 +122,24 @@ public class OTPForm extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng nhập mã xác thực");
             return;
         }
-        if (Application.isRegisterFlow()) {
-            Application.showInfoForm();
-        } else {
-            Application.login();
+        if (!otp.matches("\\d{6}")) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Mã xác thực phải có 6 chữ số");
+            return;
+        }
+        try {
+            String email = Application.getCurrentEmail();
+            if (Application.getUserService().validateOTP(email, otp)) {
+                if (Application.getUserService().needsUserInfo(email)) {
+                    Application.showInfoForm();
+                } else {
+                    Application.login();
+                }
+            } else {
+                Notifications.getInstance().show(Notifications.Type.WARNING, "Mã OTP không đúng hoặc đã hết hạn");
+            }
+        } catch (SQLException e) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi kết nối cơ sở dữ liệu");
+            e.printStackTrace();
         }
     }//GEN-LAST:event_cmdLoginActionPerformed
 

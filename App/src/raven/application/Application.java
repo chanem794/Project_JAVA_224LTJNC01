@@ -1,37 +1,30 @@
 package raven.application;
 
+import bll.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import raven.application.form.LoginForm;
-import raven.application.form.RegisterForm;
-import raven.application.form.OTPForm;
-import raven.application.form.InfoForm;
-import raven.application.form.MainForm;
+import raven.application.form.*;
 import raven.toast.Notifications;
 
-/**
- *
- * @author Raven
- */
-public class Application extends javax.swing.JFrame {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
+public class Application extends JFrame {
     private static Application app;
     private final MainForm mainForm;
     private final LoginForm loginForm;
     private final RegisterForm registerForm;
     private final OTPForm otpForm;
     private final InfoForm infoForm;
-    private Container previousForm; // Lưu form trước đó (LoginForm hoặc RegisterForm)
-    private boolean isRegisterFlow; // true nếu từ RegisterForm, false nếu từ LoginForm
+    private Container previousForm;
+    private boolean isRegisterFlow;
+    private String currentEmail;
+    private final UserService userService;
 
     public Application() {
         initComponents();
@@ -42,6 +35,7 @@ public class Application extends javax.swing.JFrame {
         registerForm = new RegisterForm();
         otpForm = new OTPForm();
         infoForm = new InfoForm();
+        userService = new UserService();
         setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
@@ -61,8 +55,9 @@ public class Application extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(app.mainForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
         app.previousForm = null;
+        app.currentEmail = null;
     }
-    
+
     public static void register() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.registerForm);
@@ -70,8 +65,9 @@ public class Application extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(app.registerForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
         app.previousForm = null;
+        app.currentEmail = null;
     }
-    
+
     public static void logout() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.loginForm);
@@ -79,21 +75,24 @@ public class Application extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(app.loginForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
         app.previousForm = null;
+        app.currentEmail = null;
     }
-    
+
     public static boolean isRegisterFlow() {
         return app.isRegisterFlow;
     }
-    public static void showOTPForm(Container currentForm, boolean isRegisterFlow) {
+
+    public static void showOTPForm(Container currentForm, boolean isRegisterFlow, String email) {
         FlatAnimatedLafChange.showSnapshot();
-        app.previousForm = currentForm; // Lưu form hiện tại (LoginForm hoặc RegisterForm)
-        app.isRegisterFlow = isRegisterFlow; // Lưu trạng thái luồng
+        app.previousForm = currentForm;
+        app.isRegisterFlow = isRegisterFlow;
+        app.currentEmail = email;
         app.setContentPane(app.otpForm);
         app.otpForm.applyComponentOrientation(app.getComponentOrientation());
         SwingUtilities.updateComponentTreeUI(app.otpForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
     }
-    
+
     public static void showInfoForm() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.infoForm);
@@ -101,6 +100,7 @@ public class Application extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(app.infoForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
     }
+
     public static void backToPreviousForm() {
         if (app.previousForm != null) {
             FlatAnimatedLafChange.showSnapshot();
@@ -110,7 +110,15 @@ public class Application extends javax.swing.JFrame {
             FlatAnimatedLafChange.hideSnapshotWithAnimation();
         }
     }
-    
+
+    public static String getCurrentEmail() {
+        return app.currentEmail;
+    }
+
+    public static UserService getUserService() {
+        return app.userService;
+    }
+
     public static void setSelectedMenu(int index, int subIndex) {
         app.mainForm.setSelectedMenu(index, subIndex);
     }
