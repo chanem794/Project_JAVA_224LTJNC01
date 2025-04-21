@@ -13,10 +13,6 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-/**
- *
- * @author Raven
- */
 public class Application extends javax.swing.JFrame { 
 
     private static Application app;
