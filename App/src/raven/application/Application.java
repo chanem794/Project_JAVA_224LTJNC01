@@ -6,11 +6,15 @@ import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import raven.application.form.LoginForm;
+import raven.application.form.RegisterForm;
+import raven.application.form.OTPForm;
+import raven.application.form.InfoForm;
 import raven.application.form.MainForm;
 import raven.toast.Notifications;
 
@@ -23,6 +27,11 @@ public class Application extends javax.swing.JFrame {
     private static Application app;
     private final MainForm mainForm;
     private final LoginForm loginForm;
+    private final RegisterForm registerForm;
+    private final OTPForm otpForm;
+    private final InfoForm infoForm;
+    private Container previousForm; // Lưu form trước đó (LoginForm hoặc RegisterForm)
+    private boolean isRegisterFlow; // true nếu từ RegisterForm, false nếu từ LoginForm
 
     public Application() {
         initComponents();
@@ -30,6 +39,9 @@ public class Application extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         mainForm = new MainForm();
         loginForm = new LoginForm();
+        registerForm = new RegisterForm();
+        otpForm = new OTPForm();
+        infoForm = new InfoForm();
         setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
@@ -48,16 +60,16 @@ public class Application extends javax.swing.JFrame {
         app.mainForm.hideMenu();
         SwingUtilities.updateComponentTreeUI(app.mainForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
     }
     
     public static void register() {
         FlatAnimatedLafChange.showSnapshot();
-        app.setContentPane(app.mainForm);
-        app.mainForm.applyComponentOrientation(app.getComponentOrientation());
-        setSelectedMenu(0, 0);
-        app.mainForm.hideMenu();
-        SwingUtilities.updateComponentTreeUI(app.mainForm);
+        app.setContentPane(app.registerForm);
+        app.registerForm.applyComponentOrientation(app.getComponentOrientation());
+        SwingUtilities.updateComponentTreeUI(app.registerForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
     }
     
     public static void logout() {
@@ -66,8 +78,39 @@ public class Application extends javax.swing.JFrame {
         app.loginForm.applyComponentOrientation(app.getComponentOrientation());
         SwingUtilities.updateComponentTreeUI(app.loginForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
     }
-
+    
+    public static boolean isRegisterFlow() {
+        return app.isRegisterFlow;
+    }
+    public static void showOTPForm(Container currentForm, boolean isRegisterFlow) {
+        FlatAnimatedLafChange.showSnapshot();
+        app.previousForm = currentForm; // Lưu form hiện tại (LoginForm hoặc RegisterForm)
+        app.isRegisterFlow = isRegisterFlow; // Lưu trạng thái luồng
+        app.setContentPane(app.otpForm);
+        app.otpForm.applyComponentOrientation(app.getComponentOrientation());
+        SwingUtilities.updateComponentTreeUI(app.otpForm);
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+    }
+    
+    public static void showInfoForm() {
+        FlatAnimatedLafChange.showSnapshot();
+        app.setContentPane(app.infoForm);
+        app.infoForm.applyComponentOrientation(app.getComponentOrientation());
+        SwingUtilities.updateComponentTreeUI(app.infoForm);
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+    }
+    public static void backToPreviousForm() {
+        if (app.previousForm != null) {
+            FlatAnimatedLafChange.showSnapshot();
+            app.setContentPane(app.previousForm);
+            app.previousForm.applyComponentOrientation(app.getComponentOrientation());
+            SwingUtilities.updateComponentTreeUI(app.previousForm);
+            FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        }
+    }
+    
     public static void setSelectedMenu(int index, int subIndex) {
         app.mainForm.setSelectedMenu(index, subIndex);
     }
