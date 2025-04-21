@@ -13,11 +13,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-
 public class Application extends javax.swing.JFrame { 
-
-
-
     private static Application app;
     private final MainForm mainForm;
     private final LoginForm loginForm;
