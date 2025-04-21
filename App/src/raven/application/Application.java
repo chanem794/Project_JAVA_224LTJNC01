@@ -8,13 +8,19 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import raven.application.form.*;
 import raven.toast.Notifications;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class Application extends JFrame {
+/**
+ *
+ * @author Raven
+ */
+public class Application extends javax.swing.JFrame { 
+
+
+
     private static Application app;
     private final MainForm mainForm;
     private final LoginForm loginForm;
