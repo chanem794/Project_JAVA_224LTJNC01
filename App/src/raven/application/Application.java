@@ -14,10 +14,16 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public class Application extends javax.swing.JFrame { 
-
     private static Application app;
     private final MainForm mainForm;
     private final LoginForm loginForm;
+    private final RegisterForm registerForm;
+    private final OTPForm otpForm;
+    private final InfoForm infoForm;
+    private Container previousForm;
+    private boolean isRegisterFlow;
+    private String currentEmail;
+    private final UserService userService;
 
     public Application() {
         initComponents();
@@ -25,6 +31,10 @@ public class Application extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         mainForm = new MainForm();
         loginForm = new LoginForm();
+        registerForm = new RegisterForm();
+        otpForm = new OTPForm();
+        infoForm = new InfoForm();
+        userService = new UserService();
         setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
@@ -43,24 +53,69 @@ public class Application extends javax.swing.JFrame {
         app.mainForm.hideMenu();
         SwingUtilities.updateComponentTreeUI(app.mainForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
+        app.currentEmail = null;
     }
-    
+
     public static void register() {
         FlatAnimatedLafChange.showSnapshot();
-        app.setContentPane(app.mainForm);
-        app.mainForm.applyComponentOrientation(app.getComponentOrientation());
-        setSelectedMenu(0, 0);
-        app.mainForm.hideMenu();
-        SwingUtilities.updateComponentTreeUI(app.mainForm);
+        app.setContentPane(app.registerForm);
+        app.registerForm.applyComponentOrientation(app.getComponentOrientation());
+        SwingUtilities.updateComponentTreeUI(app.registerForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
+        app.currentEmail = null;
     }
-    
+
     public static void logout() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.loginForm);
         app.loginForm.applyComponentOrientation(app.getComponentOrientation());
         SwingUtilities.updateComponentTreeUI(app.loginForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
+        app.currentEmail = null;
+    }
+
+    public static boolean isRegisterFlow() {
+        return app.isRegisterFlow;
+    }
+
+    public static void showOTPForm(Container currentForm, boolean isRegisterFlow, String email) {
+        FlatAnimatedLafChange.showSnapshot();
+        app.previousForm = currentForm;
+        app.isRegisterFlow = isRegisterFlow;
+        app.currentEmail = email;
+        app.setContentPane(app.otpForm);
+        app.otpForm.applyComponentOrientation(app.getComponentOrientation());
+        SwingUtilities.updateComponentTreeUI(app.otpForm);
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+    }
+
+    public static void showInfoForm() {
+        FlatAnimatedLafChange.showSnapshot();
+        app.setContentPane(app.infoForm);
+        app.infoForm.applyComponentOrientation(app.getComponentOrientation());
+        SwingUtilities.updateComponentTreeUI(app.infoForm);
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+    }
+
+    public static void backToPreviousForm() {
+        if (app.previousForm != null) {
+            FlatAnimatedLafChange.showSnapshot();
+            app.setContentPane(app.previousForm);
+            app.previousForm.applyComponentOrientation(app.getComponentOrientation());
+            SwingUtilities.updateComponentTreeUI(app.previousForm);
+            FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        }
+    }
+
+    public static String getCurrentEmail() {
+        return app.currentEmail;
+    }
+
+    public static UserService getUserService() {
+        return app.userService;
     }
 
     public static void setSelectedMenu(int index, int subIndex) {

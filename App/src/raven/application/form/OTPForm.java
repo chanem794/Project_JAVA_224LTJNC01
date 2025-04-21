@@ -1,22 +1,43 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package raven.application.form;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import net.miginfocom.swing.MigLayout;
+import raven.application.Application;
+import raven.toast.Notifications;
+
+import java.sql.SQLException;
 /**
  *
  * @author dinhk
  */
-public class otpForm extends javax.swing.JFrame {
+public class OTPForm extends javax.swing.JPanel {
 
     /**
-     * Creates new form otpForm
+     * Creates new form OTPForm
      */
-    public otpForm() {
+    public OTPForm() {
         initComponents();
+        init();
     }
+    private void init() {
+        setLayout(new MigLayout("al center center"));
 
+        lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:$h1.font");
+        
+
+        cmdLogin.putClientProperty(FlatClientProperties.STYLE, ""
+                + "borderWidth:0;"
+                + "focusWidth:0");
+        cmdQuaylai.putClientProperty(FlatClientProperties.STYLE, ""
+                + "borderWidth:0;"
+                + "focusWidth:0");
+        txtMaxacthuc.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mã xác thực");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,19 +50,16 @@ public class otpForm extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         panelLogin1 = new raven.application.form.PanelLogin();
         lbTitle = new javax.swing.JLabel();
-        lbUser = new javax.swing.JLabel();
-        txtUser = new javax.swing.JTextField();
+        lbMaxacthuc = new javax.swing.JLabel();
+        txtMaxacthuc = new javax.swing.JTextField();
         cmdLogin = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        cmdQuaylai = new javax.swing.JButton();
 
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Đăng nhập");
+        lbTitle.setText("Nhập mã xác thực");
         panelLogin1.add(lbTitle);
-
-        lbUser.setText("Số điện thoại");
-        panelLogin1.add(lbUser);
-        panelLogin1.add(txtUser);
+        panelLogin1.add(lbMaxacthuc);
+        panelLogin1.add(txtMaxacthuc);
 
         cmdLogin.setText("Tiếp tục");
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -50,6 +68,14 @@ public class otpForm extends javax.swing.JFrame {
             }
         });
         panelLogin1.add(cmdLogin);
+
+        cmdQuaylai.setText("Quay lại");
+        cmdQuaylai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdQuaylaiActionPerformed(evt);
+            }
+        });
+        panelLogin1.add(cmdQuaylai);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -65,11 +91,11 @@ public class otpForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(68, 68, 68)
                 .addComponent(panelLogin1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 735, Short.MAX_VALUE)
@@ -88,55 +114,48 @@ public class otpForm extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
-        Application.login();
+        String otp = txtMaxacthuc.getText().trim();
+        if (otp.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng nhập mã xác thực");
+            return;
+        }
+        if (!otp.matches("\\d{6}")) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Mã xác thực phải có 6 chữ số");
+            return;
+        }
+        try {
+            String email = Application.getCurrentEmail();
+            if (Application.getUserService().validateOTP(email, otp)) {
+                if (Application.getUserService().needsUserInfo(email)) {
+                    Application.showInfoForm();
+                } else {
+                    Application.login();
+                }
+            } else {
+                Notifications.getInstance().show(Notifications.Type.WARNING, "Mã OTP không đúng hoặc đã hết hạn");
+            }
+        } catch (SQLException e) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi kết nối cơ sở dữ liệu");
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_cmdLoginActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(otpForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(otpForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(otpForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(otpForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void cmdQuaylaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdQuaylaiActionPerformed
+        // TODO add your handling code here:
+        Application.backToPreviousForm();
+    }//GEN-LAST:event_cmdQuaylaiActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new otpForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdLogin;
+    private javax.swing.JButton cmdQuaylai;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lbMaxacthuc;
     private javax.swing.JLabel lbTitle;
-    private javax.swing.JLabel lbUser;
     private raven.application.form.PanelLogin panelLogin1;
-    private javax.swing.JTextField txtUser;
+    private javax.swing.JTextField txtMaxacthuc;
     // End of variables declaration//GEN-END:variables
 }
