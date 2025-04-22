@@ -8,8 +8,8 @@ import java.util.Properties;
 public class EmailUtil {
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
-    private static final String EMAIL_USERNAME = "ht4784073@gmail.com"; // Replace with your email
-    private static final String EMAIL_PASSWORD = "jcot duve ravk mxrh"; // Replace with your app-specific password
+        private static final String EMAIL_USERNAME = "ht4784073@gmail.com"; // Replace with your email
+        private static final String EMAIL_PASSWORD = "ukiq gqix yvjl djbh"; // Replace with your app-specific password
 
     public static boolean sendOTP(String recipientEmail, String otp) {
         Properties props = new Properties();
