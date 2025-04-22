@@ -35,7 +35,8 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         userService = new UserService();
-        setContentPane(loginForm);
+        setContentPane(mainForm);
+        //setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }

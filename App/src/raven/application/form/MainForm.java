@@ -80,7 +80,7 @@ public class MainForm extends JLayeredPane {
                 } else {
                     action.cancel();
                 }
-            } else if (index == 9) {
+            } else if (index == 6) {
                 Application.logout();
             } else {
                 action.cancel();
