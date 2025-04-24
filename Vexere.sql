@@ -1,30 +1,32 @@
-
 USE master;
+GO
 
 -- Kiểm tra và xóa database cũ nếu tồn tại
-IF EXISTS (SELECT name FROM sys.databases WHERE name = 'QuanLyVeXeBuytv1')
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'QuanLyVeXeBuyt')
 BEGIN
-    ALTER DATABASE QuanLyVeXeBuytv1 SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE QuanLyVeXeBuytv1;
+    ALTER DATABASE QuanLyVeXeBuyt SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE QuanLyVeXeBuyt;
 END;
+GO
 
 -- Tạo database mới
-CREATE DATABASE QuanLyVeXeBuytv1;
+CREATE DATABASE QuanLyVeXeBuyt;
 GO
 
-USE QuanLyVeXeBuytv1;
+USE QuanLyVeXeBuyt;
 GO
+
 -- Tạo bảng NguoiDung
-
 CREATE TABLE NguoiDung (
     MaNguoiDung     VARCHAR(10)     PRIMARY KEY,
     TenNguoiDung    NVARCHAR(50)    NOT NULL,
-    Email           VARCHAR(100)    NOT NULL,
+    Email           VARCHAR(100)    NOT NULL UNIQUE,
     NgaySinh        DATE,
     OtpCode         VARCHAR(6),
     Otp_taoThoiGian DATETIME
 );
-go
+GO
+
 -- Tạo bảng Tuyen
 CREATE TABLE Tuyen (
     MaTuyen INT PRIMARY KEY,
@@ -32,7 +34,8 @@ CREATE TABLE Tuyen (
     DiemDen VARCHAR(100),
     QuangDuong INT
 );
-go
+GO
+
 -- Tạo bảng Xe
 CREATE TABLE Xe (
     MaXe INT PRIMARY KEY,
@@ -50,7 +53,8 @@ CREATE TABLE Xe (
     MaTuyen INT,
     CONSTRAINT FK_Xe_Tuyen FOREIGN KEY (MaTuyen) REFERENCES Tuyen(MaTuyen)
 );
-go
+GO
+
 -- Tạo bảng DatCho
 CREATE TABLE DatCho (
     MaDatCho INT PRIMARY KEY,
@@ -62,8 +66,14 @@ CREATE TABLE DatCho (
     NgayGioKhoiHanh DATETIME,
     SoGheDat INT,
     GiaVe INT,
-    MaNguoiDung INT,
+    MaNguoiDung VARCHAR(10), -- Sửa INT thành VARCHAR(10) để khớp với NguoiDung
     MaXe INT,
     CONSTRAINT FK_DatCho_NguoiDung FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung),
     CONSTRAINT FK_DatCho_Xe FOREIGN KEY (MaXe) REFERENCES Xe(MaXe)
 );
+GO
+
+-- Thêm dữ liệu mẫu
+INSERT INTO NguoiDung (MaNguoiDung, TenNguoiDung, Email, NgaySinh) VALUES
+('ND001', N'Nguyễn Văn A', 'user1@example.com', '1990-01-01'),
+('ND002', N'Trần Thị B', 'dinhknd3@gmail.com', '1995-05-15');
