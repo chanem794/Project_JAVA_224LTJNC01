@@ -13,13 +13,13 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {
         try {
-            String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-            String serverName = "Dean";
+            String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; // ✅ sửa ở đây
+            String serverName = "MSIPC\\PHAMMINHHUY2314";
             String databaseName = "QuanLyVeXeBuyt";
             String userName = "sa";
             String password = "12345";
             String driverURL = "jdbc:sqlserver://" + serverName + ":1433;databaseName=" + databaseName +
-                              ";user=" + userName + ";password=" + password + ";encrypt=false;IntegratedSecurity=false";
+                    ";user=" + userName + ";password=" + password + ";encrypt=false;IntegratedSecurity=false";
             Class.forName(driverClass);
             this.connection = DriverManager.getConnection(driverURL);
             System.out.println("Database connection successful");
