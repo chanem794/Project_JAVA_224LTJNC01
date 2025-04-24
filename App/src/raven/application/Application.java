@@ -150,10 +150,13 @@ public class Application extends javax.swing.JFrame {
         FlatMacDarkLaf.setup();
         java.awt.EventQueue.invokeLater(() -> {
             app = new Application();
-            //  app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             app.setVisible(true);
+
+            // 👉 Hiển thị ChooseLocationForm lúc khởi động
+            showForm(new raven.application.form.other.ChooseLocationForm());
         });
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
