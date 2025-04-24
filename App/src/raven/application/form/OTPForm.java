@@ -106,8 +106,8 @@ public class OTPForm extends javax.swing.JPanel {
         }
         try {
             String email = Application.getCurrentEmail();
-            if (Application.getUserService().validateOTP(email, otp)) {
-                if (Application.getUserService().needsUserInfo(email)) {
+            if (Application.getNguoiDungService().validateOTP(email, otp)) {
+                if (Application.getNguoiDungService().needsUserInfo(email)) {
                     Application.showInfoForm();
                 } else {
                     Application.login();

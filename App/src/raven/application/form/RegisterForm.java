@@ -115,7 +115,7 @@ public class RegisterForm extends javax.swing.JPanel {
             return;
         }
         try {
-            if (Application.getUserService().processRegistration(email)) {
+            if (Application.getNguoiDungService().processRegistration(email)) {
                 Application.showOTPForm(this, true, email);
             } else {
                 Notifications.getInstance().show(Notifications.Type.WARNING, "Email không hợp lệ hoặc gửi OTP thất bại");
