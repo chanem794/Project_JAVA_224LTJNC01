@@ -132,7 +132,7 @@ public class InfoForm extends javax.swing.JPanel {
             sdf.setLenient(false);
             java.util.Date birthDate = sdf.parse(ngaysinh);
             String email = Application.getCurrentEmail();
-            if (Application.getUserService().updateUserInfo(email, ten, birthDate)) {
+            if (Application.getNguoiDungService().updateUserInfo(email, ten, birthDate)) {
                 Application.login();
             } else {
                 Notifications.getInstance().show(Notifications.Type.ERROR, "Không thể cập nhật thông tin");

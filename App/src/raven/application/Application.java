@@ -23,7 +23,7 @@ public class Application extends javax.swing.JFrame {
     private Container previousForm;
     private boolean isRegisterFlow;
     private String currentEmail;
-    private final UserService userService;
+    private final NguoiDungService nguoidungService;
 
     public Application() {
         initComponents();
@@ -34,7 +34,7 @@ public class Application extends javax.swing.JFrame {
         registerForm = new RegisterForm();
         otpForm = new OTPForm();
         infoForm = new InfoForm();
-        userService = new UserService();
+        nguoidungService = new NguoiDungService();
         setContentPane(mainForm);
         //setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
@@ -115,8 +115,8 @@ public class Application extends javax.swing.JFrame {
         return app.currentEmail;
     }
 
-    public static UserService getUserService() {
-        return app.userService;
+    public static NguoiDungService getNguoiDungService() {
+        return app.nguoidungService;
     }
 
     public static void setSelectedMenu(int index, int subIndex) {

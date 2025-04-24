@@ -1,13 +1,13 @@
 use master
-if exists (select name from sys.databases where name = 'QuanLyVeXeBuyt')
+if exists (select name from sys.databases where name = 'QuanLyVeXeBuytv2')
 begin
-    alter database QuanLyVeXeBuyt set single_user with rollback immediate;
-    drop database QuanLyVeXeBuyt;
+    alter database QuanLyVeXeBuytv2 set single_user with rollback immediate;
+    drop database QuanLyVeXeBuytv2;
 end;
 --Tạo database
-create database QuanLyVeXeBuyt
+create database QuanLyVeXeBuytv2
 go
-use QuanLyVeXeBuyt
+use QuanLyVeXeBuytv2
 go
 create table QUOCGIA(
     ID_QUOC_GIA char(5) primary key,
