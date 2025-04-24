@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+
 public class Application extends javax.swing.JFrame { 
     private static Application app;
     private final MainForm mainForm;
@@ -40,7 +41,6 @@ public class Application extends javax.swing.JFrame {
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
-
     public static void showForm(Component component) {
         component.applyComponentOrientation(app.getComponentOrientation());
         app.mainForm.showForm(component);
@@ -153,6 +153,7 @@ public class Application extends javax.swing.JFrame {
             //  app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             app.setVisible(true);
         });
+        showForm(new FormDanhSachChuyen());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
