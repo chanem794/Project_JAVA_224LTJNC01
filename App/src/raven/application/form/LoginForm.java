@@ -99,7 +99,7 @@ public class LoginForm extends javax.swing.JPanel {
             return;
         }
         try {
-            if (Application.getUserService().processLogin(email)) {
+            if (Application.getNguoiDungService().processLogin(email)) {
                 Application.showOTPForm(this, false, email);
             } else {
                 Notifications.getInstance().show(Notifications.Type.WARNING, "Email không tồn tại hoặc gửi OTP thất bại");
