@@ -14,7 +14,7 @@ public class DatabaseConnection {
     private DatabaseConnection() {
         try {
             String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; // ✅ sửa ở đây
-            String serverName = "MSIPC\\PHAMMINHHUY2314";
+            String serverName = "Dean";
             String databaseName = "QuanLyVeXeBuyt";
             String userName = "sa";
             String password = "12345";
