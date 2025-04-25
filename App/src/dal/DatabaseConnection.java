@@ -15,7 +15,7 @@ public class DatabaseConnection {
         try {
             String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             String serverName = "localhost";
-            String databaseName = "QuanLyVeXeBuyt";
+            String databaseName = "QuanLyVeXeBuytv1";
             String userName = "sa";
             String password = "123";
             String driverURL = "jdbc:sqlserver://" + serverName + ":1433;" +
