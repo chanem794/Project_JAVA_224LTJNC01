@@ -9,7 +9,10 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
 
@@ -19,10 +22,20 @@ import net.miginfocom.swing.MigLayout;
  */
 public class ChooseBusForm extends javax.swing.JPanel {
 
+    // Các biến để lưu giá trị từ ChooseLocationForm
+    private String departureLocation; // Giá trị của jComboBox1 (Nơi xuất phát)
+    private String destinationLocation; // Giá trị của jComboBox2 (Nơi đến)
+    private String departureDate; // Giá trị của jTextField1 (Ngày đi)
+    private String arrivalDate; // Giá trị của jTextField2 (Ngày đến)
+
     /**
-     * Creates new form ChooseLocationForm
+     * 
      */
-    public ChooseBusForm() {
+    public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate) {
+        this.departureLocation = departureLocation;
+        this.destinationLocation = destinationLocation;
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
         initComponents();
         init();
         UIManager.addPropertyChangeListener(evt -> {
@@ -31,87 +44,137 @@ public class ChooseBusForm extends javax.swing.JPanel {
             }
         });
     }
-    private void init() {
-        setLayout(new MigLayout("al center center"));
 
-        // Thiết lập icon cho jLabel5
-        ImageIcon iconLabel5 = new ImageIcon(getClass().getResource("/raven/icon/png/bus-stop.png"));
-        Image scaledIcon5 = iconLabel5.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        ImageIcon resizedIcon5 = new ImageIcon(scaledIcon5);
-        jLabel5.setIcon(resizedIcon5);
-        jLabel5.setIconTextGap(5);
-        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setVerticalTextPosition(javax.swing.SwingConstants.CENTER);
+private void init() {
+    setLayout(new MigLayout("al center center"));
 
-        // Thiết lập icon cho jLabel6
-        ImageIcon iconLabel6 = new ImageIcon(getClass().getResource("/raven/icon/png/location.png"));
-        Image scaledIcon6 = iconLabel6.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        ImageIcon resizedIcon6 = new ImageIcon(scaledIcon6);
-        jLabel6.setIcon(resizedIcon6);
-        jLabel6.setIconTextGap(5);
-        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setVerticalTextPosition(javax.swing.SwingConstants.CENTER);
+    // Icon jLabel5
+    ImageIcon iconLabel5 = new ImageIcon(getClass().getResource("/raven/icon/png/bus-stop.png"));
+    Image scaledIcon5 = iconLabel5.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+    jLabel5.setIcon(new ImageIcon(scaledIcon5));
+    jLabel5.setIconTextGap(5);
+    jLabel5.setHorizontalTextPosition(SwingConstants.RIGHT);
+    jLabel5.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // Thiết lập icon cho jLabel7
-        ImageIcon iconLabel7 = new ImageIcon(getClass().getResource("/raven/icon/png/calendar.png"));
-        Image scaledIcon7 = iconLabel7.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        ImageIcon resizedIcon7 = new ImageIcon(scaledIcon7);
-        jLabel7.setIcon(resizedIcon7);
-        jLabel7.setIconTextGap(5);
-        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setVerticalTextPosition(javax.swing.SwingConstants.CENTER);
+    // Icon jLabel6
+    ImageIcon iconLabel6 = new ImageIcon(getClass().getResource("/raven/icon/png/location.png"));
+    Image scaledIcon6 = iconLabel6.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+    jLabel6.setIcon(new ImageIcon(scaledIcon6));
+    jLabel6.setIconTextGap(5);
+    jLabel6.setHorizontalTextPosition(SwingConstants.RIGHT);
+    jLabel6.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // Thiết lập placeholder, font size và DateChooser cho jTextField1
+    // Icon jLabel7
+    ImageIcon iconLabel7 = new ImageIcon(getClass().getResource("/raven/icon/png/calendar.png"));
+    Image scaledIcon7 = iconLabel7.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+    jLabel7.setIcon(new ImageIcon(scaledIcon7));
+    jLabel7.setIconTextGap(5);
+    jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
+    jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
+
+    // ComboBox
+    jComboBox1.setSelectedItem(departureLocation);
+    jComboBox2.setSelectedItem(destinationLocation);
+
+    // DateChooser cho jTextField1
+    com.raven.datechooser.DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
+    dateChooser1.setTextField(jTextField1);
+    dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
+
+    // DateChooser cho jTextField2
+    com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
+    dateChooser2.setTextField(jTextField2);
+    dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
+
+    // jTextField1
+    jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
+    if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD/MM/YYYY")) {
         jTextField1.setText("DD/MM/YYYY");
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // Tăng kích thước chữ lên 16
-        jTextField1.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (jTextField1.getText().equals("DD/MM/YYYY")) {
-                    jTextField1.setText("");
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (jTextField1.getText().isEmpty()) {
-                    jTextField1.setText("DD/MM/YYYY");
-                }
-            }
-        });
-
-        // Tạo và liên kết DateChooser cho jTextField1
-        com.raven.datechooser.DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
-        dateChooser1.setTextField(jTextField1);
-        dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
-
-        // Thiết lập placeholder, font size và DateChooser cho jTextField2
-        jTextField2.setText("DD/MM/YYYY");
-        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14)); // Tăng kích thước chữ lên 16
-        jTextField2.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (jTextField2.getText().equals("DD/MM/YYYY")) {
-                    jTextField2.setText("");
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (jTextField2.getText().isEmpty()) {
-                    jTextField2.setText("DD/MM/YYYY");
-                }
-            }
-        });
-
-        // Tạo và liên kết DateChooser cho jTextField2
-        com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
-        dateChooser2.setTextField(jTextField2);
-        dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
-
-        // Cập nhật màu ban đầu
-        updatePanelColors();
+    } else {
+        jTextField1.setText(departureDate);
+        try {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date date = sdf.parse(departureDate);
+            dateChooser1.setSelectedDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    jTextField1.addFocusListener(new FocusAdapter() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            if (jTextField1.getText().equals("DD/MM/YYYY")) {
+                jTextField1.setText("");
+            }
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if (jTextField1.getText().isEmpty()) {
+                jTextField1.setText("DD/MM/YYYY");
+            }
+        }
+    });
+
+    jTextField1.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            dateChooser1.showPopup();
+        }
+    });
+
+    jTextField1.addPropertyChangeListener("text", evt -> {
+        dateChooser1.hidePopup();
+    });
+
+    // jTextField2
+    jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
+    if (arrivalDate == null || arrivalDate.isEmpty() || arrivalDate.equals("DD/MM/YYYY")) {
+        jTextField2.setText("DD/MM/YYYY");
+    } else {
+        jTextField2.setText(arrivalDate);
+        try {
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date date = sdf.parse(arrivalDate);
+            dateChooser2.setSelectedDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    jTextField2.addFocusListener(new FocusAdapter() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            if (jTextField2.getText().equals("DD/MM/YYYY")) {
+                jTextField2.setText("");
+            }
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if (jTextField2.getText().isEmpty()) {
+                jTextField2.setText("DD/MM/YYYY");
+            }
+        }
+    });
+
+    jTextField2.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            dateChooser2.showPopup();
+        }
+    });
+
+    jTextField2.addPropertyChangeListener("text", evt -> {
+        dateChooser2.hidePopup();
+    });
+
+    // Cập nhật màu nền
+    updatePanelColors();
+}
+
+
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
         if (FlatLaf.isLafDark()) {
@@ -248,12 +311,13 @@ public class ChooseBusForm extends javax.swing.JPanel {
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(14, 14, 14))
         );
 
