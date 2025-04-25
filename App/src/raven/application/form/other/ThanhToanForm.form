@@ -303,7 +303,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel20">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="B&#x1ea1;n c&#xf3; th&#x1ec3; thanh to&#xe1;n cho t&#xe0;i x&#x1ebf; khi l&#xea;n xe"/>
+                    <Property name="text" type="java.lang.String" value="T&#xe0;i kho&#x1ea3;n ph&#x1ea3;i c&#xf3; &#x111;&#x103;ng k&#xed; Internet banking"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JSeparator" name="jSeparator7">
@@ -367,7 +367,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel21">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="B&#x1ea1;n c&#xf3; th&#x1ec3; thanh to&#xe1;n cho t&#xe0;i x&#x1ebf; khi l&#xea;n xe"/>
+                    <Property name="text" type="java.lang.String" value="Thi&#x1ebf;t b&#x1ecb; c&#x1ea7;n c&#xe0;i &#x111;&#x1eb7;t &#x1ee8;ng d&#x1ee5;ng ng&#xe2;n h&#xe0;ng (Mobile Banking) ho&#x1eb7;c V&#xed; VNPAY"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JSeparator" name="jSeparator9">
@@ -431,7 +431,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel22">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="B&#x1ea1;n c&#xf3; th&#x1ec3; thanh to&#xe1;n cho t&#xe0;i x&#x1ebf; khi l&#xea;n xe"/>
+                    <Property name="text" type="java.lang.String" value="B&#x1ea1;n c&#x1ea7;n c&#xf3; t&#xe0;i kho&#x1ea3;n Viettel Money ho&#x1eb7;c c&#xf3; c&#xe0;i &#x111;&#x1eb7;t &#x1ee9;ng d&#x1ee5;ng Viettel Money"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JSeparator" name="jSeparator10">
@@ -495,7 +495,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel23">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="B&#x1ea1;n c&#xf3; th&#x1ec3; thanh to&#xe1;n cho t&#xe0;i x&#x1ebf; khi l&#xea;n xe"/>
+                    <Property name="text" type="java.lang.String" value="B&#x1ea1;n c&#xf3; th&#x1ec3; thanh to&#xe1;n t&#x1ea1;i c&#xe1;c c&#x1eed;a h&#xe0;ng ti&#x1ec7;n l&#x1ee3;i, Viettel post ho&#x1eb7;c si&#xea;u th&#x1ecb;"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JSeparator" name="jSeparator11">
@@ -627,9 +627,9 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                              <Component id="cmdTiepTuc" min="-2" pref="660" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                              <Component id="lbFooter" pref="0" max="32767" attributes="0"/>
+                              <Component id="cmdTiepTuc" min="-2" pref="671" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="lbFooter" pref="353" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
@@ -667,6 +667,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Thanh To&#xe1;n"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdTiepTucActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lbFooter">
               <Properties>
@@ -732,10 +735,14 @@
                                           <Component id="lbImage" min="-2" pref="79" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="lbIconXe" alignment="0" min="-2" pref="98" max="-2" attributes="0"/>
-                                              <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                   <Component id="lbTTXe" alignment="0" pref="192" max="32767" attributes="0"/>
                                                   <Component id="lbTenNhaXe" alignment="0" max="32767" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" attributes="0">
+                                                  <Component id="lbNguoiIcon" min="-2" pref="24" max="-2" attributes="0"/>
+                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                  <Component id="lbGheIcon" min="-2" pref="24" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -794,7 +801,10 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbTTXe" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbIconXe" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="lbNguoiIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbGheIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -848,9 +858,9 @@
                     <Property name="text" type="java.lang.String" value="Limousine 32 ph&#xf2;ng (WC)"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbIconXe">
+                <Component class="javax.swing.JLabel" name="lbNguoiIcon">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Icon"/>
+                    <Property name="text" type="java.lang.String" value="Iconnguoi"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbTGDi">
@@ -896,6 +906,11 @@
                 <Component class="javax.swing.JSeparator" name="jSeparator8">
                   <Properties>
                     <Property name="orientation" type="int" value="1"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbGheIcon">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="iconghe"/>
                   </Properties>
                 </Component>
               </SubComponents>

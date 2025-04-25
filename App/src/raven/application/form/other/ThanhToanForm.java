@@ -126,8 +126,38 @@ public class ThanhToanForm extends javax.swing.JPanel {
         ImageIcon resizedIconDiemDiIcon = new ImageIcon(scaledDiemDiImage);
         jb2.setIcon(resizedIconDiemDiIcon);
         
+        ImageIcon SoNguoiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/nguoi.png"));
+        Image scaledSoNguoiImage = SoNguoiIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  // hoặc 24x24
+        ImageIcon resizedIconSoNguoiIcon = new ImageIcon(scaledSoNguoiImage);
+        lbNguoiIcon.setIcon(resizedIconSoNguoiIcon);
+        
+        ImageIcon SoGheIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/ghe.png"));
+        Image scaledSoGheImage = SoGheIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  // hoặc 24x24
+        ImageIcon resizedIconSoGheIcon = new ImageIcon(scaledSoGheImage);
+        lbGheIcon.setIcon(resizedIconSoGheIcon);
+        
         lbFooter.setText("<html><div style='text-align: center;'>Bạn sẽ sớm nhận được biển số xe, số điện thoại tài xế và dể dàng thay đổi điển đón trả sau khi đặt</div></html>");
 
+        cmdTiepTuc.addActionListener(new java.awt.event.ActionListener() {
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+        // Kiểm tra xem có phương thức thanh toán nào được chọn hay không
+            if (!Rb1.isSelected() && !Rb2.isSelected() && !Rb3.isSelected() && !Rb4.isSelected() && !Rb5.isSelected()) {
+            // Hiển thị thông báo lỗi nếu chưa chọn phương thức
+                javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this, 
+                "Vui lòng chọn một phương thức thanh toán trước khi tiếp tục!", 
+                "Lỗi", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Xử lý logic thanh toán nếu đã chọn phương thức (có thể thêm code xử lý ở đây)
+            javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this, 
+                "Thanh toán thành công!", 
+                "Thông báo", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            // Ví dụ: Thêm code để chuyển sang bước tiếp theo hoặc lưu thông tin thanh toán
+        }
+    }
+});
    }
 
     /**
@@ -193,7 +223,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         lbImage = new javax.swing.JLabel();
         lbTenNhaXe = new javax.swing.JLabel();
         lbTTXe = new javax.swing.JLabel();
-        lbIconXe = new javax.swing.JLabel();
+        lbNguoiIcon = new javax.swing.JLabel();
         lbTGDi = new javax.swing.JLabel();
         lbTGDen = new javax.swing.JLabel();
         lbDiaChiDen = new javax.swing.JLabel();
@@ -203,6 +233,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         jb1 = new javax.swing.JLabel();
         jb2 = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
+        lbGheIcon = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1000, 768));
 
@@ -289,7 +320,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel20.setText("Bạn có thể thanh toán cho tài xế khi lên xe");
+        jLabel20.setText("Tài khoản phải có đăng kí Internet banking");
 
         lb2.setText("Thanh toán khi lên xe");
 
@@ -331,7 +362,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel21.setText("Bạn có thể thanh toán cho tài xế khi lên xe");
+        jLabel21.setText("Thiết bị cần cài đặt Ứng dụng ngân hàng (Mobile Banking) hoặc Ví VNPAY");
 
         lb3.setText("Thanh toán khi lên xe");
 
@@ -373,7 +404,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel22.setText("Bạn có thể thanh toán cho tài xế khi lên xe");
+        jLabel22.setText("Bạn cần có tài khoản Viettel Money hoặc có cài đặt ứng dụng Viettel Money");
 
         lb4.setText("Thanh toán khi lên xe");
 
@@ -415,7 +446,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel23.setText("Bạn có thể thanh toán cho tài xế khi lên xe");
+        jLabel23.setText("Bạn có thể thanh toán tại các cửa hàng tiện lợi, Viettel post hoặc siêu thị");
 
         lb5.setText("Thanh toán khi lên xe");
 
@@ -456,16 +487,16 @@ public class ThanhToanForm extends javax.swing.JPanel {
             .addGroup(panelPTTTLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPTTTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 656, Short.MAX_VALUE)
                     .addGroup(panelPTTTLayout.createSequentialGroup()
                         .addGroup(panelPTTTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbPTThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 656, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 656, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 656, Short.MAX_VALUE)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 656, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelPTTTLayout.setVerticalGroup(
@@ -555,6 +586,11 @@ public class ThanhToanForm extends javax.swing.JPanel {
         cmdTiepTuc.setBackground(new java.awt.Color(0, 204, 204));
         cmdTiepTuc.setForeground(java.awt.Color.white);
         cmdTiepTuc.setText("Thanh Toán");
+        cmdTiepTuc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdTiepTucActionPerformed(evt);
+            }
+        });
 
         lbFooter.setText("Bạn sẽ sớm nhận được biển số xe, số điện thoại tài xế và dể dàng thay đổi điển đón trả sau khi đặt");
 
@@ -568,9 +604,9 @@ public class ThanhToanForm extends javax.swing.JPanel {
                 .addGroup(panelButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelButtonLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(cmdTiepTuc, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(lbFooter, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(cmdTiepTuc, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbFooter, javax.swing.GroupLayout.PREFERRED_SIZE, 353, Short.MAX_VALUE))
                     .addGroup(panelButtonLayout.createSequentialGroup()
                         .addGap(118, 118, 118)
                         .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -601,7 +637,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
 
         lbTTXe.setText("Limousine 32 phòng (WC)");
 
-        lbIconXe.setText("Icon");
+        lbNguoiIcon.setText("Iconnguoi");
 
         lbTGDi.setText("16:30");
 
@@ -621,6 +657,8 @@ public class ThanhToanForm extends javax.swing.JPanel {
 
         jSeparator8.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        lbGheIcon.setText("iconghe");
+
         javax.swing.GroupLayout panelTTChuyenDiConLayout = new javax.swing.GroupLayout(panelTTChuyenDiCon);
         panelTTChuyenDiCon.setLayout(panelTTChuyenDiConLayout);
         panelTTChuyenDiConLayout.setHorizontalGroup(
@@ -634,10 +672,13 @@ public class ThanhToanForm extends javax.swing.JPanel {
                                 .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbIconXe, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                        .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
+                                        .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(lbGheIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
                                 .addComponent(lbNgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -680,7 +721,9 @@ public class ThanhToanForm extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbTTXe)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbIconXe)))
+                        .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbNguoiIcon)
+                            .addComponent(lbGheIcon))))
                 .addGap(18, 18, 18)
                 .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
@@ -789,6 +832,10 @@ public class ThanhToanForm extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_Rb5ActionPerformed
 
+    private void cmdTiepTucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTiepTucActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdTiepTucActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton Rb1;
@@ -836,10 +883,11 @@ public class ThanhToanForm extends javax.swing.JPanel {
     private javax.swing.JLabel lbDiaChiDi;
     private javax.swing.JLabel lbDiaChiDiCuThe;
     private javax.swing.JLabel lbFooter;
+    private javax.swing.JLabel lbGheIcon;
     private javax.swing.JLabel lbGiaVe;
-    private javax.swing.JLabel lbIconXe;
     private javax.swing.JLabel lbImage;
     private javax.swing.JLabel lbNgayThang;
+    private javax.swing.JLabel lbNguoiIcon;
     private javax.swing.JLabel lbPTThanhToan;
     private javax.swing.JLabel lbTGDen;
     private javax.swing.JLabel lbTGDi;

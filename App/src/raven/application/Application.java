@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import raven.application.form.other.component.PanelNhapTTDatVe;
 
 public class Application extends javax.swing.JFrame { 
     private static Application app;
@@ -20,6 +21,7 @@ public class Application extends javax.swing.JFrame {
     private final RegisterForm registerForm;
     private final OTPForm otpForm;
     private final InfoForm infoForm;
+    private final PanelNhapTTDatVe panelNhapTTDatVe;
     private Container previousForm;
     private boolean isRegisterFlow;
     private String currentEmail;
@@ -35,10 +37,14 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
+        panelNhapTTDatVe = new PanelNhapTTDatVe();
         setContentPane(mainForm);
         //setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
+    }
+public static void showNhapTTDatVe() {
+        showForm(app.panelNhapTTDatVe);
     }
 
     public static void showForm(Component component) {
@@ -121,6 +127,7 @@ public class Application extends javax.swing.JFrame {
 
     public static void setSelectedMenu(int index, int subIndex) {
         app.mainForm.setSelectedMenu(index, subIndex);
+        showForm(app.panelNhapTTDatVe);
     }
 
     @SuppressWarnings("unchecked")
@@ -152,6 +159,7 @@ public class Application extends javax.swing.JFrame {
             app = new Application();
             //  app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             app.setVisible(true);
+            Application.login();
         });
     }
 
