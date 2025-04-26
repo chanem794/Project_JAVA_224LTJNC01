@@ -16,7 +16,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="panelNhapTTDatVe" min="-2" pref="1060" max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="panelNhapTTDatVe" pref="1096" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -42,20 +45,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="cmdQuayLai" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="cmdQuayLai" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="panelTTLienHe" max="32767" attributes="0"/>
                               <Component id="panelTienIch" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="28" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="panelTamTinh" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="panelTTChuyenDi" alignment="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="jPanel1" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -70,18 +67,14 @@
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="panelTamTinh" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="panelTTChuyenDi" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
                           <Component id="panelTTLienHe" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="panelTienIch" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="panelButton" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="panelButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="33" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -214,244 +207,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="lbChuThichTTLH">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i v&#xe0; email &#x111;&#x1b0;&#x1ee3;c s&#x1eed; d&#x1ee5;ng &#x111;&#x1ec3; g&#x1eed;i th&#xf4;ng tin &#x111;&#x1a1;n h&#xe0;ng v&#xe0; li&#xea;n h&#x1ec7; khi c&#x1ea7;n thi&#x1ebf;t."/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-          </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="panelTTChuyenDi">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="99" red="99" type="rgb"/>
-            </Property>
-          </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="panelTTChuyenDiCon" min="-2" pref="325" max="-2" attributes="0"/>
-                          <Component id="lbTTChuyenDi" min="-2" pref="192" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="lbTTChuyenDi" min="-2" pref="31" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="panelTTChuyenDiCon" min="-2" pref="259" max="-2" attributes="0"/>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="lbTTChuyenDi">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin chuy&#x1ebf;n &#x111;i"/>
-              </Properties>
-            </Component>
-            <Container class="javax.swing.JPanel" name="panelTTChuyenDiCon">
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="lbImage" min="-2" pref="79" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Component id="lbTTXe" pref="192" max="32767" attributes="0"/>
-                                                  <Component id="lbTenNhaXe" max="32767" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" attributes="0">
-                                                  <Component id="lbNguoiIcon" min="-2" pref="24" max="-2" attributes="0"/>
-                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                  <Component id="lbGheIcon" min="-2" pref="24" max="-2" attributes="0"/>
-                                              </Group>
-                                          </Group>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="lbNgayThang" min="-2" pref="127" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="cmdChiTiet" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lbTGDi" pref="31" max="32767" attributes="0"/>
-                                      <Component id="lbTGDen" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jb1" min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="jb2" min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="jSeparator1" alignment="1" min="-2" pref="17" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbDiaChiDenCuThe" alignment="0" max="32767" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="lbDiaChiDiCuThe" min="-2" pref="210" max="-2" attributes="0"/>
-                                              <Component id="lbDiaChiDi" alignment="0" min="-2" pref="158" max="-2" attributes="0"/>
-                                              <Component id="lbDiaChiDen" alignment="0" min="-2" pref="153" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbNgayThang" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cmdChiTiet" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lbImage" min="-2" pref="64" max="-2" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Component id="lbTenNhaXe" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbTTXe" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lbNguoiIcon" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbGheIcon" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lbDiaChiDi" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jb1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbDiaChiDiCuThe" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jSeparator1" min="-2" pref="33" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Component id="lbTGDi" alignment="0" min="-2" pref="27" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jb2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbDiaChiDen" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbTGDen" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbDiaChiDenCuThe" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="lbNgayThang">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="CN, 19/06/2025"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="cmdChiTiet">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Chi ti&#x1ebf;t"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbImage">
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbTenNhaXe">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="&#x110;&#xec;nh Nh&#xe2;n"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbTTXe">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Limousine 32 ph&#xf2;ng (WC)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbTGDi">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="16:30"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbTGDen">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="10:20"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbDiaChiDen">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="VP An S&#x1b0;&#x1a1;ng"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbDiaChiDi">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="VP &#x110;&#xe0; N&#x1eb5;ng"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbDiaChiDiCuThe">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="&#x110;&#x1ecb;a ch&#x1ec9; &#x111;i c&#x1ee5; th&#x1ec3;"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbDiaChiDenCuThe">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="&#x110;&#x1ecb;a ch&#x1ec9; &#x111;&#x1ebf;n c&#x1ee5; th&#x1ec3;"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jb1">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabel1"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jb2">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabel2"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JSeparator" name="jSeparator1">
-                  <Properties>
-                    <Property name="orientation" type="int" value="1"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbNguoiIcon">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Iconnguoi"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbGheIcon">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="iconghe"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -542,9 +298,9 @@
                               <Component id="lbBaoHiem2" min="-2" pref="327" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="238" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="jCheckBox1" min="-2" pref="30" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="26" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
@@ -552,7 +308,7 @@
                           <Component id="lbTienIch" min="-2" pref="194" max="-2" attributes="0"/>
                           <Component id="panelBaoHiem" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="18" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -686,59 +442,321 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="panelTamTinh">
+        <Component class="javax.swing.JButton" name="cmdQuayLai">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="99" red="99" type="rgb"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="&lt; Quay l&#x1ea1;i"/>
           </Properties>
+        </Component>
+        <Container class="javax.swing.JPanel" name="jPanel1">
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                      <Component id="lbTamTinh" min="-2" pref="83" max="-2" attributes="0"/>
-                      <EmptySpace pref="166" max="32767" attributes="0"/>
-                      <Component id="lbGiaVe" min="-2" pref="77" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace pref="40" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="panelTamTinh" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="panelTTChuyenDi" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lbTamTinh" pref="35" max="32767" attributes="0"/>
-                          <Component id="lbGiaVe" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <Component id="panelTamTinh" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="30" max="32767" attributes="0"/>
+                      <Component id="panelTTChuyenDi" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lbTamTinh">
+            <Container class="javax.swing.JPanel" name="panelTamTinh">
               <Properties>
-                <Property name="text" type="java.lang.String" value="T&#x1ea1;m T&#xed;nh"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbGiaVe">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="cc" green="cc" red="0" type="rgb"/>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="99" green="99" red="99" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="550.000&#x111;"/>
               </Properties>
-            </Component>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                          <Component id="lbTamTinh" min="-2" pref="83" max="-2" attributes="0"/>
+                          <EmptySpace pref="166" max="32767" attributes="0"/>
+                          <Component id="lbGiaVe" min="-2" pref="77" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lbTamTinh" pref="35" max="32767" attributes="0"/>
+                              <Component id="lbGiaVe" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="14" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="lbTamTinh">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="T&#x1ea1;m T&#xed;nh"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbGiaVe">
+                  <Properties>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="cc" green="cc" red="0" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="550.000&#x111;"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="panelTTChuyenDi">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="99" green="99" red="99" type="rgb"/>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="panelTTChuyenDiCon" min="-2" pref="325" max="-2" attributes="0"/>
+                              <Component id="lbTTChuyenDi" min="-2" pref="192" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="15" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <Component id="lbTTChuyenDi" min="-2" pref="31" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="panelTTChuyenDiCon" min="-2" pref="259" max="-2" attributes="0"/>
+                          <EmptySpace pref="15" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="lbTTChuyenDi">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin chuy&#x1ebf;n &#x111;i"/>
+                  </Properties>
+                </Component>
+                <Container class="javax.swing.JPanel" name="panelTTChuyenDiCon">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lbImage" min="-2" pref="79" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                      <Component id="lbTTXe" pref="192" max="32767" attributes="0"/>
+                                                      <Component id="lbTenNhaXe" max="32767" attributes="0"/>
+                                                  </Group>
+                                                  <Group type="102" attributes="0">
+                                                      <Component id="lbNguoiIcon" min="-2" pref="24" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <Component id="lbGheIcon" min="-2" pref="24" max="-2" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lbNgayThang" min="-2" pref="127" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="cmdChiTiet" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="lbTGDi" pref="31" max="32767" attributes="0"/>
+                                          <Component id="lbTGDen" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jb1" min="-2" pref="25" max="-2" attributes="0"/>
+                                          <Component id="jb2" min="-2" pref="25" max="-2" attributes="0"/>
+                                          <Component id="jSeparator1" alignment="1" min="-2" pref="17" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lbDiaChiDenCuThe" alignment="0" max="32767" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="lbDiaChiDiCuThe" min="-2" pref="210" max="-2" attributes="0"/>
+                                                  <Component id="lbDiaChiDi" alignment="0" min="-2" pref="158" max="-2" attributes="0"/>
+                                                  <Component id="lbDiaChiDen" alignment="0" min="-2" pref="153" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lbNgayThang" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cmdChiTiet" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="lbImage" min="-2" pref="64" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="lbTenNhaXe" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbTTXe" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lbNguoiIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbGheIcon" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lbDiaChiDi" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jb1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lbDiaChiDiCuThe" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jSeparator1" min="-2" pref="33" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="lbTGDi" alignment="0" min="-2" pref="27" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jb2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbDiaChiDen" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbTGDen" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbDiaChiDenCuThe" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="lbNgayThang">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="CN, 19/06/2025"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="cmdChiTiet">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Chi ti&#x1ebf;t"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbImage">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbTenNhaXe">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&#x110;&#xec;nh Nh&#xe2;n"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbTTXe">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Limousine 32 ph&#xf2;ng (WC)"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbTGDi">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="16:30"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbTGDen">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="10:20"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbDiaChiDen">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="VP An S&#x1b0;&#x1a1;ng"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbDiaChiDi">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="VP &#x110;&#xe0; N&#x1eb5;ng"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbDiaChiDiCuThe">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&#x110;&#x1ecb;a ch&#x1ec9; &#x111;i c&#x1ee5; th&#x1ec3;"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbDiaChiDenCuThe">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&#x110;&#x1ecb;a ch&#x1ec9; &#x111;&#x1ebf;n c&#x1ee5; th&#x1ec3;"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jb1">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="jLabel1"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jb2">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="jLabel2"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JSeparator" name="jSeparator1">
+                      <Properties>
+                        <Property name="orientation" type="int" value="1"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbNguoiIcon">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Iconnguoi"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbGheIcon">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="iconghe"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+              </SubComponents>
+            </Container>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="cmdQuayLai">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="&lt; Quay l&#x1ea1;i"/>
-          </Properties>
-        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
