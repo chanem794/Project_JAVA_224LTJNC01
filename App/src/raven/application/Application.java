@@ -155,7 +155,6 @@ public class Application extends javax.swing.JFrame {
             // 👉 Hiển thị ChooseLocationForm lúc khởi động
             showForm(new raven.application.form.other.ChooseLocationForm());
         });
-        showForm(new FormDanhSachChuyen());
     }
 
 
