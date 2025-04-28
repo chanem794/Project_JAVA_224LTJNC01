@@ -15,7 +15,6 @@ import raven.application.form.other.component.PanelThanhToan;
 
 
 public class NhapTTDatVeForm extends javax.swing.JPanel {
-        
 
     public NhapTTDatVeForm() {
         initComponents();
@@ -96,30 +95,7 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         lbChuThichTTLH.setText("Số điện thoại và email được sử dụng để gửi thông tin đơn hàng và liên hệ khi cần thiết.");
         lbChuThichTTLH.setIconTextGap(5);// Khoảng cách giữa ảnh và text
         
-//        ImageIcon Busicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/bus.png"));
-//        Image scaledBusImage = Busicon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH); 
-//        ImageIcon resizedIconBusIcon = new ImageIcon(scaledBusImage);
-//        lbNgayThang.setIcon(resizedIconBusIcon);
-//        lbNgayThang.setText("T5, 08/05/2025");
-//        lbNgayThang.setIconTextGap(10);  
-        
-//        ImageIcon BaoHiemIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/baohiem2.png"));
-//        Image scaledBaoHiemImage = BaoHiemIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);  
-//        ImageIcon resizedIconBaoHiemIcon = new ImageIcon(scaledBaoHiemImage);
-//        lbGiaBaoHiem.setIcon(resizedIconBaoHiemIcon);
-//        lbGiaBaoHiem.setText("Bảo hiểm chuyến đi ( +20.000đ/ghế)");
-//        lbGiaBaoHiem.setIconTextGap(5);  
-
-//        ImageIcon DiemDenIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/diemden.png"));
-//        Image scaledDiemDenImage = DiemDenIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  
-//        ImageIcon resizedIconDiemDenIcon = new ImageIcon(scaledDiemDenImage);
-//        jb1.setIcon(resizedIconDiemDenIcon);
-//        
-//        ImageIcon DiemDiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/diemdi.png"));
-//        Image scaledDiemDiImage = DiemDiIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  
-//        ImageIcon resizedIconDiemDiIcon = new ImageIcon(scaledDiemDiImage);
-//        jb2.setIcon(resizedIconDiemDiIcon);
-        
+//      set icon        
         ImageIcon SoNguoiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/nguoi.png"));
         Image scaledSoNguoiImage = SoNguoiIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  
         ImageIcon resizedIconSoNguoiIcon = new ImageIcon(scaledSoNguoiImage);
@@ -550,9 +526,9 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(lbNgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
                 .addComponent(cmdChiTiet, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addGap(16, 16, 16))
         );
         panelHeaderLayout.setVerticalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -590,23 +566,25 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                                     .addComponent(lbDiaChiDen, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addContainerGap()
                                 .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                        .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                        .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lbGheIcon))))
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                                .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
+                                                .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(lbGheIcon))))
+                                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelTTChuyenDiConLayout.setVerticalGroup(
