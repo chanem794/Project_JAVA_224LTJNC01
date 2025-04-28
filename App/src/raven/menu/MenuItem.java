@@ -79,7 +79,7 @@ public class MenuItem extends JPanel {
         Color darkColor = FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red);
         FlatSVGIcon icon = new FlatSVGIcon("raven/menu/iconUser/" + menuIndex + ".svg");
         FlatSVGIcon.ColorFilter f = new FlatSVGIcon.ColorFilter();
-        f.add(Color.decode("#969696"), lightColor, darkColor);
+        f.add(Color.decode("#ffffff"), lightColor, darkColor);
         icon.setColorFilter(f);
         return icon;
     }

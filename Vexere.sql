@@ -18,9 +18,9 @@ GO
 
 -- Tạo bảng NguoiDung
 CREATE TABLE NguoiDung (
-    MaNguoiDung     VARCHAR(10)     PRIMARY KEY,
-    TenNguoiDung    NVARCHAR(50)    NOT NULL,
-    Email           VARCHAR(100)    NOT NULL UNIQUE,
+    MaNguoiDung     VARCHAR(10) PRIMARY KEY,
+    TenNguoiDung    NVARCHAR(50) NOT NULL,
+    Email           VARCHAR(100) NOT NULL UNIQUE,
     NgaySinh        DATE,
     OtpCode         VARCHAR(6),
     Otp_taoThoiGian DATETIME
@@ -29,51 +29,62 @@ GO
 
 -- Tạo bảng Tuyen
 CREATE TABLE Tuyen (
-    MaTuyen INT PRIMARY KEY,
-    DiemDi VARCHAR(100),
-    DiemDen VARCHAR(100),
-    QuangDuong INT
+    MaTuyen     INT PRIMARY KEY,
+    DiemDi      NVARCHAR(100),
+    DiemDen     NVARCHAR(100),
+    QuangDuong  INT
 );
 GO
 
--- Tạo bảng Xe
+-- Tạo bảng Xe (không có TenTaiXe)
 CREATE TABLE Xe (
-    MaXe INT PRIMARY KEY,
-    TenXe VARCHAR(100),
-    TenTaiXe VARCHAR(100),
-    LoaiXe VARCHAR(50),
-    DiemDi VARCHAR(100),
-    DiemDen VARCHAR(100),
-    NgayKhoiHanh DATE,
-    GioDen TIME,
-    GioDi TIME,
-    SoGhe INT,
-    GheConTrong INT,
-    GiaVe INT,
-    MaTuyen INT,
+    MaXe           INT PRIMARY KEY,
+    TenXe          NVARCHAR(100),
+    LoaiXe         NVARCHAR(50),
+    DiemDi         NVARCHAR(100),
+    DiemDen        NVARCHAR(100),
+    NgayKhoiHanh   DATE,
+    GioDen         TIME,
+    GioDi          TIME,
+    SoGhe          INT,
+    GheConTrong    INT,
+    GiaVe          INT,
+    MaTuyen        INT,
     CONSTRAINT FK_Xe_Tuyen FOREIGN KEY (MaTuyen) REFERENCES Tuyen(MaTuyen)
 );
 GO
 
 -- Tạo bảng DatCho
 CREATE TABLE DatCho (
-    MaDatCho INT PRIMARY KEY,
-    TrangThai VARCHAR(50),
-    NgayDat DATE,
-    GioDat TIME,
-    DiemDi VARCHAR(100),
-    DiemDen VARCHAR(100),
-    NgayGioKhoiHanh DATETIME,
-    SoGheDat INT,
-    GiaVe INT,
-    MaNguoiDung VARCHAR(10), -- Sửa INT thành VARCHAR(10) để khớp với NguoiDung
-    MaXe INT,
+    MaDatCho         INT PRIMARY KEY,
+    TrangThai        NVARCHAR(50),
+    NgayDat          DATE,
+    GioDat           TIME,
+    DiemDi           NVARCHAR(100),
+    DiemDen          NVARCHAR(100),
+    NgayGioKhoiHanh  DATETIME,
+    SoGheDat         INT,
+    GiaVe            INT,
+    MaNguoiDung      VARCHAR(10),
+    MaXe             INT,
     CONSTRAINT FK_DatCho_NguoiDung FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung),
     CONSTRAINT FK_DatCho_Xe FOREIGN KEY (MaXe) REFERENCES Xe(MaXe)
 );
 GO
 
--- Thêm dữ liệu mẫu
+-- ✅ Tạo bảng LichTrinhTuDong (chỉ còn MaXe, ThuTu, DiaDiem, ThoiGianDuKien)
+CREATE TABLE LichTrinhTuDong (
+    MaLichTrinhTuDong INT IDENTITY PRIMARY KEY,
+    MaXe              INT,
+    ThuTu             INT, -- Thứ tự điểm dừng
+    DiaDiem           NVARCHAR(255), -- Tên địa điểm
+    ThoiGianDuKien    INT, -- Thời gian di chuyển từ điểm trước (giây)
+    CONSTRAINT FK_LichTrinhTuDong_Xe FOREIGN KEY (MaXe) REFERENCES Xe(MaXe)
+);
+GO
+
+-- Thêm dữ liệu mẫu cho NguoiDung
 INSERT INTO NguoiDung (MaNguoiDung, TenNguoiDung, Email, NgaySinh) VALUES
 ('ND001', N'Nguyễn Văn A', 'user1@example.com', '1990-01-01'),
 ('ND002', N'Trần Thị B', 'dinhknd3@gmail.com', '1995-05-15');
+GO
