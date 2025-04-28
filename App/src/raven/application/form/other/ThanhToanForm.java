@@ -11,13 +11,18 @@ import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
-import raven.application.Application;
-import raven.application.form.other.component.PanelNhapTTDatVe;
-import raven.application.form.other.component.PanelThanhToan;
 
+/**
+ *
+ * @author DELL
+ */
 public class ThanhToanForm extends javax.swing.JPanel {
 
+    /**
+     * Creates new form ThanhToanForm
+     */
     public ThanhToanForm() {
         initComponents();
         init();
@@ -45,7 +50,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         cmdThanhToan.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h3.font");
         
-//      set bo viền bo góc cho các panel        
+        
         panelPTTT.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         panelTongTien.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         panelTTChuyenDi.putClientProperty(FlatClientProperties.STYLE, "arc:20");
@@ -54,7 +59,6 @@ public class ThanhToanForm extends javax.swing.JPanel {
         panelTTChuyenDiCon.putClientProperty(FlatClientProperties.STYLE, ""+ "arc:20;"+ "border:2,2,2,2,#E0E0E0,,20");
         panelHeader.putClientProperty(FlatClientProperties.STYLE, ""+ "arc:20;"+ "border:2,2,2,2,#F1F7FD,,20");
         
-//      In đậm gạch chân các từ qtr        
         lb1.setText("<html><b>Thanh toán khi lên xe</b></html>");
         lb2.setText("<html><b>Thẻ ATM nội địa / Internet Banking</b></html>");
         lb3.setText("<html><b>Thanh toán VNPAY - QR</b></html>");
@@ -62,7 +66,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         lb5.setText("<html><b>Tại cửa hàng tiện lợi hoặc siêu thị</b></html>");
         cmdChinhSua.setText("<html><u><b>Chỉnh sửa</b></u></html>");
         
-//      Set in đậm cho các chữ
+        //      Set in đậm cho các chữ
         lbTenNhaXe.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:bold +1");
         lbDiaChiDi.putClientProperty(FlatClientProperties.STYLE, ""
@@ -73,7 +77,6 @@ public class ThanhToanForm extends javax.swing.JPanel {
                 + "font:bold +1");
         lbDieuKhoan.setText("<html>Bằng việc nhấn nút Thanh toán, bạn đồng ý với <font color='#0055FF'><u><b>Chính sách bảo mật thanh toán </b></u></font></html>");
         cmdChiTiet.setText("<html><u><b>Chi tiết</b></u></html>");
-        
 //      set chỉ cho phép chọn 1 phương thức
         ButtonGroup group = new ButtonGroup();
         group.add(Rb1);
@@ -160,9 +163,51 @@ public class ThanhToanForm extends javax.swing.JPanel {
         FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         cmdThanhToan.setIcon(thanhtoanicon);
-        cmdThanhToan.setText("Thanh toán");      
+        cmdThanhToan.setText("Thanh toán");
         
-//        set icon cho số ghế và số người
+        
+//      Set các icon        
+//        ImageIcon XeBusicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/xebus.png"));
+//        Image scaledXeBusImage = XeBusicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  // hoặc 24x24
+//        ImageIcon resizedIconXeBusIcon = new ImageIcon(scaledXeBusImage);
+//        lb1.setIcon(resizedIconXeBusIcon);
+//        lb1.setIconTextGap(10);
+//        
+//        ImageIcon ATMicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/atm.png"));
+//        Image scaledATMImage = ATMicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  // hoặc 24x24
+//        ImageIcon resizedIATMIcon = new ImageIcon(scaledATMImage);
+//        lb2.setIcon(resizedIATMIcon);
+////        lb2.setText("Thẻ ATM nội địa / Internet Banking");
+//        lb2.setIconTextGap(10);
+//        
+//        ImageIcon VNPAYicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/vnpay.png"));
+//        Image scaledVNPAYImage = VNPAYicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  // hoặc 24x24
+//        ImageIcon resizedIVNPAYIcon = new ImageIcon(scaledVNPAYImage);
+//        lb3.setIcon(resizedIVNPAYIcon);
+////        lb3.setText("Thanh toán VNPAY - QR");
+//        lb3.setIconTextGap(10);
+//        
+//        ImageIcon Viettelicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/viettel.png"));
+//        Image scaledViettelImage = Viettelicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  // hoặc 24x24
+//        ImageIcon resizedIViettelIcon = new ImageIcon(scaledViettelImage);
+//        lb4.setIcon(resizedIViettelIcon);
+////        lb4.setText("Thanh toán qua Viettel Money");
+//        lb4.setIconTextGap(10);
+//        
+//        ImageIcon CuaHangicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/cuahang.png"));
+//        Image scaledCuaHangImage = CuaHangicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  // hoặc 24x24
+//        ImageIcon resizedICuaHangIcon = new ImageIcon(scaledCuaHangImage);
+//        lb5.setIcon(resizedICuaHangIcon);
+////        lb5.setText("Tại cửa hàng tiện lợi hoặc siêu thị");
+//        lb5.setIconTextGap(10);
+        
+//        ImageIcon ThanhToanicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/thanhtoan.png"));
+//        Image scaledThanhToanImage = ThanhToanicon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  // hoặc 24x24
+//        ImageIcon resizedIThanhToanIcon = new ImageIcon(scaledThanhToanImage);
+//        cmdThanhToan.setIcon(resizedIThanhToanIcon);
+//        cmdThanhToan.setText("Thanh toán");
+//        cmdThanhToan.setIconTextGap(10);
+        
         ImageIcon SoNguoiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/nguoi.png"));
         Image scaledSoNguoiImage = SoNguoiIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  // hoặc 24x24
         ImageIcon resizedIconSoNguoiIcon = new ImageIcon(scaledSoNguoiImage);
@@ -175,7 +220,6 @@ public class ThanhToanForm extends javax.swing.JPanel {
         lbGheIcon.setIcon(resizedIconSoGheIcon);
         lbGheIcon.setText("A1.1");
         
-//      set chữ cho đoạn văn bản dài        
         lbFooter.setText("<html><div style='text-align: center;'>Bạn sẽ sớm nhận được biển số xe, số điện thoại tài xế và dể dàng thay đổi điển đón trả sau khi đặt</div></html>");
 
         cmdThanhToan.addActionListener(new java.awt.event.ActionListener() {
@@ -578,11 +622,6 @@ public class ThanhToanForm extends javax.swing.JPanel {
         cmdChinhSua.setBorder(null);
         cmdChinhSua.setContentAreaFilled(false);
         cmdChinhSua.setFocusPainted(false);
-        cmdChinhSua.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdChinhSuaActionPerformed(evt);
-            }
-        });
 
         jLabel3.setText("Hành khách");
 
@@ -748,9 +787,9 @@ public class ThanhToanForm extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(lbNgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cmdChiTiet, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
+                .addGap(22, 22, 22))
         );
         panelHeaderLayout.setVerticalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -788,25 +827,23 @@ public class ThanhToanForm extends javax.swing.JPanel {
                                     .addComponent(lbDiaChiDen, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                .addContainerGap()
+                                .addGap(8, 8, 8)
+                                .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                        .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
-                                        .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                                .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                                .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(lbGheIcon))))
-                                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addComponent(lbGheIcon))))
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(panelHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelTTChuyenDiConLayout.setVerticalGroup(
@@ -937,10 +974,6 @@ public class ThanhToanForm extends javax.swing.JPanel {
     private void cmdThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdThanhToanActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmdThanhToanActionPerformed
-
-    private void cmdChinhSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdChinhSuaActionPerformed
-        Application.showForm(new PanelNhapTTDatVe());
-    }//GEN-LAST:event_cmdChinhSuaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
