@@ -6,12 +6,15 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import dal.ConnectStationForm;
 import raven.application.form.*;
 import raven.toast.Notifications;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.sql.SQLException;
+import raven.application.form.other.StationForm;
 import raven.application.form.other.StationForm;
 
 public class Application extends javax.swing.JFrame { 
@@ -151,8 +154,13 @@ public class Application extends javax.swing.JFrame {
         FlatMacDarkLaf.setup();
         java.awt.EventQueue.invokeLater(() -> {
             app = new Application();
-            showForm(new StationForm());
-            //  app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            StationForm stationForm = new StationForm();
+            try {
+                ConnectStationForm connectStationForm = new ConnectStationForm(stationForm);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            showForm(stationForm);
             app.setVisible(true);
         });
     }
