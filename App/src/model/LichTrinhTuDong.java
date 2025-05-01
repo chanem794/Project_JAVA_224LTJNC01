@@ -1,21 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-import java.util.Date;
-
-/**
- *
- * @author dinhk
- */
 public class LichTrinhTuDong {
     private int maLichTrinhTuDong;
     private int maXe;
     private int thuTu;
     private String diaDiem;
     private int thoiGianDuKien;
+
+    public LichTrinhTuDong() {
+    }
 
     public LichTrinhTuDong(int maLichTrinhTuDong, int maXe, int thuTu, String diaDiem, int thoiGianDuKien) {
         this.maLichTrinhTuDong = maLichTrinhTuDong;
@@ -64,6 +57,4 @@ public class LichTrinhTuDong {
     public void setThoiGianDuKien(int thoiGianDuKien) {
         this.thoiGianDuKien = thoiGianDuKien;
     }
-    
-    
 }
