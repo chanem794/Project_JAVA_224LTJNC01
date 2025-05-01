@@ -16,19 +16,19 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="162" max="32767" attributes="0"/>
-              <Component id="panelAccount1" min="-2" pref="400" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="157" max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="188" max="-2" attributes="0"/>
+              <Component id="panelAccount1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
-              <Component id="panelAccount1" min="-2" pref="300" max="-2" attributes="0"/>
-              <EmptySpace pref="132" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <Component id="panelAccount1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="81" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -47,14 +47,24 @@
             <Property name="text" type="java.lang.String" value="H&#x1ecd; v&#xe0; t&#xea;n"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtNgaySinh">
+        <Component class="javax.swing.JTextField" name="txtHovaten">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbEmail">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Email"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtEmail">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbNgaySinh">
           <Properties>
             <Property name="text" type="java.lang.String" value="Ng&#xe0;y sinh"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtHovaten">
+        <Component class="javax.swing.JTextField" name="txtNgaySinh">
         </Component>
         <Component class="javax.swing.JButton" name="cmdLuu">
           <Properties>
