@@ -7,14 +7,17 @@ package raven.application.form.other.component;
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+/**
+ *
+ * @author dinhk
+ */
+public class PanelCommingSoon extends JPanel{
 
-public class PanelAccount extends JPanel {
-
-    public PanelAccount() {
-        setLayout(new MigLayout("fillx,wrap,insets 30 40 50 40, width 720", "[fill]", "[]20[][]15[][]15[][]30[]"));
+    public PanelCommingSoon() {
+        setLayout(new MigLayout("filly,insets 40 20 40 20, width 720", "[]40[]", "[fill]"));
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:$Login.background;"
                 + "arc:20;");
     }
-
+    
 }

@@ -21,7 +21,7 @@ public class FormInbox extends javax.swing.JPanel {
         lb = new javax.swing.JLabel();
 
         lb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lb.setText("Inbox");
+        lb.setText("Comming Soon!");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

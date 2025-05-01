@@ -36,7 +36,7 @@ CREATE TABLE Tuyen (
 );
 GO
 
--- Tạo bảng Xe
+-- Tạo bảng Xe (bao gồm NgayDen)
 CREATE TABLE Xe (
     MaXe           INT PRIMARY KEY,
     TenXe          NVARCHAR(100),
@@ -44,6 +44,7 @@ CREATE TABLE Xe (
     DiemDi         NVARCHAR(100),
     DiemDen        NVARCHAR(100),
     NgayKhoiHanh   DATE,
+    NgayDen        DATE,
     GioDen         TIME,
     GioDi          TIME,
     SoGhe          INT,
@@ -94,18 +95,20 @@ INSERT INTO Tuyen VALUES
 (1, N'Hải Châu - Đà Nẵng', N'Hội An - Quảng Nam', 35);
 GO
 
--- Thêm dữ liệu mẫu cho Xe
-INSERT INTO Xe VALUES 
-(101, N'Hữu Định', N'Ghế ngồi 29 chỗ', N'Hải Châu - Đà Nẵng', N'Hội An - Quảng Nam', '2025-05-01', '08:30', '07:00', 29, 29, 70000, 1);
+-- Thêm dữ liệu mẫu cho Xe (GioDen tính tự động)
+INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, NgayDen, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
+VALUES 
+(101, N'Hữu Định', N'Ghế ngồi 29 chỗ', N'Hải Châu - Đà Nẵng', N'Hội An - Quảng Nam', '2025-05-01', '2025-05-01', 
+ DATEADD(SECOND, 7200, '07:00'), '07:00', 29, 29, 70000, 1);
 GO
 
--- Thêm dữ liệu mẫu cho LichTrinhTuDong
+-- Thêm dữ liệu mẫu cho LichTrinhTuDong (ThoiGianDuKien = 1800 giây)
 INSERT INTO LichTrinhTuDong VALUES
 (101, 1, N'Hải Châu - Đà Nẵng', 0),
-(101, 2, N'Thanh Khê - Đà Nẵng', 600),
-(101, 3, N'Ngũ Hành Sơn - Đà Nẵng', 900),
-(101, 4, N'Điện Bàn - Quảng Nam', 1200),
-(101, 5, N'Hội An - Quảng Nam', 900);
+(101, 2, N'Thanh Khê - Đà Nẵng', 1800),
+(101, 3, N'Ngũ Hành Sơn - Đà Nẵng', 1800),
+(101, 4, N'Điện Bàn - Quảng Nam', 1800),
+(101, 5, N'Hội An - Quảng Nam', 1800);
 GO
 
 -- Thêm dữ liệu vào bảng Tuyen
@@ -165,7 +168,7 @@ END;
 GO
 
 -- Thêm dữ liệu vào bảng Xe
--- Mỗi tuyến có 1 chuyến đi và 1 chuyến về
+-- Mỗi tuyến có 1 chuyến đi và 1 chuyến về (GioDen tính tự động)
 DECLARE @MaXe INT = 102; -- Bắt đầu từ 102 vì xe 101 đã có
 DECLARE @MaTuyen INT = 2;
 DECLARE @House INT = 1;
@@ -177,7 +180,14 @@ BEGIN
     WHILE @Route <= 5 -- 5 cặp tuyến
     BEGIN
         -- Chuyến đi
-        INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
+        DECLARE @GioDi1 TIME = CASE @Route 
+                                  WHEN 1 THEN '07:00'
+                                  WHEN 2 THEN '07:30'
+                                  WHEN 3 THEN '08:30'
+                                  WHEN 4 THEN '09:30'
+                                  WHEN 5 THEN '10:30'
+                               END;
+        INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, NgayDen, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
         VALUES (@MaXe, 
                 CASE @House 
                     WHEN 1 THEN N'Hữu Định'
@@ -190,12 +200,20 @@ BEGIN
                 (SELECT DiemDi FROM Tuyen WHERE MaTuyen = @MaTuyen),
                 (SELECT DiemDen FROM Tuyen WHERE MaTuyen = @MaTuyen),
                 '2025-05-01',
-                CASE @Route WHEN 1 THEN '08:30' WHEN 2 THEN '09:00' WHEN 3 THEN '10:00' WHEN 4 THEN '11:30' WHEN 5 THEN '12:30' END,
-                CASE @Route WHEN 1 THEN '07:00' WHEN 2 THEN '07:30' WHEN 3 THEN '08:30' WHEN 4 THEN '09:30' WHEN 5 THEN '10:30' END,
+                '2025-05-01',
+                DATEADD(SECOND, 7200, @GioDi1), -- GioDen = GioDi + 2 giờ
+                @GioDi1,
                 29, 29, 70000, @MaTuyen);
 
         -- Chuyến về
-        INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
+        DECLARE @GioDi2 TIME = CASE @Route 
+                                  WHEN 1 THEN '14:00'
+                                  WHEN 2 THEN '14:30'
+                                  WHEN 3 THEN '15:30'
+                                  WHEN 4 THEN '16:30'
+                                  WHEN 5 THEN '17:30'
+                               END;
+        INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, NgayDen, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
         VALUES (@MaXe + 1, 
                 CASE @House 
                     WHEN 1 THEN N'Hữu Định'
@@ -208,8 +226,9 @@ BEGIN
                 (SELECT DiemDi FROM Tuyen WHERE MaTuyen = @MaTuyen + 1),
                 (SELECT DiemDen FROM Tuyen WHERE MaTuyen = @MaTuyen + 1),
                 '2025-05-01',
-                CASE @Route WHEN 1 THEN '15:30' WHEN 2 THEN '16:00' WHEN 3 THEN '17:00' WHEN 4 THEN '18:30' WHEN 5 THEN '19:30' END,
-                CASE @Route WHEN 1 THEN '14:00' WHEN 2 THEN '14:30' WHEN 3 THEN '15:30' WHEN 4 THEN '16:30' WHEN 5 THEN '17:30' END,
+                '2025-05-01',
+                DATEADD(SECOND, 7200, @GioDi2), -- GioDen = GioDi + 2 giờ
+                @GioDi2,
                 29, 29, 70000, @MaTuyen + 1);
 
         SET @MaXe = @MaXe + 2;
@@ -221,7 +240,7 @@ END;
 GO
 
 -- Thêm dữ liệu vào bảng LichTrinhTuDong
--- Mỗi chuyến xe có 4–5 điểm dừng
+-- Mỗi chuyến xe có 5 điểm dừng, ThoiGianDuKien = 1800 giây (30 phút) mỗi đoạn
 DECLARE @MaXe INT = 102;
 DECLARE @House INT = 1;
 DECLARE @Route INT;
@@ -249,8 +268,7 @@ BEGIN
                     WHEN 3 THEN N'Cẩm Lệ - Đà Nẵng'
                     WHEN 4 THEN N'Ngũ Hành Sơn - Đà Nẵng'
                     WHEN 5 THEN N'Liên Chiểu - Đà Nẵng'
-                END, 
-                CASE @Route WHEN 1 THEN 600 WHEN 2 THEN 500 WHEN 3 THEN 700 WHEN 4 THEN 800 WHEN 5 THEN 900 END),
+                END, 1800),
             (@MaXe, 3, 
                 CASE @Route 
                     WHEN 1 THEN N'Ngũ Hành Sơn - Đà Nẵng'
@@ -258,8 +276,7 @@ BEGIN
                     WHEN 3 THEN N'Điện Bàn - Quảng Nam'
                     WHEN 4 THEN N'Điện Bàn - Quảng Nam'
                     WHEN 5 THEN N'Điện Bàn - Quảng Nam'
-                END, 
-                CASE @Route WHEN 1 THEN 900 WHEN 2 THEN 1200 WHEN 3 THEN 1000 WHEN 4 THEN 1100 WHEN 5 THEN 1300 END),
+                END, 1800),
             (@MaXe, 4, 
                 CASE @Route 
                     WHEN 1 THEN N'Điện Bàn - Quảng Nam'
@@ -267,8 +284,7 @@ BEGIN
                     WHEN 3 THEN N'Duy Xuyên - Quảng Nam'
                     WHEN 4 THEN N'Duy Xuyên - Quảng Nam'
                     WHEN 5 THEN N'Tam Kỳ - Quảng Nam'
-                END, 
-                CASE @Route WHEN 1 THEN 1200 WHEN 2 THEN 900 WHEN 3 THEN 1000 WHEN 4 THEN 1500 WHEN 5 THEN 1800 END),
+                END, 1800),
             (@MaXe, 5, 
                 CASE @Route 
                     WHEN 1 THEN N'Hội An - Quảng Nam'
@@ -276,8 +292,7 @@ BEGIN
                     WHEN 3 THEN N'Duy Xuyên - Quảng Nam'
                     WHEN 4 THEN N'Tam Kỳ - Quảng Nam'
                     WHEN 5 THEN N'Núi Thành - Quảng Nam'
-                END, 
-                CASE @Route WHEN 1 THEN 900 WHEN 2 THEN 0 WHEN 3 THEN 0 WHEN 4 THEN 1200 WHEN 5 THEN 1500 END);
+                END, 1800);
 
         -- Lịch trình cho chuyến về
         INSERT INTO LichTrinhTuDong (MaXe, ThuTu, DiaDiem, ThoiGianDuKien)
@@ -297,8 +312,7 @@ BEGIN
                     WHEN 3 THEN N'Điện Bàn - Quảng Nam'
                     WHEN 4 THEN N'Duy Xuyên - Quảng Nam'
                     WHEN 5 THEN N'Tam Kỳ - Quảng Nam'
-                END, 
-                CASE @Route WHEN 1 THEN 900 WHEN 2 THEN 900 WHEN 3 THEN 1000 WHEN 4 THEN 1200 WHEN 5 THEN 1500 END),
+                END, 1800),
             (@MaXe + 1, 3, 
                 CASE @Route 
                     WHEN 1 THEN N'Ngũ Hành Sơn - Đà Nẵng'
@@ -306,8 +320,7 @@ BEGIN
                     WHEN 3 THEN N'Ngũ Hành Sơn - Đà Nẵng'
                     WHEN 4 THEN N'Ngũ Hành Sơn - Đà Nẵng'
                     WHEN 5 THEN N'Điện Bàn - Quảng Nam'
-                END, 
-                CASE @Route WHEN 1 THEN 1200 WHEN 2 THEN 1100 WHEN 3 THEN 1000 WHEN 4 THEN 1500 WHEN 5 THEN 1800 END),
+                END, 1800),
             (@MaXe + 1, 4, 
                 CASE @Route 
                     WHEN 1 THEN N'Thanh Khê - Đà Nẵng'
@@ -315,8 +328,7 @@ BEGIN
                     WHEN 3 THEN N'Cẩm Lệ - Đà Nẵng'
                     WHEN 4 THEN N'Liên Chiểu - Đà Nẵng'
                     WHEN 5 THEN N'Liên Chiểu - Đà Nẵng'
-                END, 
-                CASE @Route WHEN 1 THEN 600 WHEN 2 THEN 500 WHEN 3 THEN 700 WHEN 4 THEN 800 WHEN 5 THEN 900 END),
+                END, 1800),
             (@MaXe + 1, 5, 
                 CASE @Route 
                     WHEN 1 THEN N'Hải Châu - Đà Nẵng'
@@ -324,8 +336,7 @@ BEGIN
                     WHEN 3 THEN N'Ngũ Hành Sơn - Đà Nẵng'
                     WHEN 4 THEN N'Liên Chiểu - Đà Nẵng'
                     WHEN 5 THEN N'Sơn Trà - Đà Nẵng'
-                END, 
-                CASE @Route WHEN 1 THEN 600 WHEN 2 THEN 500 WHEN 3 THEN 700 WHEN 4 THEN 800 WHEN 5 THEN 900 END);
+                END, 1800);
 
         SET @MaXe = @MaXe + 2;
         SET @Route = @Route + 1;
