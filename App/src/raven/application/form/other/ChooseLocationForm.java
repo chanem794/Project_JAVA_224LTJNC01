@@ -48,11 +48,12 @@ public class ChooseLocationForm extends javax.swing.JPanel {
             }
         });
     }
-    private void init() {
+   private void init() {
         setLayout(new MigLayout("al center center"));
 
         // Khởi tạo tuyenService
         TuyenService tuyenService = new TuyenService();
+
         // Thiết lập icon và thuộc tính cho jLabel1
         ImageIcon originalIcon = new ImageIcon(getClass().getResource("/raven/icon/png/iconbusfinal.png"));
         Image scaledImage = originalIcon.getImage().getScaledInstance(115, 115, Image.SCALE_SMOOTH);
@@ -107,7 +108,7 @@ public class ChooseLocationForm extends javax.swing.JPanel {
 
         // Thiết lập placeholder và font size cho jTextField1
         jTextField1.setText("DD/MM/YYYY");
-        jTextField1.setFont(new java.awt.Font("SansSerif", 1, 14)); // Tăng kích thước chữ lên 16
+        jTextField1.setFont(new java.awt.Font("SansSerif", 1, 14));
         jTextField1.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -124,13 +125,13 @@ public class ChooseLocationForm extends javax.swing.JPanel {
             }
         });
 
-        // Liên kết DateChooser với jTextField1, tương tự InfoForm
+        // Liên kết DateChooser với jTextField1
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd/MM/YYYY"));
 
         // Thiết lập placeholder và font size cho jTextField2
         jTextField2.setText("DD/MM/YYYY");
-        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14)); // Tăng kích thước chữ lên 16
+        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
         jTextField2.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -151,6 +152,7 @@ public class ChooseLocationForm extends javax.swing.JPanel {
         com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
         dateChooser2.setTextField(jTextField2);
         dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
+
         List<String> diemDiList = new ArrayList<>();
         List<String> diemDenList = new ArrayList<>();
         // Load dữ liệu từ cơ sở dữ liệu vào jComboBox1 và jComboBox2
@@ -160,18 +162,27 @@ public class ChooseLocationForm extends javax.swing.JPanel {
 
             jComboBox1.setModel(new DefaultComboBoxModel<>(diemDiList.toArray(new String[0])));
             jComboBox2.setModel(new DefaultComboBoxModel<>(diemDenList.toArray(new String[0])));
+
+            // Đặt giá trị mặc định cho jComboBox1 và jComboBox2 (nếu danh sách không rỗng)
+            if (!diemDiList.isEmpty()) {
+                jComboBox1.setSelectedIndex(0); // Đặt địa điểm đi mặc định là mục đầu tiên
+            }
+            if (!diemDenList.isEmpty()) {
+                jComboBox2.setSelectedIndex(0); // Đặt địa điểm đến mặc định là mục đầu tiên
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             jComboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"Error loading data"}));
             jComboBox2.setModel(new DefaultComboBoxModel<>(new String[]{"Error loading data"}));
-}
-        // Gọi phương thức gợi ý cho từng JComboBox
+        }
+
+        // Gọi phương thức gợi ý với cải tiến
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
         // Cập nhật màu ban đầu
         updatePanelColors();
-    }
+}
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
         if (FlatLaf.isLafDark()) {
@@ -186,26 +197,110 @@ public class ChooseLocationForm extends javax.swing.JPanel {
 
         }
     }
-    private void setupAutoComplete(JComboBox<String> comboBox, List<String> items) {
-    comboBox.setEditable(true);
-    JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
+    private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
 
-    textField.addKeyListener(new KeyAdapter() {
-        @Override
-        public void keyReleased(KeyEvent e) {
-            String input = textField.getText();
-            comboBox.removeAllItems();
-            for (String item : items) {
-                if (item.toLowerCase().contains(input.toLowerCase())) {
-                    comboBox.addItem(item);
+    private void setupAutoComplete(JComboBox<String> comboBox, List<String> items) {
+        comboBox.setEditable(true);
+        JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
+
+        // Đặt giá trị ban đầu từ mục được chọn (địa điểm mặc định)
+        if (comboBox.getSelectedItem() != null) {
+            textField.setText(comboBox.getSelectedItem().toString());
+        }
+
+        textField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateSuggestions();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateSuggestions();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateSuggestions();
+            }
+
+            private void updateSuggestions() {
+                if (isUpdating) return; // Tránh vòng lặp cập nhật
+                isUpdating = true;
+
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        String input = textField.getText().trim();
+                        List<String> matchedItems = new ArrayList<>();
+                        List<String> unmatchedItems = new ArrayList<>();
+
+                        // Nếu không có đầu vào, hiển thị toàn bộ danh sách và ẩn popup
+                        if (input.isEmpty()) {
+                            comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
+                            comboBox.setPopupVisible(false);
+                            isUpdating = false;
+                            return;
+                        }
+
+                        // Phân loại các mục: phù hợp và không phù hợp
+                        for (String item : items) {
+                            if (normalizeString(item).toLowerCase().contains(normalizeString(input).toLowerCase())) {
+                                matchedItems.add(item);
+                            } else {
+                                unmatchedItems.add(item);
+                            }
+                        }
+
+                        // Kết hợp danh sách: các mục phù hợp lên trên, các mục không phù hợp xuống dưới
+                        List<String> allItems = new ArrayList<>();
+                        allItems.addAll(matchedItems);
+                        allItems.addAll(unmatchedItems);
+
+                        // Cập nhật model của JComboBox
+                        comboBox.setModel(new DefaultComboBoxModel<>(allItems.toArray(new String[0])));
+
+                        // Chỉ hiển thị popup nếu có nội dung nhập vào và danh sách có mục phù hợp
+                        if (!input.isEmpty() && !matchedItems.isEmpty()) {
+                            comboBox.setPopupVisible(true);
+                        } else {
+                            comboBox.setPopupVisible(false);
+                        }
+
+                        // Khôi phục văn bản người dùng nhập
+                        textField.setText(input);
+                    } finally {
+                        isUpdating = false; // Đặt lại cờ sau khi cập nhật xong
+                    }
+                });
+            }
+        });
+
+        // Đảm bảo khi chọn một mục, văn bản được cập nhật mà không gây vòng lặp
+        comboBox.addActionListener(e -> {
+            if (!isUpdating && comboBox.getSelectedItem() != null) {
+                isUpdating = true;
+                try {
+                    textField.setText(comboBox.getSelectedItem().toString());
+                    comboBox.setPopupVisible(false);
+                } finally {
+                    isUpdating = false;
                 }
             }
-            textField.setText(input);
-            comboBox.setPopupVisible(true);
-        }
-    });
-}
+        });
 
+        // Đảm bảo popup không hiển thị khi mất focus
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                comboBox.setPopupVisible(false);
+            }
+        });
+    }
+    private String normalizeString(String str) {
+        if (str == null) return "";
+        String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
