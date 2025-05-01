@@ -5,7 +5,6 @@ import java.util.Date;
 public class Xe {
     private int maXe;
     private String tenXe;
-    private String tenTaiXe;
     private String loaiXe;
     private String diemDi;
     private String diemDen;
@@ -20,12 +19,11 @@ public class Xe {
     public Xe() {
     }
 
-    public Xe(int maXe, String tenXe, String tenTaiXe, String loaiXe, String diemDi, String diemDen,
+    public Xe(int maXe, String tenXe, String loaiXe, String diemDi, String diemDen,
               Date ngayKhoiHanh, java.sql.Time gioDi, java.sql.Time gioDen, int soGhe, int gheConTrong,
               int giaVe, int maTuyen) {
         this.maXe = maXe;
         this.tenXe = tenXe;
-        this.tenTaiXe = tenTaiXe;
         this.loaiXe = loaiXe;
         this.diemDi = diemDi;
         this.diemDen = diemDen;
@@ -52,14 +50,6 @@ public class Xe {
 
     public void setTenXe(String tenXe) {
         this.tenXe = tenXe;
-    }
-
-    public String getTenTaiXe() {
-        return tenTaiXe;
-    }
-
-    public void setTenTaiXe(String tenTaiXe) {
-        this.tenTaiXe = tenTaiXe;
     }
 
     public String getLoaiXe() {
