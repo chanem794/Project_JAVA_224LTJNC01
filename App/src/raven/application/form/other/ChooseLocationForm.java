@@ -4,6 +4,7 @@
  */
 package raven.application.form.other;
 
+import bll.TuyenService;
 import static com.formdev.flatlaf.FlatClientProperties.PLACEHOLDER_TEXT;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
@@ -15,6 +16,9 @@ import java.awt.RenderingHints;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -42,6 +46,8 @@ public class ChooseLocationForm extends javax.swing.JPanel {
     private void init() {
         setLayout(new MigLayout("al center center"));
 
+        // Khởi tạo tuyenService
+        TuyenService tuyenService = new TuyenService();
         // Thiết lập icon và thuộc tính cho jLabel1
         ImageIcon originalIcon = new ImageIcon(getClass().getResource("/raven/icon/png/iconbusfinal.png"));
         Image scaledImage = originalIcon.getImage().getScaledInstance(115, 115, Image.SCALE_SMOOTH);
@@ -115,7 +121,7 @@ public class ChooseLocationForm extends javax.swing.JPanel {
 
         // Liên kết DateChooser với jTextField1, tương tự InfoForm
         dateChooser1.setTextField(jTextField1);
-        dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
+        dateChooser1.setDateFormat(new java.text.SimpleDateFormat("DD/MM/YYYY"));
 
         // Thiết lập placeholder và font size cho jTextField2
         jTextField2.setText("DD/MM/YYYY");
@@ -140,6 +146,25 @@ public class ChooseLocationForm extends javax.swing.JPanel {
         com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
         dateChooser2.setTextField(jTextField2);
         dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
+
+        // Load dữ liệu từ cơ sở dữ liệu vào jComboBox1 và jComboBox2
+        try {
+            // Lấy danh sách DiemDi và DiemDen từ TuyenService
+            List<String> diemDiList = tuyenService.getAllDiemDi();
+            List<String> diemDenList = tuyenService.getAllDiemDen();
+
+            // Cập nhật jComboBox1 với danh sách DiemDi
+            jComboBox1.setModel(new DefaultComboBoxModel<>(diemDiList.toArray(new String[0])));
+
+            // Cập nhật jComboBox2 với danh sách DiemDen
+            jComboBox2.setModel(new DefaultComboBoxModel<>(diemDenList.toArray(new String[0])));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Xử lý lỗi: hiển thị thông báo hoặc đặt giá trị mặc định
+            jComboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"Error loading data"}));
+            jComboBox2.setModel(new DefaultComboBoxModel<>(new String[]{"Error loading data"}));
+        }
 
         // Cập nhật màu ban đầu
         updatePanelColors();
@@ -245,30 +270,28 @@ public class ChooseLocationForm extends javax.swing.JPanel {
         });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel10.setText("Chọn ngày đến");
+        jLabel10.setText("Chọn ngày đến dự kiến:");
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(88, 88, 88))
-                    .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
