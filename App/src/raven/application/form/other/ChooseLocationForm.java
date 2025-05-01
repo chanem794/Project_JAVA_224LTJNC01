@@ -15,12 +15,17 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
@@ -121,7 +126,7 @@ public class ChooseLocationForm extends javax.swing.JPanel {
 
         // Liên kết DateChooser với jTextField1, tương tự InfoForm
         dateChooser1.setTextField(jTextField1);
-        dateChooser1.setDateFormat(new java.text.SimpleDateFormat("DD/MM/YYYY"));
+        dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd/MM/YYYY"));
 
         // Thiết lập placeholder và font size cho jTextField2
         jTextField2.setText("DD/MM/YYYY");
@@ -146,25 +151,23 @@ public class ChooseLocationForm extends javax.swing.JPanel {
         com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
         dateChooser2.setTextField(jTextField2);
         dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
-
+        List<String> diemDiList = new ArrayList<>();
+        List<String> diemDenList = new ArrayList<>();
         // Load dữ liệu từ cơ sở dữ liệu vào jComboBox1 và jComboBox2
         try {
-            // Lấy danh sách DiemDi và DiemDen từ TuyenService
-            List<String> diemDiList = tuyenService.getAllDiemDi();
-            List<String> diemDenList = tuyenService.getAllDiemDen();
+            diemDiList = tuyenService.getAllDiemDi();
+            diemDenList = tuyenService.getAllDiemDen();
 
-            // Cập nhật jComboBox1 với danh sách DiemDi
             jComboBox1.setModel(new DefaultComboBoxModel<>(diemDiList.toArray(new String[0])));
-
-            // Cập nhật jComboBox2 với danh sách DiemDen
             jComboBox2.setModel(new DefaultComboBoxModel<>(diemDenList.toArray(new String[0])));
-
         } catch (SQLException e) {
             e.printStackTrace();
-            // Xử lý lỗi: hiển thị thông báo hoặc đặt giá trị mặc định
             jComboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"Error loading data"}));
             jComboBox2.setModel(new DefaultComboBoxModel<>(new String[]{"Error loading data"}));
-        }
+}
+        // Gọi phương thức gợi ý cho từng JComboBox
+        setupAutoComplete(jComboBox1, diemDiList);
+        setupAutoComplete(jComboBox2, diemDenList);
 
         // Cập nhật màu ban đầu
         updatePanelColors();
@@ -183,6 +186,26 @@ public class ChooseLocationForm extends javax.swing.JPanel {
 
         }
     }
+    private void setupAutoComplete(JComboBox<String> comboBox, List<String> items) {
+    comboBox.setEditable(true);
+    JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
+
+    textField.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            String input = textField.getText();
+            comboBox.removeAllItems();
+            for (String item : items) {
+                if (item.toLowerCase().contains(input.toLowerCase())) {
+                    comboBox.addItem(item);
+                }
+            }
+            textField.setText(input);
+            comboBox.setPopupVisible(true);
+        }
+    });
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
