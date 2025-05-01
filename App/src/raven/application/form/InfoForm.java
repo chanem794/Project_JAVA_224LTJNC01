@@ -44,8 +44,8 @@ public class InfoForm extends javax.swing.JPanel {
                 + "focusWidth:0");
         txtHovaten.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Họ và tên");
         txtNgaySinh.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Ngày sinh (DD/MM/YYYY)");
-        chDate.setTextField(txtNgaySinh); // Liên kết DateChooser với txtNgaySinh
-        chDate.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy")); // Định dạng ngày
+        chDate.setTextField(txtNgaySinh); 
+        chDate.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
     }
     /**
      * This method is called from within the constructor to initialize the form.

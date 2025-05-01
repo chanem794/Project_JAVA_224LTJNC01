@@ -15,6 +15,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import raven.application.form.other.StationForm;
 
+
 public class Application extends javax.swing.JFrame { 
     private static Application app;
     private final MainForm mainForm;
@@ -42,7 +43,6 @@ public class Application extends javax.swing.JFrame {
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
-
     public static void showForm(Component component) {
         component.applyComponentOrientation(app.getComponentOrientation());
         app.mainForm.showForm(component);
@@ -152,11 +152,13 @@ public class Application extends javax.swing.JFrame {
         FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(() -> {
             app = new Application();
-//            showForm(new StationForm());
-  //          app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             app.setVisible(true);
+
+            // 👉 Hiển thị ChooseLocationForm lúc khởi động
+            //showForm(new raven.application.form.other.ChooseLocationForm());
         });
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
