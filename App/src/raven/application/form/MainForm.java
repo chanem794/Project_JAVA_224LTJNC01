@@ -17,9 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
 import static raven.application.Application.showForm;
-import raven.application.form.other.FormAccount;
-import raven.application.form.other.FormInbox;
-import raven.application.form.other.FormRead;
+import raven.application.form.other.*;
 import raven.menu.Menu;
 import raven.menu.MenuAction;
 
@@ -78,7 +76,7 @@ public class MainForm extends JLayeredPane {
                     Application.showForm(new FormAccount());
                     break;
                 case 1:
-                    Application.showForm(new FormInbox());
+                    Application.showForm(new FormGioHang());
                     break;
                 case 2:
                     Application.showForm(new FormInbox());

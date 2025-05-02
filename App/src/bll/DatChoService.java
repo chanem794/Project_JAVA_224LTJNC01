@@ -1,15 +1,18 @@
 package bll;
 
 import dal.DatChoDAO;
+import dal.XeDAO;
 import model.DatCho;
 import java.sql.SQLException;
 import java.util.List;
 
 public class DatChoService {
     private DatChoDAO datChoDAO;
+    private XeDAO xeDAO;
 
     public DatChoService() {
         this.datChoDAO = new DatChoDAO();
+        this.xeDAO = new XeDAO();
     }
 
     public boolean createDatCho(DatCho datCho) throws SQLException {
@@ -34,5 +37,14 @@ public class DatChoService {
 
     public List<DatCho> getDatChoByMaXe(int maXe) throws SQLException {
         return datChoDAO.getDatChoByMaXe(maXe);
+    }
+
+    public List<DatCho> getDatChoByMaNguoiDung(String maNguoiDung) throws SQLException {
+        return datChoDAO.getDatChoByMaNguoiDung(maNguoiDung);
+    }
+
+    public DatCho getDatChoWithDetails(int maDatCho) throws SQLException {
+        DatCho datCho = datChoDAO.getDatChoByMaDatCho(maDatCho);
+        return datCho; // Không cần gán tenXe nữa
     }
 }

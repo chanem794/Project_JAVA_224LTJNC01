@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +30,7 @@ public class DatChoDAO {
             stmt.setTime(4, datCho.getGioDat());
             stmt.setString(5, datCho.getDiemDi());
             stmt.setString(6, datCho.getDiemDen());
-            if (datCho.getNgayGioKhoiHanh() != null) {
-                stmt.setTimestamp(7, new Timestamp(datCho.getNgayGioKhoiHanh().getTime()));
-            } else {
-                stmt.setNull(7, java.sql.Types.TIMESTAMP);
-            }
+            stmt.setTimestamp(7, new java.sql.Timestamp(datCho.getNgayGioKhoiHanh().getTime()));
             stmt.setInt(8, datCho.getSoGheDat());
             stmt.setInt(9, datCho.getGiaVe());
             stmt.setString(10, datCho.getMaNguoiDung());
@@ -111,11 +106,7 @@ public class DatChoDAO {
             stmt.setTime(3, datCho.getGioDat());
             stmt.setString(4, datCho.getDiemDi());
             stmt.setString(5, datCho.getDiemDen());
-            if (datCho.getNgayGioKhoiHanh() != null) {
-                stmt.setTimestamp(6, new Timestamp(datCho.getNgayGioKhoiHanh().getTime()));
-            } else {
-                stmt.setNull(6, java.sql.Types.TIMESTAMP);
-            }
+            stmt.setTimestamp(6, new java.sql.Timestamp(datCho.getNgayGioKhoiHanh().getTime()));
             stmt.setInt(7, datCho.getSoGheDat());
             stmt.setInt(8, datCho.getGiaVe());
             stmt.setString(9, datCho.getMaNguoiDung());
@@ -144,6 +135,34 @@ public class DatChoDAO {
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, maXe);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    DatCho datCho = new DatCho();
+                    datCho.setMaDatCho(rs.getInt("MaDatCho"));
+                    datCho.setTrangThai(rs.getString("TrangThai"));
+                    datCho.setNgayDat(rs.getDate("NgayDat"));
+                    datCho.setGioDat(rs.getTime("GioDat"));
+                    datCho.setDiemDi(rs.getString("DiemDi"));
+                    datCho.setDiemDen(rs.getString("DiemDen"));
+                    datCho.setNgayGioKhoiHanh(rs.getTimestamp("NgayGioKhoiHanh"));
+                    datCho.setSoGheDat(rs.getInt("SoGheDat"));
+                    datCho.setGiaVe(rs.getInt("GiaVe"));
+                    datCho.setMaNguoiDung(rs.getString("MaNguoiDung"));
+                    datCho.setMaXe(rs.getInt("MaXe"));
+                    datChoList.add(datCho);
+                }
+            }
+        }
+        return datChoList;
+    }
+
+    public List<DatCho> getDatChoByMaNguoiDung(String maNguoiDung) throws SQLException {
+        List<DatCho> datChoList = new ArrayList<>();
+        String sql = "SELECT * FROM DatCho WHERE MaNguoiDung = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, maNguoiDung);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

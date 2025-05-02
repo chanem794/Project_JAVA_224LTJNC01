@@ -17,7 +17,7 @@ public class XeDAO {
     }
 
     public boolean createXe(Xe xe) throws SQLException {
-        String sql = "INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, NgayDen, GioDi, GioDen, SoGhe, GheConTrong, GiaVe, MaTuyen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, xe.getMaXe());
@@ -30,12 +30,17 @@ public class XeDAO {
             } else {
                 stmt.setNull(6, java.sql.Types.DATE);
             }
-            stmt.setTime(7, xe.getGioDen());
+            if (xe.getNgayDen() != null) {
+                stmt.setDate(7, new java.sql.Date(xe.getNgayDen().getTime()));
+            } else {
+                stmt.setNull(7, java.sql.Types.DATE);
+            }
             stmt.setTime(8, xe.getGioDi());
-            stmt.setInt(9, xe.getSoGhe());
-            stmt.setInt(10, xe.getGheConTrong());
-            stmt.setInt(11, xe.getGiaVe());
-            stmt.setInt(12, xe.getMaTuyen());
+            stmt.setTime(9, xe.getGioDen());
+            stmt.setInt(10, xe.getSoGhe());
+            stmt.setInt(11, xe.getGheConTrong());
+            stmt.setInt(12, xe.getGiaVe());
+            stmt.setInt(13, xe.getMaTuyen());
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -56,8 +61,9 @@ public class XeDAO {
                 xe.setDiemDi(rs.getString("DiemDi"));
                 xe.setDiemDen(rs.getString("DiemDen"));
                 xe.setNgayKhoiHanh(rs.getDate("NgayKhoiHanh"));
-                xe.setGioDen(rs.getTime("GioDen"));
+                xe.setNgayDen(rs.getDate("NgayDen"));
                 xe.setGioDi(rs.getTime("GioDi"));
+                xe.setGioDen(rs.getTime("GioDen"));
                 xe.setSoGhe(rs.getInt("SoGhe"));
                 xe.setGheConTrong(rs.getInt("GheConTrong"));
                 xe.setGiaVe(rs.getInt("GiaVe"));
@@ -83,8 +89,9 @@ public class XeDAO {
                     xe.setDiemDi(rs.getString("DiemDi"));
                     xe.setDiemDen(rs.getString("DiemDen"));
                     xe.setNgayKhoiHanh(rs.getDate("NgayKhoiHanh"));
-                    xe.setGioDen(rs.getTime("GioDen"));
+                    xe.setNgayDen(rs.getDate("NgayDen"));
                     xe.setGioDi(rs.getTime("GioDi"));
+                    xe.setGioDen(rs.getTime("GioDen"));
                     xe.setSoGhe(rs.getInt("SoGhe"));
                     xe.setGheConTrong(rs.getInt("GheConTrong"));
                     xe.setGiaVe(rs.getInt("GiaVe"));
@@ -97,7 +104,7 @@ public class XeDAO {
     }
 
     public boolean updateXe(Xe xe) throws SQLException {
-        String sql = "UPDATE Xe SET TenXe = ?, LoaiXe = ?, DiemDi = ?, DiemDen = ?, NgayKhoiHanh = ?, GioDen = ?, GioDi = ?, SoGhe = ?, GheConTrong = ?, GiaVe = ?, MaTuyen = ? WHERE MaXe = ?";
+        String sql = "UPDATE Xe SET TenXe = ?, LoaiXe = ?, DiemDi = ?, DiemDen = ?, NgayKhoiHanh = ?, NgayDen = ?, GioDi = ?, GioDen = ?, SoGhe = ?, GheConTrong = ?, GiaVe = ?, MaTuyen = ? WHERE MaXe = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, xe.getTenXe());
@@ -109,13 +116,18 @@ public class XeDAO {
             } else {
                 stmt.setNull(5, java.sql.Types.DATE);
             }
-            stmt.setTime(6, xe.getGioDen());
+            if (xe.getNgayDen() != null) {
+                stmt.setDate(6, new java.sql.Date(xe.getNgayDen().getTime()));
+            } else {
+                stmt.setNull(6, java.sql.Types.DATE);
+            }
             stmt.setTime(7, xe.getGioDi());
-            stmt.setInt(8, xe.getSoGhe());
-            stmt.setInt(9, xe.getGheConTrong());
-            stmt.setInt(10, xe.getGiaVe());
-            stmt.setInt(11, xe.getMaTuyen());
-            stmt.setInt(12, xe.getMaXe());
+            stmt.setTime(8, xe.getGioDen());
+            stmt.setInt(9, xe.getSoGhe());
+            stmt.setInt(10, xe.getGheConTrong());
+            stmt.setInt(11, xe.getGiaVe());
+            stmt.setInt(12, xe.getMaTuyen());
+            stmt.setInt(13, xe.getMaXe());
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -149,8 +161,9 @@ public class XeDAO {
                     xe.setDiemDi(rs.getString("DiemDi"));
                     xe.setDiemDen(rs.getString("DiemDen"));
                     xe.setNgayKhoiHanh(rs.getDate("NgayKhoiHanh"));
-                    xe.setGioDen(rs.getTime("GioDen"));
+                    xe.setNgayDen(rs.getDate("NgayDen"));
                     xe.setGioDi(rs.getTime("GioDi"));
+                    xe.setGioDen(rs.getTime("GioDen"));
                     xe.setSoGhe(rs.getInt("SoGhe"));
                     xe.setGheConTrong(rs.getInt("GheConTrong"));
                     xe.setGiaVe(rs.getInt("GiaVe"));

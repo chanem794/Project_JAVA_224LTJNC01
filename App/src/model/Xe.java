@@ -9,6 +9,7 @@ public class Xe {
     private String diemDi;
     private String diemDen;
     private Date ngayKhoiHanh;
+    private Date ngayDen;
     private java.sql.Time gioDi;
     private java.sql.Time gioDen;
     private int soGhe;
@@ -20,14 +21,15 @@ public class Xe {
     }
 
     public Xe(int maXe, String tenXe, String loaiXe, String diemDi, String diemDen,
-              Date ngayKhoiHanh, java.sql.Time gioDi, java.sql.Time gioDen, int soGhe, int gheConTrong,
-              int giaVe, int maTuyen) {
+              Date ngayKhoiHanh, Date ngayDen, java.sql.Time gioDi, java.sql.Time gioDen, 
+              int soGhe, int gheConTrong, int giaVe, int maTuyen) {
         this.maXe = maXe;
         this.tenXe = tenXe;
         this.loaiXe = loaiXe;
         this.diemDi = diemDi;
         this.diemDen = diemDen;
         this.ngayKhoiHanh = ngayKhoiHanh;
+        this.ngayDen = ngayDen;
         this.gioDi = gioDi;
         this.gioDen = gioDen;
         this.soGhe = soGhe;
@@ -82,6 +84,14 @@ public class Xe {
 
     public void setNgayKhoiHanh(Date ngayKhoiHanh) {
         this.ngayKhoiHanh = ngayKhoiHanh;
+    }
+
+    public Date getNgayDen() {
+        return ngayDen;
+    }
+
+    public void setNgayDen(Date ngayDen) {
+        this.ngayDen = ngayDen;
     }
 
     public java.sql.Time getGioDi() {
