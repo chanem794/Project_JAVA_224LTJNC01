@@ -19,6 +19,7 @@ import raven.application.form.other.StationForm;
 public class Application extends javax.swing.JFrame { 
     private static Application app;
     private final MainForm mainForm;
+    private final MainFormAdmin mainFormAdmin;
     private final LoginForm loginForm;
     private final RegisterForm registerForm;
     private final OTPForm otpForm;
@@ -33,6 +34,7 @@ public class Application extends javax.swing.JFrame {
         setSize(new Dimension(1366, 768));
         setLocationRelativeTo(null);
         mainForm = new MainForm();
+        mainFormAdmin = new MainFormAdmin();
         loginForm = new LoginForm();
         registerForm = new RegisterForm();
         otpForm = new OTPForm();
@@ -59,7 +61,19 @@ public class Application extends javax.swing.JFrame {
         app.previousForm = null;
         app.currentEmail = null;
     }
-
+    
+    public static void loginAdmin() {
+        FlatAnimatedLafChange.showSnapshot();
+        app.setContentPane(app.mainFormAdmin);
+        app.mainFormAdmin.applyComponentOrientation(app.getComponentOrientation());
+        setSelectedMenu(0, 0);
+        app.mainFormAdmin.hideMenu();
+        SwingUtilities.updateComponentTreeUI(app.mainFormAdmin);
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        app.previousForm = null;
+        app.currentEmail = null;
+    }
+    
     public static void register() {
         FlatAnimatedLafChange.showSnapshot();
         app.setContentPane(app.registerForm);
@@ -154,8 +168,7 @@ public class Application extends javax.swing.JFrame {
             app = new Application();
             app.setVisible(true);
 
-            // 👉 Hiển thị ChooseLocationForm lúc khởi động
-            //showForm(new raven.application.form.other.ChooseLocationForm());
+            
         });
     }
 

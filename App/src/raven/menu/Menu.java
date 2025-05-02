@@ -73,7 +73,16 @@ public class Menu extends JPanel {
     public Menu() {
         init();
     }
-
+    private void initHeaderClickListener() {
+        header.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)); // Change cursor to hand on hover
+        header.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // Show StationForm when the logo is clicked
+                raven.application.Application.showForm(new raven.application.form.other.ChooseLocationForm());
+            }
+        });
+    }
     private void init() {
         setLayout(new MenuLayout());
         putClientProperty(FlatClientProperties.STYLE, ""
@@ -85,7 +94,7 @@ public class Menu extends JPanel {
         header.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$Menu.header.font;"
                 + "foreground:$Menu.foreground");
-
+        initHeaderClickListener();
         //  Menu
         scroll = new JScrollPane();
         panelMenu = new JPanel(new MenuItemLayout(this));

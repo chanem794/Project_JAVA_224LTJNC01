@@ -16,6 +16,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import raven.application.Application;
+import static raven.application.Application.showForm;
 import raven.application.form.other.FormAccount;
 import raven.application.form.other.FormInbox;
 import raven.application.form.other.FormRead;
@@ -30,6 +31,8 @@ public class MainForm extends JLayeredPane {
 
     public MainForm() {
         init();
+        // 👉 Hiển thị ChooseLocationForm lúc khởi động
+        showForm(new raven.application.form.other.ChooseLocationForm());
     }
 
     private void init() {
