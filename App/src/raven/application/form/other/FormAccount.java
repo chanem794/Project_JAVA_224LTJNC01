@@ -1,8 +1,12 @@
 package raven.application.form.other;
 
+import bll.NguoiDungService;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.raven.datechooser.DateChooser;
+import java.sql.SQLException;
+import model.NguoiDung;
 import net.miginfocom.swing.MigLayout;
+import raven.application.Application;
 import raven.toast.Notifications;
 
 /**
@@ -11,10 +15,13 @@ import raven.toast.Notifications;
  */
 public class FormAccount extends javax.swing.JPanel {
     private DateChooser chDate = new DateChooser();
+    private final NguoiDungService nguoiDungService;
+
     public FormAccount() {
         initComponents();
-        lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
-                + "font:$h1.font");
+        init();
+        nguoiDungService = Application.getNguoiDungService();
+        loadUserData();
     }
     private void init() {
         setLayout(new MigLayout("al center center"));
@@ -34,6 +41,47 @@ public class FormAccount extends javax.swing.JPanel {
         txtEmail.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
         chDate.setTextField(txtNgaySinh); // Liên kết DateChooser với txtNgaySinh
         chDate.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy")); // Định dạng ngày
+    }
+    private void loadUserData() {
+        String email = Application.getCurrentEmail();
+        if (email != null) {
+            try {
+                NguoiDung nguoiDung = nguoiDungService.getUserByEmail(email);
+                if (nguoiDung != null) {
+                    txtEmail.setText(nguoiDung.getEmail());
+                    txtHovaten.setText(nguoiDung.getTenNguoiDung() != null ? nguoiDung.getTenNguoiDung() : "");
+                    if (nguoiDung.getNgaySinh() != null) {
+                        chDate.setSelectedDate(nguoiDung.getNgaySinh());
+                    }
+                }
+            } catch (SQLException e) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi khi nạp thông tin người dùng");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void saveUserData() {
+        String email = txtEmail.getText();
+        String tenNguoiDung = txtHovaten.getText().trim();
+        java.util.Date ngaySinh = chDate.getSelectedDate();
+
+        try {
+            if (tenNguoiDung.isEmpty()) {
+                Notifications.getInstance().show(Notifications.Type.WARNING, "Họ và tên không được để trống");
+                return;
+            }
+
+            boolean success = nguoiDungService.updateUserInfo(email, tenNguoiDung, ngaySinh);
+            if (success) {
+                Notifications.getInstance().show(Notifications.Type.SUCCESS, "Cập nhật thông tin thành công");
+            } else {
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Cập nhật thông tin thất bại");
+            }
+        } catch (SQLException e) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi khi cập nhật thông tin");
+            e.printStackTrace();
+        }
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -92,10 +140,10 @@ public class FormAccount extends javax.swing.JPanel {
                 .addContainerGap(81, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void cmdLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLuuActionPerformed
             //Notifications.getInstance().show(Notifications.Type.INFO, Notifications.Location.TOP_CENTER, "Hello sample message");
-        
+        saveUserData();
     }//GEN-LAST:event_cmdLuuActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
