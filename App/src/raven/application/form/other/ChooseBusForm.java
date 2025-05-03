@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package raven.application.form.other;
 
-import bll.TuyenService;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
 import java.awt.Image;
@@ -12,11 +7,17 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
 
@@ -32,8 +33,12 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private String departureDate; // Giá trị của jTextField1 (Ngày đi)
     private String arrivalDate; // Giá trị của jTextField2 (Ngày đến)
 
+    private List<String> diemDiList = new ArrayList<>(); // Danh sách điểm đi
+    private List<String> diemDenList = new ArrayList<>(); // Danh sách điểm đến
+    private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
+
     /**
-     * 
+     * Constructor
      */
     public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate) {
         this.departureLocation = departureLocation;
@@ -49,31 +54,27 @@ public class ChooseBusForm extends javax.swing.JPanel {
         });
     }
 
-private void init() {
-    setLayout(new MigLayout("al center center"));
-    TuyenService tuyenService = new TuyenService();
-    // Khởi tạo tuyenService và xử lý lỗi nếu có
-    try {
-        
-    } catch (Exception e) {
-        System.err.println("Lỗi khi khởi tạo TuyenService: " + e.getMessage());
-        e.printStackTrace();
-        // Đặt giá trị mặc định cho jComboBox1 và jComboBox2 nếu không thể khởi tạo tuyenService
-        jComboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"Error: Cannot initialize TuyenService"}));
-        jComboBox2.setModel(new DefaultComboBoxModel<>(new String[]{"Error: Cannot initialize TuyenService"}));
-        return; // Thoát khỏi init() để tránh lỗi tiếp theo
-    }
+    private void init() {
+        setLayout(new MigLayout("al center center"));
 
-    // Load dữ liệu từ cơ sở dữ liệu vào jComboBox1 và jComboBox2
-    try {
-        // Lấy danh sách DiemDi và DiemDen từ TuyenService
-        List<String> diemDiList = tuyenService.getAllDiemDi();
-        List<String> diemDenList = tuyenService.getAllDiemDen();
+        // Đọc dữ liệu từ file Tỉnh, Huyện.txt
+        try (BufferedReader reader = new BufferedReader(new FileReader("Tỉnh, Huyện.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) { // Bỏ qua các dòng trống
+                    diemDiList.add(line);  // Thêm vào danh sách điểm đi
+                    diemDenList.add(line); // Thêm vào danh sách điểm đến (cùng danh sách)
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            diemDiList.add("Error loading data from file");
+            diemDenList.add("Error loading data from file");
+        }
 
-        // Cập nhật jComboBox1 với danh sách DiemDi
+        // Cài đặt model cho jComboBox1 và jComboBox2 từ file
         jComboBox1.setModel(new DefaultComboBoxModel<>(diemDiList.toArray(new String[0])));
-
-        // Cập nhật jComboBox2 với danh sách DiemDen
         jComboBox2.setModel(new DefaultComboBoxModel<>(diemDenList.toArray(new String[0])));
 
         // Đặt giá trị đã chọn từ ChooseLocationForm
@@ -84,139 +85,131 @@ private void init() {
             jComboBox2.setSelectedItem(destinationLocation);
         }
 
-    }catch (Exception e) {
-        // Xử lý các lỗi không mong muốn khác
-        String errorMessage = "Lỗi không xác định: " + e.getMessage();
-        System.err.println(errorMessage);
-        e.printStackTrace();
-        jComboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"Unexpected error"}));
-        jComboBox2.setModel(new DefaultComboBoxModel<>(new String[]{"Unexpected error"}));
+        // Icon jLabel5
+        ImageIcon iconLabel5 = new ImageIcon(getClass().getResource("/raven/icon/png/circle.png"));
+        Image scaledIcon5 = iconLabel5.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        jLabel5.setIcon(new ImageIcon(scaledIcon5));
+        jLabel5.setIconTextGap(5);
+        jLabel5.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel5.setVerticalTextPosition(SwingConstants.CENTER);
+
+        // Icon jLabel6
+        ImageIcon iconLabel6 = new ImageIcon(getClass().getResource("/raven/icon/png/location.png"));
+        Image scaledIcon6 = iconLabel6.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        jLabel6.setIcon(new ImageIcon(scaledIcon6));
+        jLabel6.setIconTextGap(5);
+        jLabel6.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel6.setVerticalTextPosition(SwingConstants.CENTER);
+
+        // Icon jLabel7
+        ImageIcon iconLabel7 = new ImageIcon(getClass().getResource("/raven/icon/png/calendar.png"));
+        Image scaledIcon7 = iconLabel7.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        jLabel7.setIcon(new ImageIcon(scaledIcon7));
+        jLabel7.setIconTextGap(5);
+        jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
+
+        // DateChooser cho jTextField1
+        com.raven.datechooser.DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
+        dateChooser1.setTextField(jTextField1);
+        dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy")); // Sửa định dạng để khớp với dữ liệu truyền vào
+
+        // DateChooser cho jTextField2
+        com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
+        dateChooser2.setTextField(jTextField2);
+        dateChooser2.setDateFormat(new SimpleDateFormat("dd-MM-yyyy")); // Sửa định dạng để khớp với dữ liệu truyền vào
+
+        // jTextField1
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD/MM/YYYY")) {
+            jTextField1.setText("DD/MM/YYYY");
+        } else {
+            jTextField1.setText(departureDate);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sửa định dạng để khớp với chuỗi
+                java.util.Date date = sdf.parse(departureDate);
+                dateChooser1.setSelectedDate(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        jTextField1.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField1.getText().equals("DD/MM/YYYY")) {
+                    jTextField1.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField1.getText().isEmpty()) {
+                    jTextField1.setText("DD/MM/YYYY");
+                }
+            }
+        });
+
+        jTextField1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                dateChooser1.showPopup();
+            }
+        });
+
+        jTextField1.addPropertyChangeListener("text", evt -> {
+            dateChooser1.hidePopup();
+        });
+
+        // jTextField2
+        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
+        if (arrivalDate == null || arrivalDate.isEmpty() || arrivalDate.equals("DD/MM/YYYY")) {
+            jTextField2.setText("DD/MM/YYYY");
+        } else {
+            jTextField2.setText(arrivalDate);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sửa định dạng để khớp với chuỗi
+                java.util.Date date = sdf.parse(arrivalDate);
+                dateChooser2.setSelectedDate(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        jTextField2.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField2.getText().equals("DD/MM/YYYY")) {
+                    jTextField2.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField2.getText().isEmpty()) {
+                    jTextField2.setText("DD/MM/YYYY");
+                }
+            }
+        });
+
+        jTextField2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                dateChooser2.showPopup();
+            }
+        });
+
+        jTextField2.addPropertyChangeListener("text", evt -> {
+            dateChooser2.hidePopup();
+        });
+
+        // Thiết lập gợi ý cho jComboBox1 và jComboBox2
+        setupAutoComplete(jComboBox1, diemDiList);
+        setupAutoComplete(jComboBox2, diemDenList);
+
+        // Cập nhật màu nền
+        updatePanelColors();
     }
-        // Hiển thị thông báo lỗi chi tiết để dễ dàng debug
-        // Đặt giá trị mặc định cho jComboBox1 và jComboBox2
-
-    // Icon jLabel5
-    ImageIcon iconLabel5 = new ImageIcon(getClass().getResource("/raven/icon/png/circle.png"));
-    Image scaledIcon5 = iconLabel5.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-    jLabel5.setIcon(new ImageIcon(scaledIcon5));
-    jLabel5.setIconTextGap(5);
-    jLabel5.setHorizontalTextPosition(SwingConstants.RIGHT);
-    jLabel5.setVerticalTextPosition(SwingConstants.CENTER);
-
-    // Icon jLabel6
-    ImageIcon iconLabel6 = new ImageIcon(getClass().getResource("/raven/icon/png/location.png"));
-    Image scaledIcon6 = iconLabel6.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-    jLabel6.setIcon(new ImageIcon(scaledIcon6));
-    jLabel6.setIconTextGap(5);
-    jLabel6.setHorizontalTextPosition(SwingConstants.RIGHT);
-    jLabel6.setVerticalTextPosition(SwingConstants.CENTER);
-
-    // Icon jLabel7
-    ImageIcon iconLabel7 = new ImageIcon(getClass().getResource("/raven/icon/png/calendar.png"));
-    Image scaledIcon7 = iconLabel7.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-    jLabel7.setIcon(new ImageIcon(scaledIcon7));
-    jLabel7.setIconTextGap(5);
-    jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
-    jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
-
-    // DateChooser cho jTextField1
-    com.raven.datechooser.DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
-    dateChooser1.setTextField(jTextField1);
-    dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
-
-    // DateChooser cho jTextField2
-    com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
-    dateChooser2.setTextField(jTextField2);
-    dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy"));
-
-    // jTextField1
-    jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
-    if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD/MM/YYYY")) {
-        jTextField1.setText("DD/MM/YYYY");
-    } else {
-        jTextField1.setText(departureDate);
-        try {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-            java.util.Date date = sdf.parse(departureDate);
-            dateChooser1.setSelectedDate(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    jTextField1.addFocusListener(new FocusAdapter() {
-        @Override
-        public void focusGained(FocusEvent e) {
-            if (jTextField1.getText().equals("DD/MM/YYYY")) {
-                jTextField1.setText("");
-            }
-        }
-
-        @Override
-        public void focusLost(FocusEvent e) {
-            if (jTextField1.getText().isEmpty()) {
-                jTextField1.setText("DD/MM/YYYY");
-            }
-        }
-    });
-
-    jTextField1.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            dateChooser1.showPopup();
-        }
-    });
-
-    jTextField1.addPropertyChangeListener("text", evt -> {
-        dateChooser1.hidePopup();
-    });
-
-    // jTextField2
-    jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
-    if (arrivalDate == null || arrivalDate.isEmpty() || arrivalDate.equals("DD/MM/YYYY")) {
-        jTextField2.setText("DD/MM/YYYY");
-    } else {
-        jTextField2.setText(arrivalDate);
-        try {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-            java.util.Date date = sdf.parse(arrivalDate);
-            dateChooser2.setSelectedDate(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    jTextField2.addFocusListener(new FocusAdapter() {
-        @Override
-        public void focusGained(FocusEvent e) {
-            if (jTextField2.getText().equals("DD/MM/YYYY")) {
-                jTextField2.setText("");
-            }
-        }
-
-        @Override
-        public void focusLost(FocusEvent e) {
-            if (jTextField2.getText().isEmpty()) {
-                jTextField2.setText("DD/MM/YYYY");
-            }
-        }
-    });
-
-    jTextField2.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            dateChooser2.showPopup();
-        }
-    });
-
-    jTextField2.addPropertyChangeListener("text", evt -> {
-        dateChooser2.hidePopup();
-    });
-
-    // Cập nhật màu nền
-    updatePanelColors();
-}
-
 
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
@@ -229,10 +222,113 @@ private void init() {
         } else {
             roundedPanel2.setBackground(new Color(230, 230, 230));
             roundedPanel1.setBackground(new Color(255, 255, 255));
-            jButton1.setBackground(new Color(255,149,0));
+            jButton1.setBackground(new Color(255, 149, 0));
             roundedPanel4.setBackground(new Color(230, 230, 230));
-
         }
+    }
+
+    private void setupAutoComplete(javax.swing.JComboBox<String> comboBox, List<String> items) {
+        comboBox.setEditable(true);
+        JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
+
+        // Đặt giá trị ban đầu từ mục được chọn (địa điểm mặc định)
+        if (comboBox.getSelectedItem() != null) {
+            textField.setText(comboBox.getSelectedItem().toString());
+        }
+
+        textField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateSuggestions();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateSuggestions();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateSuggestions();
+            }
+
+            private void updateSuggestions() {
+                if (isUpdating) return; // Tránh vòng lặp cập nhật
+                isUpdating = true;
+
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        String input = textField.getText();
+                        List<String> matchedItems = new ArrayList<>();
+                        List<String> unmatchedItems = new ArrayList<>();
+
+                        // Nếu không có đầu vào, hiển thị toàn bộ danh sách và ẩn popup, không khôi phục văn bản
+                        if (input.isEmpty()) {
+                            comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
+                            comboBox.setPopupVisible(false);
+                            comboBox.setSelectedIndex(-1); // Bỏ chọn mục hiện tại
+                            isUpdating = false;
+                            return;
+                        }
+
+                        // Phân loại các mục: phù hợp và không phù hợp
+                        for (String item : items) {
+                            if (normalizeString(item).toLowerCase().contains(normalizeString(input).toLowerCase())) {
+                                matchedItems.add(item);
+                            } else {
+                                unmatchedItems.add(item);
+                            }
+                        }
+
+                        // Kết hợp danh sách: các mục phù hợp lên trên, các mục không phù hợp xuống dưới
+                        List<String> allItems = new ArrayList<>();
+                        allItems.addAll(matchedItems);
+                        allItems.addAll(unmatchedItems);
+
+                        // Cập nhật model của JComboBox
+                        comboBox.setModel(new DefaultComboBoxModel<>(allItems.toArray(new String[0])));
+                        comboBox.setSelectedItem(input); // Giữ nguyên nội dung bạn đang gõ
+                        comboBox.showPopup();
+
+                        // Chỉ hiển thị popup nếu có nội dung nhập vào và danh sách có mục phù hợp
+                        if (!input.isEmpty() && !matchedItems.isEmpty()) {
+                            comboBox.setPopupVisible(true);
+                        } else {
+                            comboBox.setPopupVisible(false);
+                        }
+                    } finally {
+                        isUpdating = false; // Đặt lại cờ sau khi cập nhật xong
+                    }
+                });
+            }
+        });
+
+        // Đảm bảo khi chọn một mục, văn bản được cập nhật mà không gây vòng lặp
+        comboBox.addActionListener(e -> {
+            if (!isUpdating && comboBox.getSelectedItem() != null) {
+                isUpdating = true;
+                try {
+                    textField.setText(comboBox.getSelectedItem().toString());
+                    comboBox.setPopupVisible(false);
+                } finally {
+                    isUpdating = false;
+                }
+            }
+        });
+
+        // Đảm bảo popup không hiển thị khi mất focus
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                comboBox.setPopupVisible(false);
+            }
+        });
+    }
+
+    private String normalizeString(String str) {
+        if (str == null) return "";
+        String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
     }
     /**
      * This method is called from within the constructor to initialize the form.
