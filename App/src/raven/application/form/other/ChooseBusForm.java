@@ -1,5 +1,7 @@
 package raven.application.form.other;
 
+import bll.TuyenService;
+import bll.XeService;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
 import java.awt.Image;
@@ -10,8 +12,11 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -20,6 +25,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import model.Tuyen;
+import model.Xe;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -33,7 +40,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private String destinationLocation; // Giá trị của jComboBox2 (Nơi đến)
     private String departureDate; // Giá trị của jTextField1 (Ngày đi)
     private String arrivalDate; // Giá trị của jTextField2 (Ngày đến)
-
+    private int totalXe;
     private List<String> diemDiList = new ArrayList<>(); // Danh sách điểm đi
     private List<String> diemDenList = new ArrayList<>(); // Danh sách điểm đến
     private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
@@ -41,6 +48,22 @@ public class ChooseBusForm extends javax.swing.JPanel {
     /**
      * Constructor
      */
+        public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate, int totalXe) {
+        this.departureLocation = departureLocation;
+        this.destinationLocation = destinationLocation;
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
+        this.totalXe = totalXe;
+        initComponents();
+        init();
+        UIManager.addPropertyChangeListener(evt -> {
+            if ("lookAndFeel".equals(evt.getPropertyName())) {
+                updatePanelColors();
+            }
+        });
+        // Cập nhật label với tổng số xe
+        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+    }
     public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate) {
         this.departureLocation = departureLocation;
         this.destinationLocation = destinationLocation;
@@ -329,9 +352,62 @@ public class ChooseBusForm extends javax.swing.JPanel {
     }
 
     private String normalizeString(String str) {
-        if (str == null) return "";
-        String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
-        return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
+            if (str == null) return "";
+            String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+            return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
+        }
+        private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        String departureLocation = jComboBox1.getSelectedItem().toString();
+        String destinationLocation = jComboBox2.getSelectedItem().toString();
+        String departureDateStr = jTextField1.getText();
+        String arrivalDateStr = jTextField2.getText();
+
+        // Chuyển đổi departureDateStr sang Date
+        Date departureDate = null;
+        if (!"DD/MM/YYYY".equals(departureDateStr)) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                departureDate = sdf.parse(departureDateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                departureDate = new Date(); // Giá trị mặc định nếu lỗi
+            }
+        }
+
+        // Lấy MaTuyen từ danh sách getAllTuyen()
+        int maTuyen = -1;
+        try {
+            TuyenService tuyenService = new TuyenService();
+            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
+            for (Tuyen tuyen : tuyenList) {
+                if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
+                    maTuyen = tuyen.getMaTuyen();
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Lấy danh sách xe dựa trên MaTuyen
+        List<Xe> xeList = new ArrayList<>();
+        if (maTuyen != -1) {
+            try {
+                XeService xeService = new XeService();
+                xeList = xeService.getXeByMaTuyen(maTuyen);
+                // Lọc thêm theo ngày nếu có
+                if (departureDate != null) {
+                    java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
+                    xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(sqlDepartureDate));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int totalXe = xeList.size();
+        // Cập nhật label với tổng số xe
+        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
     }
     /**
      * This method is called from within the constructor to initialize the form.
