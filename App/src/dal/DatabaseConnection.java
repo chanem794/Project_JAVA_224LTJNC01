@@ -14,10 +14,10 @@ public class DatabaseConnection {
     private DatabaseConnection() {
         try {
             String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; // ✅ sửa ở đây
-            String serverName = "Dean";
+            String serverName = "LEPS\\NGUYENHUYNH";
             String databaseName = "QuanLyVeXeBuyt";
             String userName = "sa";
-            String password = "12345";
+            String password = "123";
             String driverURL = "jdbc:sqlserver://" + serverName + ":1433;databaseName=" + databaseName +
                     ";user=" + userName + ";password=" + password + ";encrypt=false;IntegratedSecurity=false";
             Class.forName(driverClass);

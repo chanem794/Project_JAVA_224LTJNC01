@@ -155,7 +155,9 @@ public class Application extends javax.swing.JFrame {
 //            showForm(new StationForm());
   //          app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             app.setVisible(true);
+        showForm(new raven.application.form.other.FormTTChuyen());
         });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
