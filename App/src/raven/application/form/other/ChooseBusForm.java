@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -112,12 +113,12 @@ public class ChooseBusForm extends javax.swing.JPanel {
         // DateChooser cho jTextField1
         com.raven.datechooser.DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
         dateChooser1.setTextField(jTextField1);
-        dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy")); // Sửa định dạng để khớp với dữ liệu truyền vào
+        dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 
         // DateChooser cho jTextField2
         com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
         dateChooser2.setTextField(jTextField2);
-        dateChooser2.setDateFormat(new SimpleDateFormat("dd-MM-yyyy")); // Sửa định dạng để khớp với dữ liệu truyền vào
+        dateChooser2.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 
         // jTextField1
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
@@ -126,7 +127,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         } else {
             jTextField1.setText(departureDate);
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sửa định dạng để khớp với chuỗi
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 java.util.Date date = sdf.parse(departureDate);
                 dateChooser1.setSelectedDate(date);
             } catch (Exception e) {
@@ -168,7 +169,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         } else {
             jTextField2.setText(arrivalDate);
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Sửa định dạng để khớp với chuỗi
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 java.util.Date date = sdf.parse(arrivalDate);
                 dateChooser2.setSelectedDate(date);
             } catch (Exception e) {
@@ -206,6 +207,14 @@ public class ChooseBusForm extends javax.swing.JPanel {
         // Thiết lập gợi ý cho jComboBox1 và jComboBox2
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
+
+        // Cấu hình jScrollPane1 cho roundedPanel4
+        jScrollPane1.setOpaque(false);
+        jScrollPane1.getViewport().setOpaque(false);
+        jScrollPane1.setBorder(null); // Xóa viền để không che khuất góc bo tròn
+        jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Tắt thanh cuộn ngang
+        jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Thanh cuộn dọc hiển thị khi cần
+        jScrollPane1.setMaximumSize(new java.awt.Dimension(Short.MAX_VALUE, 200)); // Chiều cao tối đa 200px
 
         // Cập nhật màu nền
         updatePanelColors();
@@ -354,6 +363,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         roundedPanel4 = new raven.application.form.other.RoundedPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
@@ -361,6 +371,9 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
+        jRadioButton7 = new javax.swing.JRadioButton();
+        jRadioButton8 = new javax.swing.JRadioButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
 
         roundedPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -470,7 +483,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
             roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -508,6 +521,17 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         jRadioButton6.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jRadioButton6.setText("Giá giảm dần");
+        jRadioButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton6ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton7.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jRadioButton7.setText("Coming soon");
+
+        jRadioButton8.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jRadioButton8.setText("Giá rẻ nhất");
 
         javax.swing.GroupLayout roundedPanel4Layout = new javax.swing.GroupLayout(roundedPanel4);
         roundedPanel4.setLayout(roundedPanel4Layout);
@@ -516,31 +540,39 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(roundedPanel4Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton6)
+                    .addComponent(jRadioButton8)
+                    .addComponent(jRadioButton7)
                     .addComponent(jRadioButton3)
                     .addComponent(jRadioButton2)
                     .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton6)
-                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton5))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(261, Short.MAX_VALUE))
         );
         roundedPanel4Layout.setVerticalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel4Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jRadioButton1)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jRadioButton2)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jRadioButton3)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jRadioButton4)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jRadioButton5)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(jRadioButton6)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addComponent(jRadioButton8)
+                .addGap(31, 31, 31)
+                .addComponent(jRadioButton7)
+                .addContainerGap(98, Short.MAX_VALUE))
         );
+
+        jScrollPane1.setViewportView(roundedPanel4);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -551,16 +583,20 @@ public class ChooseBusForm extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -576,7 +612,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 165, Short.MAX_VALUE))
+                .addGap(0, 136, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -595,6 +631,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton6ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -615,6 +655,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
+    private javax.swing.JRadioButton jRadioButton7;
+    private javax.swing.JRadioButton jRadioButton8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private raven.application.form.other.RoundedPanel roundedPanel1;
