@@ -5,6 +5,7 @@
 package raven.application.form.other;
 
 import bll.TuyenService;
+import bll.XeService;
 import static com.formdev.flatlaf.FlatClientProperties.PLACEHOLDER_TEXT;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
@@ -22,7 +23,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -31,6 +35,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import model.Tuyen;
+import model.Xe;
 import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 /**
@@ -556,11 +562,60 @@ private String normalizeString(String str) {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     String departureLocation = jComboBox1.getSelectedItem().toString();
     String destinationLocation = jComboBox2.getSelectedItem().toString();
-    String departureDate = jTextField1.getText();
-    String arrivalDate = jTextField2.getText();
+    String departureDateStr = jTextField1.getText();
+    String arrivalDateStr = jTextField2.getText();
 
+    // Chuyển đổi departureDateStr sang Date
+    Date departureDate = null;
+    if (!"DD/MM/YYYY".equals(departureDateStr)) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            departureDate = sdf.parse(departureDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            departureDate = new Date(); // Gán giá trị mặc định nếu parse thất bại
+        }
+    } else {
+        // Nếu không nhập ngày, có thể bỏ qua lọc theo ngày hoặc gán ngày hiện tại
+        departureDate = new Date(); // Hoặc để null nếu không muốn lọc
+    }
+
+    // Lấy MaTuyen từ danh sách getAllTuyen()
+    int maTuyen = -1;
+    try {
+        TuyenService tuyenService = new TuyenService();
+        List<Tuyen> tuyenList = tuyenService.getAllTuyen();
+        for (Tuyen tuyen : tuyenList) {
+            if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
+                maTuyen = tuyen.getMaTuyen();
+                break;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    // Lấy danh sách xe dựa trên MaTuyen
+    List<Xe> xeList = new ArrayList<>();
+    if (maTuyen != -1) {
+        try {
+            XeService xeService = new XeService();
+            xeList = xeService.getXeByMaTuyen(maTuyen);
+            // Lọc thêm theo ngày nếu có departureDate hợp lệ
+            // Lọc thêm theo ngày nếu có departureDate hợp lệ
+            if (departureDate != null) {
+                java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
+                java.sql.Date finalSqlDepartureDate = sqlDepartureDate; // Biến final để dùng trong lambda
+                xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(finalSqlDepartureDate));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    int totalXe = xeList.size();
     // Truyền giá trị sang ChooseBusForm
-    Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDate, arrivalDate));
+    Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDateStr, arrivalDateStr, totalXe));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
