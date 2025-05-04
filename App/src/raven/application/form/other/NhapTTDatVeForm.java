@@ -3,28 +3,60 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package raven.application.form.other;
+import raven.application.form.other.component.PanelChiTiet;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.ui.FlatUIUtils;
+import dal.TTChuyenDiDAO;
 import java.awt.Color;
 import java.awt.Image;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import javax.swing.ImageIcon;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import model.TTChuyenDi;
 import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.application.form.other.component.PanelThanhToan;
 
 
 public class NhapTTDatVeForm extends javax.swing.JPanel {
-        
-
-    public NhapTTDatVeForm() {
+    private PanelChiTiet PanelChiTiet;
+    private JLayeredPane layeredPane;
+    private int maXe;
+    private int basePrice;
+    private static final int INSURANCE_COST = 20000;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+    
+    public NhapTTDatVeForm(int maXe) {
         initComponents();
         init();
-        
+        this.maXe = maXe;
+ 
     }
+    
     private void init() {
-        
+        TTChuyenDiDAO TTChuyenDiDAO = new TTChuyenDiDAO();
+        TTChuyenDi xe = TTChuyenDiDAO.getTripDetails(101);
+        if (xe != null) {
+            lbTenNhaXe.setText(xe.getTenXe());
+            lbTTXe.setText(xe.getLoaiXe());
+            lbDiaChiDi.setText(xe.getDiemDi());
+            lbDiaChiDen.setText(xe.getDiemDen());
+            lbTGDi.setText(TIME_FORMAT.format(xe.getGioDi()));
+            lbTGDen.setText(TIME_FORMAT.format(xe.getGioDen()));
+            lbNgayThang.setText(DATE_FORMAT.format(xe.getNgayKhoiHanh()));
+            lbGheIcon.setText("A1.1");
+            lbNguoiIcon.setText("1");
+            basePrice = xe.getGiaVe();
+            updateTotalCost();
+        } 
         setLayout(new MigLayout("align left top", "", ""));
+        
         
 //      Set phần tiêu đề cho tất cả tiêu đề
         lbTTLienHe.putClientProperty(FlatClientProperties.STYLE, ""
@@ -96,30 +128,6 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         lbChuThichTTLH.setText("Số điện thoại và email được sử dụng để gửi thông tin đơn hàng và liên hệ khi cần thiết.");
         lbChuThichTTLH.setIconTextGap(5);// Khoảng cách giữa ảnh và text
         
-//        ImageIcon Busicon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/bus.png"));
-//        Image scaledBusImage = Busicon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH); 
-//        ImageIcon resizedIconBusIcon = new ImageIcon(scaledBusImage);
-//        lbNgayThang.setIcon(resizedIconBusIcon);
-//        lbNgayThang.setText("T5, 08/05/2025");
-//        lbNgayThang.setIconTextGap(10);  
-        
-//        ImageIcon BaoHiemIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/baohiem2.png"));
-//        Image scaledBaoHiemImage = BaoHiemIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);  
-//        ImageIcon resizedIconBaoHiemIcon = new ImageIcon(scaledBaoHiemImage);
-//        lbGiaBaoHiem.setIcon(resizedIconBaoHiemIcon);
-//        lbGiaBaoHiem.setText("Bảo hiểm chuyến đi ( +20.000đ/ghế)");
-//        lbGiaBaoHiem.setIconTextGap(5);  
-
-//        ImageIcon DiemDenIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/diemden.png"));
-//        Image scaledDiemDenImage = DiemDenIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  
-//        ImageIcon resizedIconDiemDenIcon = new ImageIcon(scaledDiemDenImage);
-//        jb1.setIcon(resizedIconDiemDenIcon);
-//        
-//        ImageIcon DiemDiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/diemdi.png"));
-//        Image scaledDiemDiImage = DiemDiIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);  
-//        ImageIcon resizedIconDiemDiIcon = new ImageIcon(scaledDiemDiImage);
-//        jb2.setIcon(resizedIconDiemDiIcon);
-        
         ImageIcon SoNguoiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/nguoi.png"));
         Image scaledSoNguoiImage = SoNguoiIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  
         ImageIcon resizedIconSoNguoiIcon = new ImageIcon(scaledSoNguoiImage);
@@ -150,7 +158,6 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lbNgayThang.setIcon(BusBusicon);
-        lbNgayThang.setText("T5, 08/05/2025");
         
         FlatSVGIcon cmdQLicon = new FlatSVGIcon("raven/thanhtoan/icon/quayLai.svg");
         cmdQLicon.setColorFilter(new FlatSVGIcon.ColorFilter()
@@ -181,8 +188,49 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         lbFooter.setText("<html><div style='text-align: center;'>Bạn sẽ sớm nhận được biển số xe, số điện thoại tài xế và dể dàng thay đổi điển đón trả sau khi đặt</div></html>");
         lbMoTaBaoHiem4.setText("<html><div style='text-align: left;'>Hoàn trả 100% tiền vé thực tế nếu chuyến đi bị hủy do các lý do khách quan hoặc bất khả kháng liên quan<br> đến vấn đề sức khỏe, bao gồm các trường hợp như bệnh nặng được xác nhận bằng giấy tờ y tế, tình trạng<br> khẩn cấp sức khỏe của hành khách, hoặc các hướng dẫn y tế công cộng.</div></html>");
         lbMoTaBaoHiem3.setText("<html><div style='text-align: left;'>Quyền lợi bảo hiểm lên đến 400 triệu đồng trong trường hợp xảy ra tai nạn, bao gồm các chi phí y tế, điều<br> trị hoặc bồi thường thiệt hại được xác nhận theo quy định của hợp đồng bảo hiểm.</div></html>");
+//      Set Panel khi nhấn button chi tiết
+        
+        layeredPane = new JLayeredPane();
+        layeredPane.setLayout(null);
 
+
+        this.removeAll(); 
+        panelNhapTTDatVe.setBounds(0, 0, 1096, 752);
+        layeredPane.add(panelNhapTTDatVe, JLayeredPane.DEFAULT_LAYER);
+
+        // Thêm layeredPane vào NhapTTDatVeForm
+        this.setLayout(new java.awt.BorderLayout());
+        this.add(layeredPane, java.awt.BorderLayout.CENTER);
+
+        // Khởi tạo và thêm PanelChiTiet
+        PanelChiTiet = new PanelChiTiet(101);
+        PanelChiTiet.setVisible(false);
+        int formWidth = 1096;
+        int formHeight = 752;
+        int detailWidth = 400; // Chiều rộng cụ thể: 400px
+        int detailHeight = 620;
+        PanelChiTiet.setBounds(formWidth - detailWidth - 10, 42, detailWidth, detailHeight);
+        layeredPane.add(PanelChiTiet, JLayeredPane.PALETTE_LAYER);
+
+        cmdChiTiet.addActionListener(e -> {
+            PanelChiTiet.setVisible(true);
+        });
+
+        PanelChiTiet.getBtnClose().addActionListener(e -> {
+            PanelChiTiet.setVisible(false);
+        });
+
+        this.revalidate();
+        this.repaint();
 }
+    private void updateTotalCost() {
+        int total = basePrice;
+        if (CbBaoHiem.isSelected()) {
+            total += INSURANCE_COST;
+        }
+        lbGiaVe.setText(String.format("%,dđ", total));
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -356,9 +404,11 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
             panelButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelButtonLayout.createSequentialGroup()
                 .addContainerGap(12, Short.MAX_VALUE)
-                .addGroup(panelButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cmdTiepTuc, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbFooter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelButtonLayout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(lbFooter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbDieuKhoan)
                 .addGap(12, 12, 12))
@@ -517,9 +567,9 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         lbDiaChiDi.setForeground(new java.awt.Color(0, 0, 0));
         lbDiaChiDi.setText("VP Đà Nẵng");
 
-        lbDiaChiDiCuThe.setText("Địa chỉ đi cụ thể");
+        lbDiaChiDiCuThe.setText("Tất cả các trạm đón trả khách");
 
-        lbDiaChiDenCuThe.setText("Địa chỉ đến cụ thể");
+        lbDiaChiDenCuThe.setText("Tất cả các trạm đón trả khách");
 
         jb1.setText("jLabel1");
 
@@ -539,6 +589,11 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         cmdChiTiet.setBorder(null);
         cmdChiTiet.setContentAreaFilled(false);
         cmdChiTiet.setFocusPainted(false);
+        cmdChiTiet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdChiTietActionPerformed(evt);
+            }
+        });
 
         lbNgayThang.setForeground(new java.awt.Color(0, 0, 0));
         lbNgayThang.setText("CN, 19/06/2025");
@@ -549,8 +604,8 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(lbNgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbNgayThang, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(cmdChiTiet, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
@@ -590,23 +645,25 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                                     .addComponent(lbDiaChiDen, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addContainerGap()
                                 .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                        .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
-                                        .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(lbImage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lbGheIcon))))
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(lbTTXe, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                                .addComponent(lbTenNhaXe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(panelTTChuyenDiConLayout.createSequentialGroup()
+                                                .addComponent(lbNguoiIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(lbGheIcon))))
+                                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelTTChuyenDiConLayout.setVerticalGroup(
@@ -634,8 +691,8 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                             .addComponent(jb1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbDiaChiDiCuThe)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbDiaChiDiCuThe, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lbTGDi, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelTTChuyenDiConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -643,8 +700,8 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                     .addComponent(lbDiaChiDen)
                     .addComponent(lbTGDen, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbDiaChiDenCuThe)
-                .addGap(40, 40, 40))
+                .addComponent(lbDiaChiDenCuThe, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
 
         javax.swing.GroupLayout panelTTChuyenDiLayout = new javax.swing.GroupLayout(panelTTChuyenDi);
@@ -673,11 +730,11 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelTamTinh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelTTChuyenDi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(panelTTChuyenDi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelTamTinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -700,8 +757,8 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                             .addComponent(panelTTLienHe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panelTienIch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
             .addComponent(panelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panelNhapTTDatVeLayout.setVerticalGroup(
@@ -737,12 +794,37 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdTiepTucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTiepTucActionPerformed
-        Application.showForm(new PanelThanhToan());
+        String tenNguoiDi = txtTenNguoiDi.getText().trim();
+        String sdt = txtSDT.getText().trim();
+        String email = txtEmail.getText().trim();
+        List<String> missingFields = new ArrayList<>();
+        if (tenNguoiDi.isEmpty()) {
+            missingFields.add("Tên người đi");
+        }
+        if (sdt.isEmpty()) {
+            missingFields.add("Số điện thoại");
+        }
+        if (email.isEmpty()) {
+            missingFields.add("Email");
+        }
+        if (!missingFields.isEmpty()) {
+            String errorMessage = "Vui lòng điền đầy đủ các thông tin sau: " + String.join(", ", missingFields) + "!";
+            JOptionPane.showMessageDialog(this,
+                errorMessage,
+                "Lỗi",
+                JOptionPane.ERROR_MESSAGE);
+        } else {
+            Application.showForm(new PanelThanhToan(tenNguoiDi, sdt, email));
+        }
     }//GEN-LAST:event_cmdTiepTucActionPerformed
 
     private void txtTenNguoiDiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenNguoiDiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTenNguoiDiActionPerformed
+
+    private void cmdChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdChiTietActionPerformed
+
+    }//GEN-LAST:event_cmdChiTietActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -796,6 +878,5 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
     private javax.swing.JTextField txtSDT;
     private javax.swing.JTextField txtTenNguoiDi;
     // End of variables declaration//GEN-END:variables
-
 
 }

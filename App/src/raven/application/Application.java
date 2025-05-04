@@ -10,8 +10,6 @@ import raven.application.form.*;
 import raven.toast.Notifications;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import raven.application.form.other.component.PanelNhapTTDatVe;
 
 public class Application extends javax.swing.JFrame { 
@@ -21,7 +19,7 @@ public class Application extends javax.swing.JFrame {
     private final RegisterForm registerForm;
     private final OTPForm otpForm;
     private final InfoForm infoForm;
-    private final PanelNhapTTDatVe panelNhapTTDatVe;
+    private PanelNhapTTDatVe panelNhapTTDatVe;
     private Container previousForm;
     private boolean isRegisterFlow;
     private String currentEmail;
@@ -37,13 +35,18 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
-        panelNhapTTDatVe = new PanelNhapTTDatVe();
+        panelNhapTTDatVe = new PanelNhapTTDatVe(1); 
         setContentPane(mainForm);
-        //setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
-public static void showNhapTTDatVe() {
+
+    public static void showNhapTTDatVe() {
+        showNhapTTDatVe(1); 
+    }
+
+    public static void showNhapTTDatVe(int maxe) {
+        app.panelNhapTTDatVe = new PanelNhapTTDatVe(maxe);
         showForm(app.panelNhapTTDatVe);
     }
 
@@ -127,6 +130,7 @@ public static void showNhapTTDatVe() {
 
     public static void setSelectedMenu(int index, int subIndex) {
         app.mainForm.setSelectedMenu(index, subIndex);
+        app.panelNhapTTDatVe = new PanelNhapTTDatVe(1); 
         showForm(app.panelNhapTTDatVe);
     }
 
