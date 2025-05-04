@@ -3,6 +3,7 @@ package raven.application.form.other;
 import bll.TuyenService;
 import bll.XeService;
 import com.formdev.flatlaf.FlatLaf;
+import com.raven.datechooser.DateChooser;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
@@ -81,14 +82,13 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private void init() {
         setLayout(new MigLayout("al center center"));
 
-        // Đọc dữ liệu từ file Tỉnh, Huyện.txt
         try (BufferedReader reader = new BufferedReader(new FileReader("Tỉnh, Huyện.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (!line.isEmpty()) { // Bỏ qua các dòng trống
-                    diemDiList.add(line);  // Thêm vào danh sách điểm đi
-                    diemDenList.add(line); // Thêm vào danh sách điểm đến (cùng danh sách)
+                if (!line.isEmpty()) {
+                    diemDiList.add(line);
+                    diemDenList.add(line);
                 }
             }
         } catch (IOException e) {
@@ -97,11 +97,9 @@ public class ChooseBusForm extends javax.swing.JPanel {
             diemDenList.add("Error loading data from file");
         }
 
-        // Cài đặt model cho jComboBox1 và jComboBox2 từ file
         jComboBox1.setModel(new DefaultComboBoxModel<>(diemDiList.toArray(new String[0])));
         jComboBox2.setModel(new DefaultComboBoxModel<>(diemDenList.toArray(new String[0])));
 
-        // Đặt giá trị đã chọn từ ChooseLocationForm
         if (departureLocation != null && !departureLocation.isEmpty()) {
             jComboBox1.setSelectedItem(departureLocation);
         }
@@ -109,7 +107,6 @@ public class ChooseBusForm extends javax.swing.JPanel {
             jComboBox2.setSelectedItem(destinationLocation);
         }
 
-        // Icon jLabel5
         ImageIcon iconLabel5 = new ImageIcon(getClass().getResource("/raven/icon/png/circle.png"));
         Image scaledIcon5 = iconLabel5.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         jLabel5.setIcon(new ImageIcon(scaledIcon5));
@@ -117,7 +114,6 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel5.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel5.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // Icon jLabel6
         ImageIcon iconLabel6 = new ImageIcon(getClass().getResource("/raven/icon/png/location.png"));
         Image scaledIcon6 = iconLabel6.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         jLabel6.setIcon(new ImageIcon(scaledIcon6));
@@ -125,7 +121,6 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel6.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel6.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // Icon jLabel7
         ImageIcon iconLabel7 = new ImageIcon(getClass().getResource("/raven/icon/png/calendar.png"));
         Image scaledIcon7 = iconLabel7.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         jLabel7.setIcon(new ImageIcon(scaledIcon7));
@@ -133,20 +128,18 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // DateChooser cho jTextField1
-        com.raven.datechooser.DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
+        DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
-
-        // DateChooser cho jTextField2
-        com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
+        
+        
+        DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
         dateChooser2.setTextField(jTextField2);
         dateChooser2.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 
-        // jTextField1
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD/MM/YYYY")) {
-            jTextField1.setText("DD/MM/YYYY");
+        if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD-MM-YYYY")) {
+            jTextField1.setText("DD-MM-YYYY");
         } else {
             jTextField1.setText(departureDate);
             try {
@@ -161,7 +154,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jTextField1.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (jTextField1.getText().equals("DD/MM/YYYY")) {
+                if (jTextField1.getText().equals("DD-MM-YYYY")) {
                     jTextField1.setText("");
                 }
             }
@@ -169,7 +162,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             @Override
             public void focusLost(FocusEvent e) {
                 if (jTextField1.getText().isEmpty()) {
-                    jTextField1.setText("DD/MM/YYYY");
+                    jTextField1.setText("DD-MM-YYYY");
                 }
             }
         });
@@ -185,10 +178,9 @@ public class ChooseBusForm extends javax.swing.JPanel {
             dateChooser1.hidePopup();
         });
 
-        // jTextField2
         jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
-        if (arrivalDate == null || arrivalDate.isEmpty() || arrivalDate.equals("DD/MM/YYYY")) {
-            jTextField2.setText("DD/MM/YYYY");
+        if (arrivalDate == null || arrivalDate.isEmpty() || arrivalDate.equals("DD-MM-YYYY")) {
+            jTextField2.setText("DD-MM-YYYY");
         } else {
             jTextField2.setText(arrivalDate);
             try {
@@ -203,7 +195,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jTextField2.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (jTextField2.getText().equals("DD/MM/YYYY")) {
+                if (jTextField2.getText().equals("DD-MM-YYYY")) {
                     jTextField2.setText("");
                 }
             }
@@ -211,7 +203,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             @Override
             public void focusLost(FocusEvent e) {
                 if (jTextField2.getText().isEmpty()) {
-                    jTextField2.setText("DD/MM/YYYY");
+                    jTextField2.setText("DD-MM-YYYY");
                 }
             }
         });
@@ -227,13 +219,12 @@ public class ChooseBusForm extends javax.swing.JPanel {
             dateChooser2.hidePopup();
         });
 
-        // Thiết lập gợi ý cho jComboBox1 và jComboBox2
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
-        // Cập nhật màu nền
         updatePanelColors();
     }
+
 
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
@@ -356,59 +347,6 @@ public class ChooseBusForm extends javax.swing.JPanel {
             String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
             return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
         }
-        private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        String departureLocation = jComboBox1.getSelectedItem().toString();
-        String destinationLocation = jComboBox2.getSelectedItem().toString();
-        String departureDateStr = jTextField1.getText();
-        String arrivalDateStr = jTextField2.getText();
-
-        // Chuyển đổi departureDateStr sang Date
-        Date departureDate = null;
-        if (!"DD/MM/YYYY".equals(departureDateStr)) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                departureDate = sdf.parse(departureDateStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                departureDate = new Date(); // Giá trị mặc định nếu lỗi
-            }
-        }
-
-        // Lấy MaTuyen từ danh sách getAllTuyen()
-        int maTuyen = -1;
-        try {
-            TuyenService tuyenService = new TuyenService();
-            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
-            for (Tuyen tuyen : tuyenList) {
-                if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
-                    maTuyen = tuyen.getMaTuyen();
-                    break;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        // Lấy danh sách xe dựa trên MaTuyen
-        List<Xe> xeList = new ArrayList<>();
-        if (maTuyen != -1) {
-            try {
-                XeService xeService = new XeService();
-                xeList = xeService.getXeByMaTuyen(maTuyen);
-                // Lọc thêm theo ngày nếu có
-                if (departureDate != null) {
-                    java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
-                    xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(sqlDepartureDate));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        int totalXe = xeList.size();
-        // Cập nhật label với tổng số xe
-        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -447,6 +385,11 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         jButton1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jButton1.setText("Tìm kiếm ");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -663,6 +606,61 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String departureLocation = jComboBox1.getSelectedItem().toString();
+        String destinationLocation = jComboBox2.getSelectedItem().toString();
+        String departureDateStr = jTextField1.getText();
+
+        // Chuyển đổi departureDateStr sang Date
+        Date departureDate = null;
+        if (!"DD-MM-YYYY".equals(departureDateStr)) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                departureDate = sdf.parse(departureDateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                departureDate = new Date(); // Giá trị mặc định nếu lỗi
+            }
+        } else {
+            departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
+        }
+
+        // Lấy MaTuyen từ danh sách getAllTuyen()
+        int maTuyen = -1;
+        try {
+            TuyenService tuyenService = new TuyenService();
+            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
+            for (Tuyen tuyen : tuyenList) {
+                if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
+                    maTuyen = tuyen.getMaTuyen();
+                    break;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+    }
+
+    // Lấy danh sách xe dựa trên MaTuyen
+    List<Xe> xeList = new ArrayList<>();
+    if (maTuyen != -1) {
+        try {
+            XeService xeService = new XeService();
+            xeList = xeService.getXeByMaTuyen(maTuyen);
+            // Lọc thêm theo ngày nếu có departureDate hợp lệ
+            if (departureDate != null) {
+                java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
+                xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(sqlDepartureDate));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    int totalXe = xeList.size();
+    // Cập nhật label với tổng số xe
+    jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);   // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
