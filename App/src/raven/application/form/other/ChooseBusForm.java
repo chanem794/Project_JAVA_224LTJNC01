@@ -233,14 +233,14 @@ public class ChooseBusForm extends javax.swing.JPanel {
             roundedPanel1.setBackground(new Color(49, 62, 74, 255));
             jButton1.setBackground(new Color(79, 92, 104, 255));
             roundedPanel4.setBackground(new Color(79, 92, 104, 255));
-            roundedPanel5.setBackground(new Color(79, 92, 104, 255));
+            roundedPanel7.setBackground(new Color(79, 92, 104, 255));
             // Màu xám đậm cho dark mode
         } else {
             roundedPanel2.setBackground(new Color(230, 230, 230));
             roundedPanel1.setBackground(new Color(255, 255, 255));
             jButton1.setBackground(new Color(255, 149, 0));
             roundedPanel4.setBackground(new Color(230, 230, 230));
-            roundedPanel5.setBackground(new Color(230, 230, 230));
+            roundedPanel7.setBackground(new Color(230, 230, 230));
         }
     }
 
@@ -375,10 +375,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         roundedPanel3 = new raven.application.form.other.RoundedPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
+        roundedJScrollPane3 = new raven.application.form.other.RoundedJScrollPane();
+        roundedPanel7 = new raven.application.form.other.RoundedPanel();
         roundedJScrollPane1 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel4 = new raven.application.form.other.RoundedPanel();
-        roundedJScrollPane2 = new raven.application.form.other.RoundedJScrollPane();
-        roundedPanel5 = new raven.application.form.other.RoundedPanel();
         jLabel1 = new javax.swing.JLabel();
 
         roundedPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -496,7 +496,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
             roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -523,40 +523,39 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         jRadioButton1.setText("jRadioButton1");
 
+        javax.swing.GroupLayout roundedPanel7Layout = new javax.swing.GroupLayout(roundedPanel7);
+        roundedPanel7.setLayout(roundedPanel7Layout);
+        roundedPanel7Layout.setHorizontalGroup(
+            roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 311, Short.MAX_VALUE)
+        );
+        roundedPanel7Layout.setVerticalGroup(
+            roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 462, Short.MAX_VALUE)
+        );
+
+        roundedJScrollPane3.setViewportView(roundedPanel7);
+
+        jLabel1.setText("jLabel1");
+
         javax.swing.GroupLayout roundedPanel4Layout = new javax.swing.GroupLayout(roundedPanel4);
         roundedPanel4.setLayout(roundedPanel4Layout);
         roundedPanel4Layout.setHorizontalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 223, Short.MAX_VALUE)
+            .addGroup(roundedPanel4Layout.createSequentialGroup()
+                .addGap(329, 329, 329)
+                .addComponent(jLabel1)
+                .addContainerGap(363, Short.MAX_VALUE))
         );
         roundedPanel4Layout.setVerticalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 436, Short.MAX_VALUE)
+            .addGroup(roundedPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(440, Short.MAX_VALUE))
         );
 
         roundedJScrollPane1.setViewportView(roundedPanel4);
-
-        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jLabel1.setText("jLabel1");
-
-        javax.swing.GroupLayout roundedPanel5Layout = new javax.swing.GroupLayout(roundedPanel5);
-        roundedPanel5.setLayout(roundedPanel5Layout);
-        roundedPanel5Layout.setHorizontalGroup(
-            roundedPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roundedPanel5Layout.createSequentialGroup()
-                .addGap(338, 338, 338)
-                .addComponent(jLabel1)
-                .addContainerGap(450, Short.MAX_VALUE))
-        );
-        roundedPanel5Layout.setVerticalGroup(
-            roundedPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roundedPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(406, Short.MAX_VALUE))
-        );
-
-        roundedJScrollPane2.setViewportView(roundedPanel5);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -565,10 +564,9 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(roundedJScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(roundedJScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 829, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(roundedJScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(roundedJScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -576,10 +574,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 18, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(roundedJScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(roundedJScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(roundedJScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                    .addComponent(roundedJScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -596,7 +594,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 246, Short.MAX_VALUE))
+                .addGap(0, 17, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -609,37 +607,37 @@ public class ChooseBusForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String departureLocation = jComboBox1.getSelectedItem().toString();
-        String destinationLocation = jComboBox2.getSelectedItem().toString();
-        String departureDateStr = jTextField1.getText();
+    String departureLocation = jComboBox1.getSelectedItem().toString();
+    String destinationLocation = jComboBox2.getSelectedItem().toString();
+    String departureDateStr = jTextField1.getText();
 
-        // Chuyển đổi departureDateStr sang Date
-        Date departureDate = null;
-        if (!"DD-MM-YYYY".equals(departureDateStr)) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                departureDate = sdf.parse(departureDateStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                departureDate = new Date(); // Giá trị mặc định nếu lỗi
-            }
-        } else {
-            departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
-        }
-
-        // Lấy MaTuyen từ danh sách getAllTuyen()
-        int maTuyen = -1;
+    // Chuyển đổi departureDateStr sang Date
+    Date departureDate = null;
+    if (!"DD-MM-YYYY".equals(departureDateStr)) {
         try {
-            TuyenService tuyenService = new TuyenService();
-            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
-            for (Tuyen tuyen : tuyenList) {
-                if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
-                    maTuyen = tuyen.getMaTuyen();
-                    break;
-                }
-            }
-        } catch (SQLException e) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            departureDate = sdf.parse(departureDateStr);
+        } catch (ParseException e) {
             e.printStackTrace();
+            departureDate = new Date(); // Giá trị mặc định nếu lỗi
+        }
+    } else {
+        departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
+    }
+
+    // Lấy MaTuyen từ danh sách getAllTuyen()
+    int maTuyen = -1;
+    try {
+        TuyenService tuyenService = new TuyenService();
+        List<Tuyen> tuyenList = tuyenService.getAllTuyen();
+        for (Tuyen tuyen : tuyenList) {
+            if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
+                maTuyen = tuyen.getMaTuyen();
+                break;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
 
     // Lấy danh sách xe dựa trên MaTuyen
@@ -660,7 +658,36 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
     int totalXe = xeList.size();
     // Cập nhật label với tổng số xe
-    jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);   // TODO add your handling code here:
+    jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+
+    // Xóa nội dung hiện tại của roundedPanel4
+    roundedPanel4.removeAll();
+
+    // Tạo panel chứa các BusTicketForm
+    javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
+    ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10", "[grow]", "[]")); // Layout theo cột dọc
+    ticketContainer.setOpaque(false); // Đặt trong suốt để hiển thị nền của roundedPanel4
+
+    // Thêm 3 BusTicketForm
+    for (int i = 0; i < 3; i++) {
+        BusTicketForm busTicketForm = new BusTicketForm();
+        busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200)); // Đảm bảo kích thước cố định cho mỗi form
+        ticketContainer.add(busTicketForm, "growx"); // Thêm vào container với chiều rộng linh hoạt
+    }
+
+    // Thêm jLabel1 vào đầu container
+    ticketContainer.add(jLabel1, "align center, wrap");
+
+    // Thêm container vào roundedPanel4
+    roundedPanel4.setLayout(new java.awt.BorderLayout());
+    roundedPanel4.add(ticketContainer, java.awt.BorderLayout.NORTH);
+
+    // Làm mới giao diện để hiển thị thanh cuộn
+    roundedPanel4.revalidate();
+    roundedPanel4.repaint();
+    roundedJScrollPane1.revalidate();
+    roundedJScrollPane1.repaint();
+  // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
@@ -683,11 +710,11 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane1;
-    private raven.application.form.other.RoundedJScrollPane roundedJScrollPane2;
+    private raven.application.form.other.RoundedJScrollPane roundedJScrollPane3;
     private raven.application.form.other.RoundedPanel roundedPanel1;
     private raven.application.form.other.RoundedPanel roundedPanel2;
     private raven.application.form.other.RoundedPanel roundedPanel3;
     private raven.application.form.other.RoundedPanel roundedPanel4;
-    private raven.application.form.other.RoundedPanel roundedPanel5;
+    private raven.application.form.other.RoundedPanel roundedPanel7;
     // End of variables declaration//GEN-END:variables
 }
