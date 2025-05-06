@@ -564,7 +564,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(roundedJScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addComponent(roundedJScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(roundedJScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -607,87 +608,91 @@ public class ChooseBusForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String departureLocation = jComboBox1.getSelectedItem().toString();
-    String destinationLocation = jComboBox2.getSelectedItem().toString();
-    String departureDateStr = jTextField1.getText();
+        String departureLocation = jComboBox1.getSelectedItem().toString();
+        String destinationLocation = jComboBox2.getSelectedItem().toString();
+        String departureDateStr = jTextField1.getText();
 
-    // Chuyển đổi departureDateStr sang Date
-    Date departureDate = null;
-    if (!"DD-MM-YYYY".equals(departureDateStr)) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            departureDate = sdf.parse(departureDateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            departureDate = new Date(); // Giá trị mặc định nếu lỗi
-        }
-    } else {
-        departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
-    }
-
-    // Lấy MaTuyen từ danh sách getAllTuyen()
-    int maTuyen = -1;
-    try {
-        TuyenService tuyenService = new TuyenService();
-        List<Tuyen> tuyenList = tuyenService.getAllTuyen();
-        for (Tuyen tuyen : tuyenList) {
-            if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
-                maTuyen = tuyen.getMaTuyen();
-                break;
+        // Chuyển đổi departureDateStr sang Date
+        Date departureDate = null;
+        if (!"DD-MM-YYYY".equals(departureDateStr)) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                departureDate = sdf.parse(departureDateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                departureDate = new Date(); // Giá trị mặc định nếu lỗi
             }
+        } else {
+            departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
 
-    // Lấy danh sách xe dựa trên MaTuyen
-    List<Xe> xeList = new ArrayList<>();
-    if (maTuyen != -1) {
+        // Lấy MaTuyen từ danh sách getAllTuyen()
+        int maTuyen = -1;
         try {
-            XeService xeService = new XeService();
-            xeList = xeService.getXeByMaTuyen(maTuyen);
-            // Lọc thêm theo ngày nếu có departureDate hợp lệ
-            if (departureDate != null) {
-                java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
-                xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(sqlDepartureDate));
+            TuyenService tuyenService = new TuyenService();
+            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
+            for (Tuyen tuyen : tuyenList) {
+                if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
+                    maTuyen = tuyen.getMaTuyen();
+                    break;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
 
-    int totalXe = xeList.size();
-    // Cập nhật label với tổng số xe
-    jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+        // Lấy danh sách xe dựa trên MaTuyen
+        List<Xe> xeList = new ArrayList<>();
+        if (maTuyen != -1) {
+            try {
+                XeService xeService = new XeService();
+                xeList = xeService.getXeByMaTuyen(maTuyen);
+                // Lọc thêm theo ngày nếu có departureDate hợp lệ
+                if (departureDate != null) {
+                    java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
+                    xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(sqlDepartureDate));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
-    // Xóa nội dung hiện tại của roundedPanel4
-    roundedPanel4.removeAll();
+        int totalXe = xeList.size();
+        // Cập nhật label với tổng số xe
+        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
 
-    // Tạo panel chứa các BusTicketForm
-    javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
-    ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10", "[grow]", "[]")); // Layout theo cột dọc
-    ticketContainer.setOpaque(false); // Đặt trong suốt để hiển thị nền của roundedPanel4
+        // Xóa nội dung hiện tại của roundedPanel4
+        roundedPanel4.removeAll();
 
-    // Thêm 3 BusTicketForm
-    for (int i = 0; i < 3; i++) {
-        BusTicketForm busTicketForm = new BusTicketForm();
-        busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200)); // Đảm bảo kích thước cố định cho mỗi form
-        ticketContainer.add(busTicketForm, "growx"); // Thêm vào container với chiều rộng linh hoạt
-    }
+        // Tạo panel chứa các BusTicketForm
+        javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
+        ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10, align center", "[600px]", "[]")); // Cố định chiều rộng cột là 600px, căn giữa
+        ticketContainer.setOpaque(false); // Đặt trong suốt để hiển thị nền của roundedPanel4
 
-    // Thêm jLabel1 vào đầu container
-    ticketContainer.add(jLabel1, "align center, wrap");
+        // Thêm 3 BusTicketForm với kích thước cố định
+        for (int i = 0; i < 3; i++) {
+            BusTicketForm busTicketForm = new BusTicketForm();
+            busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200)); // Kích thước cố định
+            busTicketForm.setMaximumSize(new java.awt.Dimension(600, 200)); // Khóa kích thước tối đa
+            busTicketForm.setMinimumSize(new java.awt.Dimension(600, 200)); // Khóa kích thước tối thiểu
+            ticketContainer.add(busTicketForm, "align center"); // Căn giữa, không cho phép mở rộng
+        }
 
-    // Thêm container vào roundedPanel4
-    roundedPanel4.setLayout(new java.awt.BorderLayout());
-    roundedPanel4.add(ticketContainer, java.awt.BorderLayout.NORTH);
+        // Thêm jLabel1 vào cuối container, căn giữa
+        ticketContainer.add(jLabel1, "align center, wrap");
 
-    // Làm mới giao diện để hiển thị thanh cuộn
-    roundedPanel4.revalidate();
-    roundedPanel4.repaint();
-    roundedJScrollPane1.revalidate();
-    roundedJScrollPane1.repaint();
-  // TODO add your handling code here:
+        // Thêm container vào roundedPanel4
+        roundedPanel4.setLayout(new java.awt.BorderLayout());
+        roundedPanel4.add(ticketContainer, java.awt.BorderLayout.CENTER); // Sử dụng CENTER để căn giữa toàn bộ nội dung
+
+        // Đảm bảo không có thanh cuộn ngang
+        roundedJScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Làm mới giao diện để hiển thị thanh cuộn
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
+        roundedJScrollPane1.revalidate();
+        roundedJScrollPane1.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
