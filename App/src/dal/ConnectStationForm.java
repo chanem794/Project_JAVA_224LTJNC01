@@ -16,7 +16,7 @@ public class ConnectStationForm {
     private StationForm sf;
     private Connection con;
     private Statement stm;
-
+  
     public ConnectStationForm(StationForm stationForm) throws SQLException {
         this.sf = stationForm;
         con = DatabaseConnection.getInstance().getConnection();
