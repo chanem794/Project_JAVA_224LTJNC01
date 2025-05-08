@@ -37,6 +37,14 @@ public class OTPForm extends javax.swing.JPanel {
                 + "borderWidth:0;"
                 + "focusWidth:0");
         txtMaxacthuc.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mã xác thực");
+        txtMaxacthuc.addKeyListener(new java.awt.event.KeyAdapter() {
+        @Override
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+                cmdLogin.doClick(); // Kích hoạt cmdLogin
+            }
+        }
+    });
     }
     /**
      * This method is called from within the constructor to initialize the form.
