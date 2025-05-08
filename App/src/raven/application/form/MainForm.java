@@ -79,7 +79,7 @@ public class MainForm extends JLayeredPane {
                 case 1:
                     String maNguoiDung = Application.getCurrentMaNguoiDung();
                     if (maNguoiDung != null) {
-                        showForm(new FormGioHang()); // Hiển thị FormGioHang
+                        showForm(new FormAccount()); // Hiển thị FormGioHang
                     } else {
                         showForm(new FormAccount());
                     }
