@@ -11,10 +11,6 @@ import raven.application.form.*;
 import raven.toast.Notifications;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import raven.application.form.other.StationForm;
-
 
 public class Application extends javax.swing.JFrame { 
     private static Application app;
@@ -39,10 +35,10 @@ public class Application extends javax.swing.JFrame {
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
         setContentPane(mainForm);
-        //setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
+
     public static void showForm(Component component) {
         component.applyComponentOrientation(app.getComponentOrientation());
         app.mainForm.showForm(component);
@@ -154,8 +150,6 @@ public class Application extends javax.swing.JFrame {
             app = new Application();
             app.setVisible(true);
 
-            // 👉 Hiển thị ChooseLocationForm lúc khởi động
-            showForm(new raven.application.form.other.ChooseLocationForm());
         });
     }
 

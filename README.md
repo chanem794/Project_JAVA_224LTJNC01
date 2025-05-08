@@ -4,3 +4,4 @@ Member:
 - Nguyễn Huỳnh 
 - Phạm Minh Huy
 - Trần Văn Thọ Khang
+- Lê Duy Quốc
