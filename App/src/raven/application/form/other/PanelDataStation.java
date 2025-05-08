@@ -16,7 +16,6 @@ public class PanelDataStation {
         panel.setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
 
         JRadioButton radioButton = new JRadioButton();
-        // Sử dụng kiểu dáng hợp lệ của FlatLaf
         radioButton.putClientProperty("FlatLaf.style", ""
                 + "background:#FFFFFF;"
                 + "foreground:#102102;"
