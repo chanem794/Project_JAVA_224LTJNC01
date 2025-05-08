@@ -1,6 +1,7 @@
 package raven.application;
 
 import bll.*;
+import model.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
@@ -27,6 +28,7 @@ public class Application extends javax.swing.JFrame {
     private final InfoForm infoForm;
     private Container previousForm;
     private boolean isRegisterFlow;
+    private String currentMaNguoiDung; // Thêm để lưu maNguoiDung
     private String currentEmail;
     private final NguoiDungService nguoidungService;
 
@@ -41,8 +43,8 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
-        setContentPane(mainForm);
-        //setContentPane(loginForm);
+        //setContentPane(mainForm);
+        setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
@@ -60,6 +62,14 @@ public class Application extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(app.mainForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
         app.previousForm = null;
+        try {
+            NguoiDung user = app.nguoidungService.getUserByEmail(app.currentEmail);
+            if (user != null) {
+                app.currentMaNguoiDung = user.getMaNguoiDung();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         app.currentEmail = null;
     }
     
@@ -73,6 +83,8 @@ public class Application extends javax.swing.JFrame {
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
         app.previousForm = null;
         app.currentEmail = null;
+        app.currentMaNguoiDung = null; // Admin không cần maNguoiDung
+
     }
     
     public static void register() {
@@ -116,6 +128,14 @@ public class Application extends javax.swing.JFrame {
         app.infoForm.applyComponentOrientation(app.getComponentOrientation());
         SwingUtilities.updateComponentTreeUI(app.infoForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
+        try {
+            NguoiDung user = app.nguoidungService.getUserByEmail(app.currentEmail);
+            if (user != null) {
+                app.currentMaNguoiDung = user.getMaNguoiDung();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void backToPreviousForm() {
@@ -131,7 +151,11 @@ public class Application extends javax.swing.JFrame {
     public static String getCurrentEmail() {
         return app.currentEmail;
     }
-
+    
+    public static String getCurrentMaNguoiDung() {
+        return app.currentMaNguoiDung;
+    }
+    
     public static NguoiDungService getNguoiDungService() {
         return app.nguoidungService;
     }

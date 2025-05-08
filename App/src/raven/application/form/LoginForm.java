@@ -33,6 +33,8 @@ public class LoginForm extends javax.swing.JPanel {
                 + "borderWidth:0;"
                 + "focusWidth:0");
         txtEmail.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "your_mail@example.com");
+        // 🔑 Add Enter key trigger
+        txtEmail.addActionListener(e -> cmdLogin.doClick());
     }
 
     @SuppressWarnings("unchecked")
