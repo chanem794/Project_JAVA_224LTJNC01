@@ -107,7 +107,7 @@ VALUES
 (1, N'Đã đặt', '2025-05-01', '06:00', N'Hải Châu - Đà Nẵng', N'Hội An - Quảng Nam', '2025-05-01 07:00', 2, 70000, 'ND002', 101),
 (2, N'Đã đặt', '2025-05-01', '06:30', N'Thanh Khê - Đà Nẵng', N'Điện Bàn - Quảng Nam', '2025-05-01 07:30', 3, 70000, 'ND002', 101),
 (3, N'Đã đặt', '2025-05-01', '07:00', N'Ngũ Hành Sơn - Đà Nẵng', N'Duy Xuyên - Quảng Nam', '2025-05-01 08:00', 4, 70000, 'ND001', 101),
-(4, N'Đã đặt', '2025-05-01', '07:30', N'Liên Chiểu - Đà Nẵng', N'Tam Kỳ - Quảng Nam', '2025-05-01 08:30', 5, 70000, 'ND001', 101);
+(4, N'Đã đặt', '2025-05-01', '07:30', N'Liên Chiểu - Đà Nẵng', N'Tam Kỳ - Quảng Nam', '2025-05-01 0	8:30', 5, 70000, 'ND001', 101);
 GO
 -- Thêm dữ liệu mẫu cho LichTrinhTuDong (ThoiGianDuKien = 1800 giây)
 INSERT INTO LichTrinhTuDong VALUES

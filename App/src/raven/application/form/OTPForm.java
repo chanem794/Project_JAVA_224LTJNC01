@@ -37,6 +37,8 @@ public class OTPForm extends javax.swing.JPanel {
                 + "borderWidth:0;"
                 + "focusWidth:0");
         txtMaxacthuc.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Mã xác thực");
+        // 🔑 Add Enter key trigger
+        txtMaxacthuc.addActionListener(e -> cmdLogin.doClick());
     }
     /**
      * This method is called from within the constructor to initialize the form.
