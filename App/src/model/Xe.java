@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class Xe {
@@ -19,6 +20,16 @@ public class Xe {
     public Xe() { 
     }
 
+     public Xe(int maXe, int maTuyen, Time gioDi, Time gioDen, int giaVe, String diemDi, String diemDen) {
+        this.maXe = maXe;
+        this.maTuyen = maTuyen;
+        this.gioDi = gioDi;
+        this.gioDen = gioDen;
+        this.giaVe = giaVe;
+        this.diemDi = diemDi;
+        this.diemDen = diemDen;
+    }
+    
     public Xe(int maXe, String tenXe, String loaiXe, String diemDi, String diemDen,
               Date ngayKhoiHanh, java.sql.Time gioDi, java.sql.Time gioDen, int soGhe, int gheConTrong,
               int giaVe, int maTuyen) {

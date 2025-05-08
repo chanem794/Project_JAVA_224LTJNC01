@@ -78,6 +78,22 @@ public class MainForm extends JLayeredPane {
                 case 1:
                     Application.showForm(new FormAccount()); 
                     break;
+                    
+                case 2:
+                    Application.showForm(new FormAccount()); 
+                    break;
+                    
+                case 3:
+                    Application.showForm(new FormAccount()); 
+                    break;
+                case 4:
+                    Application.showForm(new FormAccount()); 
+                    break;
+                    
+                case 5:
+                    Application.showForm(new FormAccount()); 
+                    break;
+                    
                 case 6:
                     Application.logout();
                     break;
