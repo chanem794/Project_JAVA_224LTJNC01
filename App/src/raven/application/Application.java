@@ -6,11 +6,11 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import raven.application.form.*;
 import raven.toast.Notifications;
 import javax.swing.*;
 import java.awt.*;
-import raven.application.form.other.component.PanelNhapTTDatVe;
 
 public class Application extends javax.swing.JFrame { 
     private static Application app;
@@ -19,7 +19,6 @@ public class Application extends javax.swing.JFrame {
     private final RegisterForm registerForm;
     private final OTPForm otpForm;
     private final InfoForm infoForm;
-    private PanelNhapTTDatVe panelNhapTTDatVe;
     private Container previousForm;
     private boolean isRegisterFlow;
     private String currentEmail;
@@ -35,19 +34,9 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
-        panelNhapTTDatVe = new PanelNhapTTDatVe(1); 
         setContentPane(mainForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
-    }
-
-    public static void showNhapTTDatVe() {
-        showNhapTTDatVe(1); 
-    }
-
-    public static void showNhapTTDatVe(int maxe) {
-        app.panelNhapTTDatVe = new PanelNhapTTDatVe(maxe);
-        showForm(app.panelNhapTTDatVe);
     }
 
     public static void showForm(Component component) {
@@ -130,8 +119,6 @@ public class Application extends javax.swing.JFrame {
 
     public static void setSelectedMenu(int index, int subIndex) {
         app.mainForm.setSelectedMenu(index, subIndex);
-        app.panelNhapTTDatVe = new PanelNhapTTDatVe(1); 
-        showForm(app.panelNhapTTDatVe);
     }
 
     @SuppressWarnings("unchecked")
@@ -158,14 +145,14 @@ public class Application extends javax.swing.JFrame {
         FlatRobotoFont.install();
         FlatLaf.registerCustomDefaultsSource("raven.theme");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
-        FlatMacDarkLaf.setup();
+        FlatMacLightLaf.setup();
         java.awt.EventQueue.invokeLater(() -> {
             app = new Application();
-            //  app.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             app.setVisible(true);
-            Application.login();
+
         });
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
