@@ -39,6 +39,7 @@ import model.Tuyen;
 import model.Xe;
 import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
+import raven.toast.Notifications;
 /**
  *
  * @author Admin
@@ -153,29 +154,9 @@ public class ChooseLocationForm extends javax.swing.JPanel {
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new java.text.SimpleDateFormat("dd-MM-yyyy")); // <- Sửa YYYY thành yyyy
 
-        // Thiết lập placeholder và font size cho jTextField2
-        jTextField2.setText("DD/MM/YYYY");
-        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
-        jTextField2.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (jTextField2.getText().equals("DD/MM/YYYY")) {
-                    jTextField2.setText("");
-                }
-            }
+        
 
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (jTextField2.getText().isEmpty()) {
-                    jTextField2.setText("DD/MM/YYYY");
-                }
-            }
-        });
-
-        // Tạo DateChooser mới cho jTextField2 và liên kết (SỬA chỗ này)
-        com.raven.datechooser.DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
-        dateChooser2.setTextField(jTextField2);
-        dateChooser2.setDateFormat(new java.text.SimpleDateFormat("dd-MM-yyyy")); // <- Đảm bảo dùng yyyy
+        
 
         // Cài đặt model cho jComboBox1 và jComboBox2 từ file
         jComboBox1.setModel(new DefaultComboBoxModel<>(diemDiList.toArray(new String[0])));
@@ -342,8 +323,6 @@ private String normalizeString(String str) {
         jTextField1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         roundedPanel3 = new raven.application.form.other.RoundedPanel();
 
@@ -394,18 +373,6 @@ private String normalizeString(String str) {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setText("Chọn ngày đi:");
 
-        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jTextField2.setText("DD/MM/YYYY");
-        jTextField2.setToolTipText("");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel10.setText("Chọn ngày đến dự kiến:");
-
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
@@ -418,29 +385,25 @@ private String normalizeString(String str) {
                     .addComponent(jLabel3)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(103, 103, 103))
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(roundedPanel1Layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27))))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -449,8 +412,7 @@ private String normalizeString(String str) {
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -460,8 +422,7 @@ private String normalizeString(String str) {
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(14, 14, 14))
         );
 
@@ -564,8 +525,6 @@ private String normalizeString(String str) {
     String departureLocation = jComboBox1.getSelectedItem().toString();
     String destinationLocation = jComboBox2.getSelectedItem().toString();
     String departureDateStr = jTextField1.getText();
-    String arrivalDateStr = jTextField2.getText();
-
     // Chuyển đổi departureDateStr sang Date
     Date departureDate = null;
     if (!"DD/MM/YYYY".equals(departureDateStr)) {
@@ -615,13 +574,18 @@ private String normalizeString(String str) {
     }
 
     int totalXe = xeList.size();
-    // Truyền giá trị sang ChooseBusForm
-    Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDateStr, arrivalDateStr, totalXe));
+    if (totalXe == 0) {
+            // Thiết lập vị trí thông báo ở giữa
+            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào, xin vui lòng chọn lại!");
+            return; // Dừng việc cập nhật giao diện
+        }
+    else
+    {
+        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
+        // Truyền giá trị sang ChooseBusForm
+        Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDateStr, totalXe));
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -630,7 +594,6 @@ private String normalizeString(String str) {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -641,7 +604,6 @@ private String normalizeString(String str) {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private raven.application.form.other.RoundedPanel roundedPanel1;
     private raven.application.form.other.RoundedPanel roundedPanel2;
     private raven.application.form.other.RoundedPanel roundedPanel3;
