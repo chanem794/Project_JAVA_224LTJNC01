@@ -29,8 +29,6 @@ import javax.swing.UIManager;
 import model.Tuyen;
 import model.Xe;
 import net.miginfocom.swing.MigLayout;
-import raven.application.Application;
-import raven.toast.Notifications;
 
 /**
  *
@@ -51,24 +49,26 @@ public class ChooseBusForm extends javax.swing.JPanel {
     /**
      * Constructor
      */
-        public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, int totalXe) {
-            this.departureLocation = departureLocation;
-            this.destinationLocation = destinationLocation;
-            this.departureDate = departureDate; // Thêm dòng này để gán departureDate
-            this.totalXe = totalXe;
-            initComponents();
-            init();
-            UIManager.addPropertyChangeListener(evt -> {
-                if ("lookAndFeel".equals(evt.getPropertyName())) {
-                    updatePanelColors();
-                }
-            });
-            jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+        public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate, int totalXe) {
+        this.departureLocation = departureLocation;
+        this.destinationLocation = destinationLocation;
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
+        this.totalXe = totalXe;
+        initComponents();
+        init();
+        UIManager.addPropertyChangeListener(evt -> {
+            if ("lookAndFeel".equals(evt.getPropertyName())) {
+                updatePanelColors();
+            }
+        });
+        // Cập nhật label với tổng số xe
+        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
     }
     public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate) {
         this.departureLocation = departureLocation;
         this.destinationLocation = destinationLocation;
-        this.departureDate = departureDate; // Sửa dòng này: Gán departureDate
+        this.departureDate = departureDate;
         this.arrivalDate = arrivalDate;
         initComponents();
         init();
@@ -76,8 +76,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
             if ("lookAndFeel".equals(evt.getPropertyName())) {
                 updatePanelColors();
             }
-    });
-}
+        });
+    }
 
     private void init() {
         setLayout(new MigLayout("al center center"));
@@ -127,19 +127,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel7.setIconTextGap(5);
         jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
-        
-        ImageIcon iconLabel9 = new ImageIcon(getClass().getResource("/raven/icon/png/bus.png"));
-        Image scaledIcon9 = iconLabel9.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        jLabel9.setIcon(new ImageIcon(scaledIcon9));
-        jLabel9.setIconTextGap(5);
-        jLabel9.setHorizontalTextPosition(SwingConstants.RIGHT);
-        jLabel9.setVerticalTextPosition(SwingConstants.CENTER);
 
         DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
         
         
+        DateChooser dateChooser2 = new com.raven.datechooser.DateChooser();
+        dateChooser2.setTextField(jTextField2);
+        dateChooser2.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
         if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD-MM-YYYY")) {
@@ -154,6 +150,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }
+
         jTextField1.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -180,6 +177,48 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jTextField1.addPropertyChangeListener("text", evt -> {
             dateChooser1.hidePopup();
         });
+
+        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 14));
+        if (arrivalDate == null || arrivalDate.isEmpty() || arrivalDate.equals("DD-MM-YYYY")) {
+            jTextField2.setText("DD-MM-YYYY");
+        } else {
+            jTextField2.setText(arrivalDate);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                java.util.Date date = sdf.parse(arrivalDate);
+                dateChooser2.setSelectedDate(date);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        jTextField2.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField2.getText().equals("DD-MM-YYYY")) {
+                    jTextField2.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField2.getText().isEmpty()) {
+                    jTextField2.setText("DD-MM-YYYY");
+                }
+            }
+        });
+
+        jTextField2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                dateChooser2.showPopup();
+            }
+        });
+
+        jTextField2.addPropertyChangeListener("text", evt -> {
+            dateChooser2.hidePopup();
+        });
+
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
@@ -200,8 +239,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
             roundedPanel2.setBackground(new Color(230, 230, 230));
             roundedPanel1.setBackground(new Color(255, 255, 255));
             jButton1.setBackground(new Color(255, 149, 0));
-            roundedPanel4.setBackground(new Color(255, 255, 255));
-            roundedPanel7.setBackground(new Color(255, 255, 255));
+            roundedPanel4.setBackground(new Color(230, 230, 230));
+            roundedPanel7.setBackground(new Color(230, 230, 230));
         }
     }
 
@@ -330,17 +369,17 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         roundedPanel3 = new raven.application.form.other.RoundedPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
         roundedJScrollPane3 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel7 = new raven.application.form.other.RoundedPanel();
-        jRadioButton2 = new javax.swing.JRadioButton();
         roundedJScrollPane1 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel4 = new raven.application.form.other.RoundedPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
 
         roundedPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -380,6 +419,12 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setText("Chọn ngày đi:");
 
+        jTextField2.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jTextField2.setText("DD/MM/YYYY");
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel9.setText("Chọn ngày đến");
+
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
         roundedPanel1Layout.setHorizontalGroup(
@@ -400,41 +445,46 @@ public class ChooseBusForm extends javax.swing.JPanel {
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(jComboBox2, 0, 182, Short.MAX_VALUE)
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addGap(246, 246, 246))
-                    .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel9))
+                .addGap(22, 22, 22))
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel1Layout.createSequentialGroup()
                 .addContainerGap(19, Short.MAX_VALUE)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel8)))
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel9))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
         );
@@ -446,7 +496,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(roundedPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         roundedPanel2Layout.setVerticalGroup(
             roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -473,28 +523,19 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         jRadioButton1.setText("jRadioButton1");
 
-        jRadioButton2.setText("jRadioButton2");
-
         javax.swing.GroupLayout roundedPanel7Layout = new javax.swing.GroupLayout(roundedPanel7);
         roundedPanel7.setLayout(roundedPanel7Layout);
         roundedPanel7Layout.setHorizontalGroup(
             roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roundedPanel7Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jRadioButton2)
-                .addContainerGap(189, Short.MAX_VALUE))
+            .addGap(0, 311, Short.MAX_VALUE)
         );
         roundedPanel7Layout.setVerticalGroup(
             roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(roundedPanel7Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jRadioButton2)
-                .addContainerGap(411, Short.MAX_VALUE))
+            .addGap(0, 462, Short.MAX_VALUE)
         );
 
         roundedJScrollPane3.setViewportView(roundedPanel7);
 
-        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel1.setText("jLabel1");
 
         javax.swing.GroupLayout roundedPanel4Layout = new javax.swing.GroupLayout(roundedPanel4);
@@ -502,19 +543,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
         roundedPanel4Layout.setHorizontalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel4Layout.createSequentialGroup()
-                .addGap(226, 226, 226)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(329, 329, 329)
                 .addComponent(jLabel1)
-                .addContainerGap(438, Short.MAX_VALUE))
+                .addContainerGap(363, Short.MAX_VALUE))
         );
         roundedPanel4Layout.setVerticalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel1)
                 .addContainerGap(440, Short.MAX_VALUE))
         );
 
@@ -527,7 +564,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(roundedJScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addComponent(roundedJScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(roundedJScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addComponent(roundedPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -549,7 +587,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -620,52 +658,32 @@ public class ChooseBusForm extends javax.swing.JPanel {
         }
 
         int totalXe = xeList.size();
-        // Kiểm tra nếu không tìm thấy chuyến xe nào
-        if (totalXe == 0) {
-            // Thiết lập vị trí thông báo ở giữa
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào, xin vui lòng chọn lại!");
-            return; // Dừng việc cập nhật giao diện
-        }
-        else
-        {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
-            // Truyền giá trị sang ChooseBusForm
-
-        }
-
         // Cập nhật label với tổng số xe
         jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
 
-        // Tạo hoặc cập nhật ticketContainer
+        // Xóa nội dung hiện tại của roundedPanel4
+        roundedPanel4.removeAll();
+
+        // Tạo panel chứa các BusTicketForm
         javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
-        ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10, align center", "[600px]", "[]"));
-        ticketContainer.setOpaque(false);
-
-        // Tạo một panel con để chứa jLabel9 và jLabel1 trên cùng một hàng
-        javax.swing.JPanel labelPanel = new javax.swing.JPanel();
-        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]")); // Gap 5 giữa jLabel9 và jLabel1
-        labelPanel.setOpaque(false); // Trong suốt để hiển thị nền
-
-        // Thêm jLabel9 (ảnh) và jLabel1 (text) vào labelPanel
-        labelPanel.add(jLabel9, "align left");
-        labelPanel.add(jLabel1, "align left");
-
-        // Thêm labelPanel vào ticketContainer, căn giữa
-        ticketContainer.add(labelPanel, "align center, wrap");
+        ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10, align center", "[600px]", "[]")); // Cố định chiều rộng cột là 600px, căn giữa
+        ticketContainer.setOpaque(false); // Đặt trong suốt để hiển thị nền của roundedPanel4
 
         // Thêm 3 BusTicketForm với kích thước cố định
         for (int i = 0; i < 3; i++) {
             BusTicketForm busTicketForm = new BusTicketForm();
-            busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200));
-            busTicketForm.setMaximumSize(new java.awt.Dimension(600, 200));
-            busTicketForm.setMinimumSize(new java.awt.Dimension(600, 200));
-            ticketContainer.add(busTicketForm, "align center");
+            busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200)); // Kích thước cố định
+            busTicketForm.setMaximumSize(new java.awt.Dimension(600, 200)); // Khóa kích thước tối đa
+            busTicketForm.setMinimumSize(new java.awt.Dimension(600, 200)); // Khóa kích thước tối thiểu
+            ticketContainer.add(busTicketForm, "align center"); // Căn giữa, không cho phép mở rộng
         }
 
-        // Thêm ticketContainer vào roundedPanel4
-        roundedPanel4.removeAll(); // Xóa nội dung cũ
+        // Thêm jLabel1 vào cuối container, căn giữa
+        ticketContainer.add(jLabel1, "align center, wrap");
+
+        // Thêm container vào roundedPanel4
         roundedPanel4.setLayout(new java.awt.BorderLayout());
-        roundedPanel4.add(ticketContainer, java.awt.BorderLayout.CENTER);
+        roundedPanel4.add(ticketContainer, java.awt.BorderLayout.CENTER); // Sử dụng CENTER để căn giữa toàn bộ nội dung
 
         // Đảm bảo không có thanh cuộn ngang
         roundedJScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -694,8 +712,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane1;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane3;
     private raven.application.form.other.RoundedPanel roundedPanel1;

@@ -39,14 +39,14 @@ public class RoundedJScrollPane extends JScrollPane {
             @Override
             public void mouseEntered(MouseEvent e) {
                 isMouseOver = true;
-                setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Hiển thị thanh cuộn khi chuột vào
+                setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED); // Hiển thị thanh cuộn khi chuột vào
                 repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 isMouseOver = false;
-                setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS); // Ẩn thanh cuộn khi chuột ra
+                setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER); // Ẩn thanh cuộn khi chuột ra
                 repaint();
             }
         });
