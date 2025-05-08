@@ -29,7 +29,6 @@ public class MainForm extends JLayeredPane {
 
     public MainForm() {
         init();
-        //String maNguoiDung = Application.getCurrentMaNguoiDung();
         // 👉 Hiển thị ChooseLocationForm lúc khởi động
         showForm(new raven.application.form.other.ChooseLocationForm());
     }
@@ -70,19 +69,14 @@ public class MainForm extends JLayeredPane {
     }
 
     private void initMenuEvent() {
-        menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {  
+        menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
             switch (index) {
                 case 0:
                     Application.showForm(new FormAccount());
                     break;
                 case 1:
-                    String maNguoiDung = Application.getCurrentMaNguoiDung();
-                    if (maNguoiDung != null) {
-                        showForm(new FormGioHang()); // Hiển thị FormGioHang
-                    } else {
-                        showForm(new FormAccount());
-                    }
+                    Application.showForm(new FormGioHang());
                     break;
                 case 2:
                     Application.showForm(new FormInbox());
