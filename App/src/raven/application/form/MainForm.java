@@ -103,8 +103,7 @@ public class MainForm extends JLayeredPane {
                     break;
                 default:
                     action.cancel();
-                    break;
-            }
+                }
         });
     }
 
