@@ -8,6 +8,7 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import raven.application.form.*;
+import raven.application.form.other.*;
 import raven.toast.Notifications;
 import javax.swing.*;
 import java.awt.*;
@@ -146,10 +147,11 @@ public class Application extends javax.swing.JFrame {
         FlatLaf.registerCustomDefaultsSource("raven.theme");
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 13));
         FlatMacLightLaf.setup();
+        
         java.awt.EventQueue.invokeLater(() -> {
             app = new Application();
             app.setVisible(true);
-
+            
         });
     }
 
