@@ -4,23 +4,162 @@
  */
 package raven.application.form.other;
 
+import com.formdev.flatlaf.FlatLaf;
+import java.awt.Color;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
+import dal.BusticketDAO;
+import sun.rmi.transport.Connection;
 
 /**
  *
  * @author Admin
  */
 public class BusTicketForm extends javax.swing.JPanel {
-
+    Connection conn=null;
     /**
      * Creates new form BusTicketForm
      */
     public BusTicketForm() {
         initComponents();
         init();
+        UIManager.addPropertyChangeListener(evt -> {
+            if ("lookAndFeel".equals(evt.getPropertyName())) {
+                updatePanelColors();
+            }
+        });
     }
     private void init() {
         setLayout(new MigLayout("al center center"));
+        
+        ImageIcon iconLabel9 = new ImageIcon(getClass().getResource("/raven/icon/png/begin.png"));
+        Image scaledIcon9 = iconLabel9.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        jLabel9.setIcon(new ImageIcon(scaledIcon9));
+        jLabel9.setIconTextGap(5);
+        jLabel9.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel9.setVerticalTextPosition(SwingConstants.CENTER);
+
+        ImageIcon iconLabel10 = new ImageIcon(getClass().getResource("/raven/icon/png/end.png"));
+        Image scaledIcon10 = iconLabel10.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        jLabel10.setIcon(new ImageIcon(scaledIcon10));
+        jLabel10.setIconTextGap(5);
+        jLabel10.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel10.setVerticalTextPosition(SwingConstants.CENTER);
+        
+        ImageIcon icon = new ImageIcon(getClass().getResource("/raven/icon/png/iconbusfinal.png"));
+        Image image = icon.getImage().getScaledInstance(80, 60, Image.SCALE_SMOOTH); // Resize icon thành 80x60
+        roundedLabel1.setIcon(new ImageIcon(image));
+        
+        roundedPanel2.setBackground(new Color(230, 230, 230));
+        roundedPanel1.setBackground(new Color(255, 255, 255));
+        jButton1.setBackground(new Color(24,144,255));
+    }
+
+    public JButton getjButton1() {
+        return jButton1;
+    }
+
+    public void setjButton1(JButton jButton1) {
+        this.jButton1 = jButton1;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public void setjLabel1(String jLabel1) {
+        this.jLabel1.setText(jLabel1);
+    }
+
+    public JLabel getjLabel10() {
+        return jLabel10;
+    }
+
+    public void setjLabel10(JLabel jLabel10) {
+        this.jLabel10 = jLabel10;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public void setjLabel2(String jLabel2) {
+        this.jLabel2.setText(jLabel2);
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public void setjLabel3(String jLabel3) {
+        this.jLabel3.setText(jLabel3);
+    }
+
+    public JLabel getjLabel4() {
+        return jLabel4;
+    }
+
+    public void setjLabel4(String jLabel4) {
+        this.jLabel4.setText(jLabel4);
+    }
+
+    public JLabel getjLabel5() {
+        return jLabel5;
+    }
+
+    public void setjLabel5(String jLabel5) {
+        this.jLabel5.setText(jLabel5);
+    }
+
+    public JLabel getjLabel6() {
+        return jLabel6;
+    }
+
+    public void setjLabel6(String jLabel6) {
+        this.jLabel6.setText(jLabel6);
+    }
+
+    public JLabel getjLabel7() {
+        return jLabel7;
+    }
+
+    public void setjLabel7(String jLabel7) {
+        this.jLabel7.setText(jLabel7);
+    }
+
+    public JLabel getjLabel8() {
+        return jLabel8;
+    }
+
+    public void setjLabel8(String jLabel8) {
+        this.jLabel8.setText(jLabel8);
+    }
+
+    public JLabel getjLabel9() {
+        return jLabel9;
+    }
+
+    public void setjLabel9(String jLabel9) {
+        this.jLabel9.setText(jLabel9);
+    }
+    
+    private void updatePanelColors() {
+        if (FlatLaf.isLafDark()) {
+            roundedPanel2.setBackground(new Color(79, 92, 104, 255));
+            roundedPanel1.setBackground(new Color(49, 62, 74, 255));
+            jButton1.setBackground(new Color(79, 92, 104, 255));
+            // Màu xám đậm cho dark mode
+        } else {
+            roundedPanel2.setBackground(new Color(230, 230, 230));
+            roundedPanel1.setBackground(new Color(255, 255, 255));
+            jButton1.setBackground(new Color(24,144,255));
+
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,6 +170,7 @@ public class BusTicketForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        roundedPanel2 = new raven.application.form.other.RoundedPanel();
         roundedPanel1 = new raven.application.form.other.RoundedPanel();
         roundedLabel1 = new raven.application.form.other.RoundedLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -42,8 +182,14 @@ public class BusTicketForm extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
-        roundedLabel1.setText("roundedLabel1");
+        setPreferredSize(new java.awt.Dimension(580, 200));
+
+        roundedPanel2.setPreferredSize(new java.awt.Dimension(580, 180));
+
+        roundedPanel1.setPreferredSize(new java.awt.Dimension(550, 170));
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel1.setText("jLabel1");
@@ -64,9 +210,14 @@ public class BusTicketForm extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel7.setText("jLabel7");
 
+        jButton1.setBackground(new java.awt.Color(24, 144, 255));
         jButton1.setText("jButton1");
 
         jLabel8.setText("jLabel8");
+
+        jLabel9.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        jLabel10.setPreferredSize(new java.awt.Dimension(20, 20));
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -76,28 +227,29 @@ public class BusTicketForm extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(roundedLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 251, Short.MAX_VALUE)
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(64, 64, 64))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addContainerGap())))
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(roundedPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(roundedPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel4))))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7))
+                .addContainerGap())
         );
         roundedPanel1Layout.setVerticalGroup(
             roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,18 +263,48 @@ public class BusTicketForm extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel8))
+                            .addGroup(roundedPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(roundedPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(roundedPanel1Layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(3, 3, 3))
                     .addComponent(roundedLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
+        roundedPanel2.setLayout(roundedPanel2Layout);
+        roundedPanel2Layout.setHorizontalGroup(
+            roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 580, Short.MAX_VALUE)
+            .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(roundedPanel2Layout.createSequentialGroup()
+                    .addGap(15, 15, 15)
+                    .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(15, Short.MAX_VALUE)))
+        );
+        roundedPanel2Layout.setVerticalGroup(
+            roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(roundedPanel2Layout.createSequentialGroup()
+                    .addGap(5, 5, 5)
+                    .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -130,16 +312,16 @@ public class BusTicketForm extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addGap(0, 10, Short.MAX_VALUE)
+                .addComponent(roundedPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 9, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -147,6 +329,7 @@ public class BusTicketForm extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -154,7 +337,9 @@ public class BusTicketForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private raven.application.form.other.RoundedLabel roundedLabel1;
     private raven.application.form.other.RoundedPanel roundedPanel1;
+    private raven.application.form.other.RoundedPanel roundedPanel2;
     // End of variables declaration//GEN-END:variables
 }
