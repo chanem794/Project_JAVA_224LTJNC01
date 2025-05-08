@@ -16,7 +16,7 @@ public class Xe {
     private int giaVe;
     private int maTuyen;
 
-    public Xe() {
+    public Xe() { 
     }
 
     public Xe(int maXe, String tenXe, String loaiXe, String diemDi, String diemDen,
