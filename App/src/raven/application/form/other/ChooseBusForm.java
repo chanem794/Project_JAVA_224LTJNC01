@@ -135,6 +135,13 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel9.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel9.setVerticalTextPosition(SwingConstants.CENTER);
 
+        ImageIcon iconLabel11 = new ImageIcon(getClass().getResource("/raven/icon/png/filter.png"));
+        Image scaledIcon11 = iconLabel11.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        jLabel11.setIcon(new ImageIcon(scaledIcon11));
+        jLabel11.setIconTextGap(5);
+        jLabel11.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel11.setVerticalTextPosition(SwingConstants.CENTER);
+        
         DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
@@ -337,6 +344,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
         roundedJScrollPane3 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel7 = new raven.application.form.other.RoundedPanel();
         jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jLabel10 = new javax.swing.JLabel();
+        jRadioButton5 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
+        jRadioButton7 = new javax.swing.JRadioButton();
+        jRadioButton8 = new javax.swing.JRadioButton();
+        jRadioButton9 = new javax.swing.JRadioButton();
+        jLabel11 = new javax.swing.JLabel();
         roundedJScrollPane1 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel4 = new raven.application.form.other.RoundedPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -473,7 +489,32 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         jRadioButton1.setText("jRadioButton1");
 
-        jRadioButton2.setText("jRadioButton2");
+        jRadioButton2.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton2.setText("Mặc định\n");
+
+        jRadioButton3.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton3.setText("Giờ đi sớm nhất");
+
+        jRadioButton4.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton4.setText("Giờ đi muộn nhất\n");
+
+        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        jLabel10.setText("Sắp xếp theo");
+
+        jRadioButton5.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton5.setText("Giá tăng dần");
+
+        jRadioButton6.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton6.setText("Giá giảm dần");
+
+        jRadioButton7.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton7.setText("Giá rẻ nhất ");
+
+        jRadioButton8.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton8.setText("Giá đắt nhất");
+
+        jRadioButton9.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton9.setText("Nhiều chỗ trống nhất");
 
         javax.swing.GroupLayout roundedPanel7Layout = new javax.swing.GroupLayout(roundedPanel7);
         roundedPanel7.setLayout(roundedPanel7Layout);
@@ -481,15 +522,47 @@ public class ChooseBusForm extends javax.swing.JPanel {
             roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel7Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jRadioButton2)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addGroup(roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton6)
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton3)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jRadioButton7)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton8)
+                    .addComponent(jRadioButton9))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel7Layout.createSequentialGroup()
+                .addContainerGap(65, Short.MAX_VALUE)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10)
+                .addGap(88, 88, 88))
         );
         roundedPanel7Layout.setVerticalGroup(
             roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel7Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(15, 15, 15)
+                .addGroup(roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
                 .addComponent(jRadioButton2)
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton3)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton4)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton5)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton6)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton7)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jRadioButton9)
+                .addGap(28, 28, 28))
         );
 
         roundedJScrollPane3.setViewportView(roundedPanel7);
@@ -628,7 +701,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         }
         else
         {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
             // Truyền giá trị sang ChooseBusForm
 
         }
@@ -684,6 +757,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -695,6 +770,13 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
+    private javax.swing.JRadioButton jRadioButton7;
+    private javax.swing.JRadioButton jRadioButton8;
+    private javax.swing.JRadioButton jRadioButton9;
     private javax.swing.JTextField jTextField1;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane1;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane3;

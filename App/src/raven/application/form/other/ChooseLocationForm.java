@@ -581,7 +581,7 @@ private String normalizeString(String str) {
         }
     else
     {
-        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
+        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
         // Truyền giá trị sang ChooseBusForm
         Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDateStr, totalXe));
     }
