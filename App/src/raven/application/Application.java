@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
-import raven.application.form.other.*;
+import raven.application.form.other.StationForm;
 
 
 public class Application extends javax.swing.JFrame { 
@@ -26,7 +26,6 @@ public class Application extends javax.swing.JFrame {
     private final RegisterForm registerForm;
     private final OTPForm otpForm;
     private final InfoForm infoForm;
-//    private final NhapTTDatVeForm tDatVeForm;
     private Container previousForm;
     private boolean isRegisterFlow;
     private String currentMaNguoiDung; // Thêm để lưu maNguoiDung
@@ -43,11 +42,9 @@ public class Application extends javax.swing.JFrame {
         registerForm = new RegisterForm();
         otpForm = new OTPForm();
         infoForm = new InfoForm();
-//        tDatVeForm = new NhapTTDatVeForm(101);
         nguoidungService = new NguoiDungService();
-        setContentPane(mainForm);
-        
-        //setContentPane(loginForm);
+        //setContentPane(mainForm);
+        setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
@@ -195,6 +192,7 @@ public class Application extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             app = new Application();
             app.setVisible(true);
+
             
         });
     }
