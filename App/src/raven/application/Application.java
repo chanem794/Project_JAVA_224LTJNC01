@@ -38,8 +38,8 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
-        setContentPane(mainForm);
-        //setContentPane(loginForm);
+//        setContentPane(mainForm);
+        setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }

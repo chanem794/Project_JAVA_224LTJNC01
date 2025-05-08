@@ -70,24 +70,24 @@ public class MainForm extends JLayeredPane {
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
-            if (index == 0) {
-                Application.showForm(new FormAccount());
-            } else if (index == 1) {
-                if (subIndex == 1) {
-                    Application.showForm(new FormInbox());
-                } else if (subIndex == 2) {
-                    Application.showForm(new FormRead());
-                } else {
+
+            switch (index) {
+                case 0:
+                    Application.showForm(new FormAccount());
+                    break;
+                case 1:
+                    Application.showForm(new FormAccount()); 
+                    break;
+                case 6:
+                    Application.logout();
+                    break;
+                default:
                     action.cancel();
-                }
-            } else if (index == 6) {
-                Application.logout();
-            } else {
-                action.cancel();
+                    break;
             }
         });
     }
-
+                
     private void setMenuFull(boolean full) {
         String icon;
         if (getComponentOrientation().isLeftToRight()) {

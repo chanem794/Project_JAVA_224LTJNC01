@@ -9,6 +9,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -16,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import raven.application.Application;
+import raven.application.form.other.ChooseLocationForm;
 import raven.menu.mode.ToolBarAccentColor;
 
 /**
@@ -85,7 +89,13 @@ public class Menu extends JPanel {
         header.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$Menu.header.font;"
                 + "foreground:$Menu.foreground");
-
+        // Thêm sự kiện nhấn chuột cho header
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Application.showForm(new ChooseLocationForm());
+            }
+        });
         //  Menu
         scroll = new JScrollPane();
         panelMenu = new JPanel(new MenuItemLayout(this));
