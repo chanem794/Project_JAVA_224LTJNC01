@@ -85,7 +85,7 @@ public class MainForm extends JLayeredPane {
                     }
                     break;
                 case 2:
-                    Application.showForm(new NhapTTDatVeForm(101));
+                    Application.showForm(new FormInbox());
                     break;
                 case 3:
                     Application.showForm(new FormInbox());
