@@ -10,13 +10,13 @@ import java.util.List;
 import model.Xe;
 import model.Tuyen;
 import raven.application.form.other.StationForm;
-
+   
 public class ConnectStationForm {
-
+   
     private StationForm sf;
     private Connection con;
     private Statement stm;
-
+  
     public ConnectStationForm(StationForm stationForm) throws SQLException {
         this.sf = stationForm;
         con = DatabaseConnection.getInstance().getConnection();
