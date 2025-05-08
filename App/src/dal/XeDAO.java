@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XeDAO {
-    private Connection connection;
+    private Connection connection;  
 
     public XeDAO() {
         this.connection = DatabaseConnection.getInstance().getConnection();
