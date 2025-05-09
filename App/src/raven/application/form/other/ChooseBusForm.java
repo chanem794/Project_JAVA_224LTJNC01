@@ -37,7 +37,7 @@ import raven.toast.Notifications;
  * @author Admin
  */
 public class ChooseBusForm extends javax.swing.JPanel {
-
+    private List<BusTicketForm> busTicketForms = new ArrayList<>();
     // Các biến để lưu giá trị từ ChooseLocationForm
     private String departureLocation; // Giá trị của jComboBox1 (Nơi xuất phát)
     private String destinationLocation; // Giá trị của jComboBox2 (Nơi đến)
@@ -202,14 +202,26 @@ public class ChooseBusForm extends javax.swing.JPanel {
             jButton1.setBackground(new Color(79, 92, 104, 255));
             roundedPanel4.setBackground(new Color(79, 92, 104, 255));
             roundedPanel7.setBackground(new Color(79, 92, 104, 255));
-            // Màu xám đậm cho dark mode
+            // Cập nhật màu nền cho tất cả BusTicketForm
+            for (BusTicketForm busTicketForm : busTicketForms) {
+                busTicketForm.setBackground(new Color(79, 92, 104, 255));
+            }
         } else {
             roundedPanel2.setBackground(new Color(230, 230, 230));
             roundedPanel1.setBackground(new Color(255, 255, 255));
             jButton1.setBackground(new Color(255, 149, 0));
             roundedPanel4.setBackground(new Color(255, 255, 255));
             roundedPanel7.setBackground(new Color(255, 255, 255));
+            // Cập nhật màu nền cho tất cả BusTicketForm
+            for (BusTicketForm busTicketForm : busTicketForms) {
+                busTicketForm.setBackground(new Color(255, 255, 255));
+            }
         }
+        // Làm mới giao diện sau khi thay đổi theme
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
+        roundedJScrollPane1.revalidate();
+        roundedJScrollPane1.repaint();
     }
 
     private void setupAutoComplete(javax.swing.JComboBox<String> comboBox, List<String> items) {
@@ -315,6 +327,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
             return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
         }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -643,7 +656,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String departureLocation = jComboBox1.getSelectedItem().toString();
+            String departureLocation = jComboBox1.getSelectedItem().toString();
         String destinationLocation = jComboBox2.getSelectedItem().toString();
         String departureDateStr = jTextField1.getText();
 
@@ -695,15 +708,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
         int totalXe = xeList.size();
         // Kiểm tra nếu không tìm thấy chuyến xe nào
         if (totalXe == 0) {
-            // Thiết lập vị trí thông báo ở giữa
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào, xin vui lòng chọn lại!");
             return; // Dừng việc cập nhật giao diện
-        }
-        else
-        {
+        } else {
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
-            // Truyền giá trị sang ChooseBusForm
-
         }
 
         // Cập nhật label với tổng số xe
@@ -716,8 +724,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         // Tạo một panel con để chứa jLabel9 và jLabel1 trên cùng một hàng
         javax.swing.JPanel labelPanel = new javax.swing.JPanel();
-        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]")); // Gap 5 giữa jLabel9 và jLabel1
-        labelPanel.setOpaque(false); // Trong suốt để hiển thị nền
+        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]"));
+        labelPanel.setOpaque(false);
 
         // Thêm jLabel9 (ảnh) và jLabel1 (text) vào labelPanel
         labelPanel.add(jLabel9, "align left");
@@ -726,13 +734,26 @@ public class ChooseBusForm extends javax.swing.JPanel {
         // Thêm labelPanel vào ticketContainer, căn giữa
         ticketContainer.add(labelPanel, "align center, wrap");
 
-        // Thêm 3 BusTicketForm với kích thước cố định
+        // Xóa danh sách BusTicketForm cũ trước khi tạo mới
+        busTicketForms.clear();
+
+        // Thêm 3 BusTicketForm với kích thước cố định và màu nền thủ công
         for (int i = 0; i < 3; i++) {
             BusTicketForm busTicketForm = new BusTicketForm();
-            busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200));
-            busTicketForm.setMaximumSize(new java.awt.Dimension(600, 200));
-            busTicketForm.setMinimumSize(new java.awt.Dimension(600, 200));
+            busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMaximumSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMinimumSize(new java.awt.Dimension(650, 250));
+            // Đặt màu nền thủ công dựa trên theme hiện tại
+            boolean isDarkMode = FlatLaf.isLafDark();
+            System.out.println("Dark mode detected when creating BusTicketForm: " + isDarkMode); // Debug
+            if (isDarkMode) {
+                busTicketForm.setBackground(new Color(79, 92, 104, 255));
+            } else {
+                busTicketForm.setBackground(new Color(255, 255, 255));
+            }
             ticketContainer.add(busTicketForm, "align center");
+            // Lưu BusTicketForm vào danh sách
+            busTicketForms.add(busTicketForm);
         }
 
         // Thêm ticketContainer vào roundedPanel4
