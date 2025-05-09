@@ -3,14 +3,17 @@ package raven.application.form.other;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
 import java.awt.Image;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import model.Xe; // Import model Xe
 import net.miginfocom.swing.MigLayout;
+import raven.application.Application;
 
 public class BusTicketForm extends javax.swing.JPanel {
     
@@ -156,6 +159,11 @@ public class BusTicketForm extends javax.swing.JPanel {
         jButton1.setBackground(new java.awt.Color(24, 144, 255));
         jButton1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("jLabel8");
@@ -287,16 +295,39 @@ public class BusTicketForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addComponent(roundedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addComponent(roundedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (xe != null) {
+        // Tạo một instance của StationForm và truyền thông tin điểm đi, điểm đến
+        StationForm stationForm = new StationForm();
+        // Điền thông tin điểm đi vào jTextField1
+        stationForm.getJTextField1().setText(xe.getDiemDi());
+        // Điền thông tin điểm đến vào jTextField2
+        stationForm.getJTextField2().setText(xe.getDiemDen());
+        // Gọi phương thức tìm kiếm trạm dựa trên điểm đi và điểm đến
+        if (stationForm.stationService != null) {
+            stationForm.stationService.searchPickupStations(xe.getDiemDi());
+            stationForm.stationService.searchDropoffStations(xe.getDiemDen());
+        } else {
+            JOptionPane.showMessageDialog(this, "Không thể khởi tạo dịch vụ trạm. Vui lòng thử lại!");
+            return; // Thoát nếu stationService null
+        }
+        // Hiển thị StationForm
+        Application.showForm(stationForm); // Thay bằng cách quản lý form của bạn nếu khác
+    } else {
+        JOptionPane.showMessageDialog(this, "Không có thông tin chuyến xe để chọn!");
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

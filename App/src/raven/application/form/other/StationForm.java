@@ -29,13 +29,15 @@ public class StationForm extends javax.swing.JPanel {
     private ButtonGroup dropoffButtonGroup;
     private String selectedPickupStation;
     private String selectedDropoffStation;
-    private StationService stationService;
+    protected StationService stationService;
+    private ChooseBusForm previousForm;
 
     /**
      * Creates new form NewJPanel
      */
     public StationForm() {
        initComponents();
+       this.previousForm = previousForm;
        pickupButtonGroup = new ButtonGroup();
        dropoffButtonGroup = new ButtonGroup();
        try {
@@ -45,6 +47,7 @@ public class StationForm extends javax.swing.JPanel {
        } catch (SQLException ex) {
            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
            JOptionPane.showMessageDialog(this, "Lỗi khi khởi tạo dữ liệu: " + ex.getMessage());
+           stationService = null;
        }
        init();
    }
