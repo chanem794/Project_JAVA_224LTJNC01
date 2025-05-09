@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -37,7 +38,7 @@ import raven.toast.Notifications;
  * @author Admin
  */
 public class ChooseBusForm extends javax.swing.JPanel {
-
+    private List<BusTicketForm> busTicketForms = new ArrayList<>();
     // Các biến để lưu giá trị từ ChooseLocationForm
     private String departureLocation; // Giá trị của jComboBox1 (Nơi xuất phát)
     private String destinationLocation; // Giá trị của jComboBox2 (Nơi đến)
@@ -47,37 +48,26 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private List<String> diemDiList = new ArrayList<>(); // Danh sách điểm đi
     private List<String> diemDenList = new ArrayList<>(); // Danh sách điểm đến
     private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
+    private List<Xe> xeList; // Thêm biến thành viên xeList
 
     /**
      * Constructor
      */
-        public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, int totalXe) {
-            this.departureLocation = departureLocation;
-            this.destinationLocation = destinationLocation;
-            this.departureDate = departureDate; // Thêm dòng này để gán departureDate
-            this.totalXe = totalXe;
-            initComponents();
-            init();
-            UIManager.addPropertyChangeListener(evt -> {
-                if ("lookAndFeel".equals(evt.getPropertyName())) {
-                    updatePanelColors();
-                }
-            });
-            jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
-    }
-    public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate) {
+    public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, List<Xe> xeList) {
         this.departureLocation = departureLocation;
         this.destinationLocation = destinationLocation;
-        this.departureDate = departureDate; // Sửa dòng này: Gán departureDate
-        this.arrivalDate = arrivalDate;
+        this.departureDate = departureDate;
+        this.xeList = xeList; // Gán xeList từ tham số
+        this.totalXe = xeList != null ? xeList.size() : 0; // Gán totalXe
         initComponents();
         init();
         UIManager.addPropertyChangeListener(evt -> {
             if ("lookAndFeel".equals(evt.getPropertyName())) {
                 updatePanelColors();
             }
-    });
-}
+        });
+        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+    }
 
     private void init() {
         setLayout(new MigLayout("al center center"));
@@ -127,7 +117,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel7.setIconTextGap(5);
         jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
-        
+
         ImageIcon iconLabel9 = new ImageIcon(getClass().getResource("/raven/icon/png/bus.png"));
         Image scaledIcon9 = iconLabel9.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         jLabel9.setIcon(new ImageIcon(scaledIcon9));
@@ -135,11 +125,16 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel9.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel9.setVerticalTextPosition(SwingConstants.CENTER);
 
+        ImageIcon iconLabel11 = new ImageIcon(getClass().getResource("/raven/icon/png/filter.png"));
+        Image scaledIcon11 = iconLabel11.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        jLabel11.setIcon(new ImageIcon(scaledIcon11));
+        jLabel11.setIconTextGap(5);
+        jLabel11.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jLabel11.setVerticalTextPosition(SwingConstants.CENTER);
+
         DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
-        
-        
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
         if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD-MM-YYYY")) {
@@ -183,7 +178,71 @@ public class ChooseBusForm extends javax.swing.JPanel {
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
+        // Hiển thị BusTicketForm trực tiếp khi khởi tạo
+        displayBusTicketForms();
+
         updatePanelColors();
+    }
+
+    // Thêm phương thức để hiển thị BusTicketForm
+    void displayBusTicketForms() {
+        // Kiểm tra nếu xeList rỗng
+        if (xeList == null || xeList.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào để hiển thị!");
+            return;
+        }
+
+        // Tạo hoặc cập nhật ticketContainer
+        javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
+        ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10, align center", "[600px]", "[]"));
+        ticketContainer.setOpaque(false);
+
+        // Tạo một panel con để chứa jLabel9 và jLabel1 trên cùng một hàng
+        javax.swing.JPanel labelPanel = new javax.swing.JPanel();
+        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]"));
+        labelPanel.setOpaque(false);
+
+        // Thêm jLabel9 (ảnh) và jLabel1 (text) vào labelPanel
+        labelPanel.add(jLabel9, "align left");
+        labelPanel.add(jLabel1, "align left");
+
+        // Thêm labelPanel vào ticketContainer, căn giữa
+        ticketContainer.add(labelPanel, "align center, wrap");
+
+        // Xóa danh sách BusTicketForm cũ trước khi tạo mới
+        busTicketForms.clear();
+
+        // Thêm BusTicketForm với thông tin từ danh sách xeList
+        int displayCount = Math.min(xeList.size(), 300); // Hiển thị tối đa 300 xe
+        for (int i = 0; i < displayCount; i++) {
+            BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
+            busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMaximumSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMinimumSize(new java.awt.Dimension(650, 250));
+            // Đặt màu nền thủ công dựa trên theme hiện tại
+            boolean isDarkMode = FlatLaf.isLafDark();
+            if (isDarkMode) {
+                busTicketForm.setBackground(new Color(79, 92, 104, 255));
+            } else {
+                busTicketForm.setBackground(new Color(255, 255, 255));
+            }
+            ticketContainer.add(busTicketForm, "align center");
+            busTicketForms.add(busTicketForm);
+        }
+
+        // Thêm ticketContainer vào roundedPanel4
+        roundedPanel4.removeAll();
+        roundedPanel4.setLayout(new java.awt.BorderLayout());
+        roundedPanel4.add(ticketContainer, java.awt.BorderLayout.CENTER);
+
+        // Đảm bảo không có thanh cuộn ngang
+        roundedJScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Làm mới giao diện để hiển thị thanh cuộn
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
+        roundedJScrollPane1.revalidate();
+        roundedJScrollPane1.repaint();
     }
 
 
@@ -195,14 +254,26 @@ public class ChooseBusForm extends javax.swing.JPanel {
             jButton1.setBackground(new Color(79, 92, 104, 255));
             roundedPanel4.setBackground(new Color(79, 92, 104, 255));
             roundedPanel7.setBackground(new Color(79, 92, 104, 255));
-            // Màu xám đậm cho dark mode
+            // Cập nhật màu nền cho tất cả BusTicketForm
+            for (BusTicketForm busTicketForm : busTicketForms) {
+                busTicketForm.setBackground(new Color(79, 92, 104, 255));
+            }
         } else {
             roundedPanel2.setBackground(new Color(230, 230, 230));
             roundedPanel1.setBackground(new Color(255, 255, 255));
             jButton1.setBackground(new Color(255, 149, 0));
             roundedPanel4.setBackground(new Color(255, 255, 255));
             roundedPanel7.setBackground(new Color(255, 255, 255));
+            // Cập nhật màu nền cho tất cả BusTicketForm
+            for (BusTicketForm busTicketForm : busTicketForms) {
+                busTicketForm.setBackground(new Color(255, 255, 255));
+            }
         }
+        // Làm mới giao diện sau khi thay đổi theme
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
+        roundedJScrollPane1.revalidate();
+        roundedJScrollPane1.repaint();
     }
 
     private void setupAutoComplete(javax.swing.JComboBox<String> comboBox, List<String> items) {
@@ -308,6 +379,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
             String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
             return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
         }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -337,6 +409,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
         roundedJScrollPane3 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel7 = new raven.application.form.other.RoundedPanel();
         jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jLabel10 = new javax.swing.JLabel();
+        jRadioButton5 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
+        jRadioButton7 = new javax.swing.JRadioButton();
+        jRadioButton8 = new javax.swing.JRadioButton();
+        jRadioButton9 = new javax.swing.JRadioButton();
+        jLabel11 = new javax.swing.JLabel();
         roundedJScrollPane1 = new raven.application.form.other.RoundedJScrollPane();
         roundedPanel4 = new raven.application.form.other.RoundedPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -473,7 +554,32 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         jRadioButton1.setText("jRadioButton1");
 
-        jRadioButton2.setText("jRadioButton2");
+        jRadioButton2.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton2.setText("Mặc định\n");
+
+        jRadioButton3.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton3.setText("Giờ đi sớm nhất");
+
+        jRadioButton4.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton4.setText("Giờ đi muộn nhất\n");
+
+        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        jLabel10.setText("Sắp xếp theo");
+
+        jRadioButton5.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton5.setText("Giá tăng dần");
+
+        jRadioButton6.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton6.setText("Giá giảm dần");
+
+        jRadioButton7.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton7.setText("Giá rẻ nhất ");
+
+        jRadioButton8.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton8.setText("Giá đắt nhất");
+
+        jRadioButton9.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
+        jRadioButton9.setText("Nhiều chỗ trống nhất");
 
         javax.swing.GroupLayout roundedPanel7Layout = new javax.swing.GroupLayout(roundedPanel7);
         roundedPanel7.setLayout(roundedPanel7Layout);
@@ -481,15 +587,47 @@ public class ChooseBusForm extends javax.swing.JPanel {
             roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel7Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jRadioButton2)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addGroup(roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton6)
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton3)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jRadioButton7)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton8)
+                    .addComponent(jRadioButton9))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel7Layout.createSequentialGroup()
+                .addContainerGap(65, Short.MAX_VALUE)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10)
+                .addGap(88, 88, 88))
         );
         roundedPanel7Layout.setVerticalGroup(
             roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(roundedPanel7Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(15, 15, 15)
+                .addGroup(roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
                 .addComponent(jRadioButton2)
-                .addContainerGap(411, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton3)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton4)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton5)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton6)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton7)
+                .addGap(30, 30, 30)
+                .addComponent(jRadioButton8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jRadioButton9)
+                .addGap(28, 28, 28))
         );
 
         roundedJScrollPane3.setViewportView(roundedPanel7);
@@ -570,7 +708,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String departureLocation = jComboBox1.getSelectedItem().toString();
+            String departureLocation = jComboBox1.getSelectedItem().toString();
         String destinationLocation = jComboBox2.getSelectedItem().toString();
         String departureDateStr = jTextField1.getText();
 
@@ -622,15 +760,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
         int totalXe = xeList.size();
         // Kiểm tra nếu không tìm thấy chuyến xe nào
         if (totalXe == 0) {
-            // Thiết lập vị trí thông báo ở giữa
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào, xin vui lòng chọn lại!");
             return; // Dừng việc cập nhật giao diện
-        }
-        else
-        {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
-            // Truyền giá trị sang ChooseBusForm
-
+        } else {
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
         }
 
         // Cập nhật label với tổng số xe
@@ -643,8 +776,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
 
         // Tạo một panel con để chứa jLabel9 và jLabel1 trên cùng một hàng
         javax.swing.JPanel labelPanel = new javax.swing.JPanel();
-        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]")); // Gap 5 giữa jLabel9 và jLabel1
-        labelPanel.setOpaque(false); // Trong suốt để hiển thị nền
+        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]"));
+        labelPanel.setOpaque(false);
 
         // Thêm jLabel9 (ảnh) và jLabel1 (text) vào labelPanel
         labelPanel.add(jLabel9, "align left");
@@ -653,13 +786,27 @@ public class ChooseBusForm extends javax.swing.JPanel {
         // Thêm labelPanel vào ticketContainer, căn giữa
         ticketContainer.add(labelPanel, "align center, wrap");
 
-        // Thêm 3 BusTicketForm với kích thước cố định
-        for (int i = 0; i < 3; i++) {
-            BusTicketForm busTicketForm = new BusTicketForm();
-            busTicketForm.setPreferredSize(new java.awt.Dimension(600, 200));
-            busTicketForm.setMaximumSize(new java.awt.Dimension(600, 200));
-            busTicketForm.setMinimumSize(new java.awt.Dimension(600, 200));
+        // Xóa danh sách BusTicketForm cũ trước khi tạo mới
+        busTicketForms.clear();
+
+        // Thêm BusTicketForm với thông tin từ danh sách xeList
+        int displayCount = Math.min(xeList.size(), 300); // Hiển thị tối đa 300 xe
+        for (int i = 0; i < displayCount; i++) {
+            BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
+            busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMaximumSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMinimumSize(new java.awt.Dimension(650, 250));
+            // Đặt màu nền thủ công dựa trên theme hiện tại
+            boolean isDarkMode = FlatLaf.isLafDark();
+            System.out.println("Dark mode detected when creating BusTicketForm: " + isDarkMode); // Debug
+            if (isDarkMode) {
+                busTicketForm.setBackground(new Color(79, 92, 104, 255));
+            } else {
+                busTicketForm.setBackground(new Color(255, 255, 255));
+            }
             ticketContainer.add(busTicketForm, "align center");
+            // Lưu BusTicketForm vào danh sách
+            busTicketForms.add(busTicketForm);
         }
 
         // Thêm ticketContainer vào roundedPanel4
@@ -684,6 +831,8 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -695,6 +844,13 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
+    private javax.swing.JRadioButton jRadioButton7;
+    private javax.swing.JRadioButton jRadioButton8;
+    private javax.swing.JRadioButton jRadioButton9;
     private javax.swing.JTextField jTextField1;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane1;
     private raven.application.form.other.RoundedJScrollPane roundedJScrollPane3;
@@ -704,4 +860,32 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private raven.application.form.other.RoundedPanel roundedPanel4;
     private raven.application.form.other.RoundedPanel roundedPanel7;
     // End of variables declaration//GEN-END:variables
+
+    // Getter cho các giá trị đã lưu
+    public String getDepartureLocation() {
+        return departureLocation;
+    }
+
+    public String getDestinationLocation() {
+        return destinationLocation;
+    }
+
+    public String getDepartureDate() {
+        return departureDate;
+    }
+
+    // Getter cho các thành phần giao diện
+    public JComboBox<String> getJComboBox1() {
+        return jComboBox1;
+    }
+
+    public JComboBox<String> getJComboBox2() {
+        return jComboBox2;
+    }
+
+    public JTextField getJTextField1() {
+        return jTextField1;
+    }
+
+    // Phương thức displayBusTicketForms() đã có sẵn
 }
