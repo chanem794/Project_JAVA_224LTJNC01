@@ -737,9 +737,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
         // Xóa danh sách BusTicketForm cũ trước khi tạo mới
         busTicketForms.clear();
 
-        // Thêm 3 BusTicketForm với kích thước cố định và màu nền thủ công
-        for (int i = 0; i < 3; i++) {
-            BusTicketForm busTicketForm = new BusTicketForm();
+        // Thêm BusTicketForm với thông tin từ danh sách xeList
+        int displayCount = Math.min(xeList.size(), 3); // Hiển thị tối đa 3 xe
+        for (int i = 0; i < displayCount; i++) {
+            BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
             busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
             busTicketForm.setMaximumSize(new java.awt.Dimension(650, 250));
             busTicketForm.setMinimumSize(new java.awt.Dimension(650, 250));
