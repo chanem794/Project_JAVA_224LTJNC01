@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -184,7 +185,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
     }
 
     // Thêm phương thức để hiển thị BusTicketForm
-    private void displayBusTicketForms() {
+    void displayBusTicketForms() {
         // Kiểm tra nếu xeList rỗng
         if (xeList == null || xeList.isEmpty()) {
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào để hiển thị!");
@@ -859,4 +860,32 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private raven.application.form.other.RoundedPanel roundedPanel4;
     private raven.application.form.other.RoundedPanel roundedPanel7;
     // End of variables declaration//GEN-END:variables
+
+    // Getter cho các giá trị đã lưu
+    public String getDepartureLocation() {
+        return departureLocation;
+    }
+
+    public String getDestinationLocation() {
+        return destinationLocation;
+    }
+
+    public String getDepartureDate() {
+        return departureDate;
+    }
+
+    // Getter cho các thành phần giao diện
+    public JComboBox<String> getJComboBox1() {
+        return jComboBox1;
+    }
+
+    public JComboBox<String> getJComboBox2() {
+        return jComboBox2;
+    }
+
+    public JTextField getJTextField1() {
+        return jTextField1;
+    }
+
+    // Phương thức displayBusTicketForms() đã có sẵn
 }

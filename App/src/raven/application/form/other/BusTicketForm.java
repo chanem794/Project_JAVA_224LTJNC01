@@ -2,6 +2,7 @@ package raven.application.form.other;
 
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -308,22 +309,33 @@ public class BusTicketForm extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (xe != null) {
-        // Tạo một instance của StationForm và truyền thông tin điểm đi, điểm đến
-        StationForm stationForm = new StationForm();
-        // Điền thông tin điểm đi vào jTextField1
+        // Tìm ChooseBusForm từ parent component
+        ChooseBusForm chooseBusForm = null;
+        Component parent = this;
+        while (parent != null) {
+            if (parent instanceof ChooseBusForm) {
+                chooseBusForm = (ChooseBusForm) parent;
+                break;
+            }
+            parent = parent.getParent();
+        }
+
+        if (chooseBusForm == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy ChooseBusForm!");
+            return;
+        }
+
+        StationForm stationForm = new StationForm(chooseBusForm); // Truyền ChooseBusForm
         stationForm.getJTextField1().setText(xe.getDiemDi());
-        // Điền thông tin điểm đến vào jTextField2
         stationForm.getJTextField2().setText(xe.getDiemDen());
-        // Gọi phương thức tìm kiếm trạm dựa trên điểm đi và điểm đến
         if (stationForm.stationService != null) {
             stationForm.stationService.searchPickupStations(xe.getDiemDi());
             stationForm.stationService.searchDropoffStations(xe.getDiemDen());
         } else {
             JOptionPane.showMessageDialog(this, "Không thể khởi tạo dịch vụ trạm. Vui lòng thử lại!");
-            return; // Thoát nếu stationService null
+            return;
         }
-        // Hiển thị StationForm
-        Application.showForm(stationForm); // Thay bằng cách quản lý form của bạn nếu khác
+        Application.showForm(stationForm);
     } else {
         JOptionPane.showMessageDialog(this, "Không có thông tin chuyến xe để chọn!");
     }

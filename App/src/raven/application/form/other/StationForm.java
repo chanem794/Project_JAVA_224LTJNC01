@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
+import raven.application.Application;
 
 /**
  *
@@ -35,22 +36,22 @@ public class StationForm extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    public StationForm() {
-       initComponents();
-       this.previousForm = previousForm;
-       pickupButtonGroup = new ButtonGroup();
-       dropoffButtonGroup = new ButtonGroup();
-       try {
-           stationService = new StationService(this); 
-           stationService.searchPickupStations(""); 
-           stationService.searchDropoffStations("");
-       } catch (SQLException ex) {
-           Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
-           JOptionPane.showMessageDialog(this, "Lỗi khi khởi tạo dữ liệu: " + ex.getMessage());
-           stationService = null;
-       }
-       init();
-   }
+    public StationForm(ChooseBusForm previousForm) {
+        this.previousForm = previousForm; // Lưu instance
+        initComponents();
+        pickupButtonGroup = new ButtonGroup();
+        dropoffButtonGroup = new ButtonGroup();
+        try {
+            stationService = new StationService(this);
+            stationService.searchPickupStations("");
+            stationService.searchDropoffStations("");
+        } catch (SQLException ex) {
+            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Lỗi khi khởi tạo dữ liệu: " + ex.getMessage());
+            stationService = null;
+        }
+        init();
+    }
 
     @Override
     protected void paintComponent(Graphics grphcs) {
@@ -792,7 +793,20 @@ public class StationForm extends javax.swing.JPanel {
     }//GEN-LAST:event_btnContinueActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
-        roundedPanel1.setVisible(false);
+        if (previousForm != null) {
+        // Khôi phục dữ liệu trên giao diện ChooseBusForm
+        previousForm.getJComboBox1().setSelectedItem(previousForm.getDepartureLocation());
+        previousForm.getJComboBox2().setSelectedItem(previousForm.getDestinationLocation());
+        previousForm.getJTextField1().setText(previousForm.getDepartureDate() != null ? previousForm.getDepartureDate() : "DD-MM-YYYY");
+
+        // Hiển thị lại danh sách BusTicketForm
+        previousForm.displayBusTicketForms();
+
+        // Chuyển về ChooseBusForm
+        Application.showForm(previousForm);
+    } else {
+        JOptionPane.showMessageDialog(this, "Không thể quay lại ChooseBusForm!");
+    }
     }//GEN-LAST:event_btnPreviousActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
