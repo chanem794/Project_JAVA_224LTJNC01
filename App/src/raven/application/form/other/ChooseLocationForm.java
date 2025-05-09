@@ -522,69 +522,66 @@ private String normalizeString(String str) {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String departureLocation = jComboBox1.getSelectedItem().toString();
-    String destinationLocation = jComboBox2.getSelectedItem().toString();
-    String departureDateStr = jTextField1.getText();
-    // Chuyển đổi departureDateStr sang Date
-    Date departureDate = null;
-    if (!"DD/MM/YYYY".equals(departureDateStr)) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            departureDate = sdf.parse(departureDateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            departureDate = new Date(); // Gán giá trị mặc định nếu parse thất bại
-        }
-    } else {
-        // Nếu không nhập ngày, có thể bỏ qua lọc theo ngày hoặc gán ngày hiện tại
-        departureDate = new Date(); // Hoặc để null nếu không muốn lọc
-    }
+        String departureLocation = jComboBox1.getSelectedItem().toString();
+        String destinationLocation = jComboBox2.getSelectedItem().toString();
+        String departureDateStr = jTextField1.getText();
 
-    // Lấy MaTuyen từ danh sách getAllTuyen()
-    int maTuyen = -1;
-    try {
-        TuyenService tuyenService = new TuyenService();
-        List<Tuyen> tuyenList = tuyenService.getAllTuyen();
-        for (Tuyen tuyen : tuyenList) {
-            if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
-                maTuyen = tuyen.getMaTuyen();
-                break;
+        // Chuyển đổi departureDateStr sang Date
+        Date departureDate = null;
+        if (!"DD/MM/YYYY".equals(departureDateStr)) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                departureDate = sdf.parse(departureDateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                departureDate = new Date(); // Gán giá trị mặc định nếu parse thất bại
             }
+        } else {
+            departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
 
-    // Lấy danh sách xe dựa trên MaTuyen
-    List<Xe> xeList = new ArrayList<>();
-    if (maTuyen != -1) {
+        // Lấy MaTuyen từ danh sách getAllTuyen()
+        int maTuyen = -1;
         try {
-            XeService xeService = new XeService();
-            xeList = xeService.getXeByMaTuyen(maTuyen);
-            // Lọc thêm theo ngày nếu có departureDate hợp lệ
-            // Lọc thêm theo ngày nếu có departureDate hợp lệ
-            if (departureDate != null) {
-                java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
-                java.sql.Date finalSqlDepartureDate = sqlDepartureDate; // Biến final để dùng trong lambda
-                xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(finalSqlDepartureDate));
+            TuyenService tuyenService = new TuyenService();
+            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
+            for (Tuyen tuyen : tuyenList) {
+                if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
+                    maTuyen = tuyen.getMaTuyen();
+                    break;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
 
-    int totalXe = xeList.size();
-    if (totalXe == 0) {
+        // Lấy danh sách xe dựa trên MaTuyen
+        List<Xe> xeList = new ArrayList<>();
+        if (maTuyen != -1) {
+            try {
+                XeService xeService = new XeService();
+                xeList = xeService.getXeByMaTuyen(maTuyen);
+                // Lọc thêm theo ngày nếu có departureDate hợp lệ
+                if (departureDate != null) {
+                    java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
+                    java.sql.Date finalSqlDepartureDate = sqlDepartureDate; // Biến final để dùng trong lambda
+                    xeList.removeIf(xe -> xe.getNgayKhoiHanh() == null || !xe.getNgayKhoiHanh().equals(finalSqlDepartureDate));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        int totalXe = xeList.size();
+        if (totalXe == 0) {
             // Thiết lập vị trí thông báo ở giữa
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào, xin vui lòng chọn lại!");
             return; // Dừng việc cập nhật giao diện
+        } else {
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
+            // Truyền xeList cùng các thông tin khác sang ChooseBusForm
+            Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDateStr, xeList));
         }
-    else
-    {
-        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
-        // Truyền giá trị sang ChooseBusForm
-        Application.showForm(new ChooseBusForm(departureLocation, destinationLocation, departureDateStr, totalXe));
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

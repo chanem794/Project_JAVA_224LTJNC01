@@ -47,37 +47,26 @@ public class ChooseBusForm extends javax.swing.JPanel {
     private List<String> diemDiList = new ArrayList<>(); // Danh sách điểm đi
     private List<String> diemDenList = new ArrayList<>(); // Danh sách điểm đến
     private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
+    private List<Xe> xeList; // Thêm biến thành viên xeList
 
     /**
      * Constructor
      */
-        public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, int totalXe) {
-            this.departureLocation = departureLocation;
-            this.destinationLocation = destinationLocation;
-            this.departureDate = departureDate; // Thêm dòng này để gán departureDate
-            this.totalXe = totalXe;
-            initComponents();
-            init();
-            UIManager.addPropertyChangeListener(evt -> {
-                if ("lookAndFeel".equals(evt.getPropertyName())) {
-                    updatePanelColors();
-                }
-            });
-            jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
-    }
-    public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, String arrivalDate) {
+    public ChooseBusForm(String departureLocation, String destinationLocation, String departureDate, List<Xe> xeList) {
         this.departureLocation = departureLocation;
         this.destinationLocation = destinationLocation;
-        this.departureDate = departureDate; // Sửa dòng này: Gán departureDate
-        this.arrivalDate = arrivalDate;
+        this.departureDate = departureDate;
+        this.xeList = xeList; // Gán xeList từ tham số
+        this.totalXe = xeList != null ? xeList.size() : 0; // Gán totalXe
         initComponents();
         init();
         UIManager.addPropertyChangeListener(evt -> {
             if ("lookAndFeel".equals(evt.getPropertyName())) {
                 updatePanelColors();
             }
-    });
-}
+        });
+        jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+    }
 
     private void init() {
         setLayout(new MigLayout("al center center"));
@@ -127,7 +116,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel7.setIconTextGap(5);
         jLabel7.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel7.setVerticalTextPosition(SwingConstants.CENTER);
-        
+
         ImageIcon iconLabel9 = new ImageIcon(getClass().getResource("/raven/icon/png/bus.png"));
         Image scaledIcon9 = iconLabel9.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         jLabel9.setIcon(new ImageIcon(scaledIcon9));
@@ -141,12 +130,10 @@ public class ChooseBusForm extends javax.swing.JPanel {
         jLabel11.setIconTextGap(5);
         jLabel11.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel11.setVerticalTextPosition(SwingConstants.CENTER);
-        
+
         DateChooser dateChooser1 = new com.raven.datechooser.DateChooser();
         dateChooser1.setTextField(jTextField1);
         dateChooser1.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
-        
-        
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14));
         if (departureDate == null || departureDate.isEmpty() || departureDate.equals("DD-MM-YYYY")) {
@@ -190,7 +177,71 @@ public class ChooseBusForm extends javax.swing.JPanel {
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
+        // Hiển thị BusTicketForm trực tiếp khi khởi tạo
+        displayBusTicketForms();
+
         updatePanelColors();
+    }
+
+    // Thêm phương thức để hiển thị BusTicketForm
+    private void displayBusTicketForms() {
+        // Kiểm tra nếu xeList rỗng
+        if (xeList == null || xeList.isEmpty()) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào để hiển thị!");
+            return;
+        }
+
+        // Tạo hoặc cập nhật ticketContainer
+        javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
+        ticketContainer.setLayout(new MigLayout("wrap 1, gap 10, insets 10, align center", "[600px]", "[]"));
+        ticketContainer.setOpaque(false);
+
+        // Tạo một panel con để chứa jLabel9 và jLabel1 trên cùng một hàng
+        javax.swing.JPanel labelPanel = new javax.swing.JPanel();
+        labelPanel.setLayout(new MigLayout("insets 0, gap 5", "[][]", "[]"));
+        labelPanel.setOpaque(false);
+
+        // Thêm jLabel9 (ảnh) và jLabel1 (text) vào labelPanel
+        labelPanel.add(jLabel9, "align left");
+        labelPanel.add(jLabel1, "align left");
+
+        // Thêm labelPanel vào ticketContainer, căn giữa
+        ticketContainer.add(labelPanel, "align center, wrap");
+
+        // Xóa danh sách BusTicketForm cũ trước khi tạo mới
+        busTicketForms.clear();
+
+        // Thêm BusTicketForm với thông tin từ danh sách xeList
+        int displayCount = Math.min(xeList.size(), 300); // Hiển thị tối đa 300 xe
+        for (int i = 0; i < displayCount; i++) {
+            BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
+            busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMaximumSize(new java.awt.Dimension(650, 250));
+            busTicketForm.setMinimumSize(new java.awt.Dimension(650, 250));
+            // Đặt màu nền thủ công dựa trên theme hiện tại
+            boolean isDarkMode = FlatLaf.isLafDark();
+            if (isDarkMode) {
+                busTicketForm.setBackground(new Color(79, 92, 104, 255));
+            } else {
+                busTicketForm.setBackground(new Color(255, 255, 255));
+            }
+            ticketContainer.add(busTicketForm, "align center");
+            busTicketForms.add(busTicketForm);
+        }
+
+        // Thêm ticketContainer vào roundedPanel4
+        roundedPanel4.removeAll();
+        roundedPanel4.setLayout(new java.awt.BorderLayout());
+        roundedPanel4.add(ticketContainer, java.awt.BorderLayout.CENTER);
+
+        // Đảm bảo không có thanh cuộn ngang
+        roundedJScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Làm mới giao diện để hiển thị thanh cuộn
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
+        roundedJScrollPane1.revalidate();
+        roundedJScrollPane1.repaint();
     }
 
 
@@ -738,7 +789,7 @@ public class ChooseBusForm extends javax.swing.JPanel {
         busTicketForms.clear();
 
         // Thêm BusTicketForm với thông tin từ danh sách xeList
-        int displayCount = Math.min(xeList.size(), 3); // Hiển thị tối đa 3 xe
+        int displayCount = Math.min(xeList.size(), 300); // Hiển thị tối đa 300 xe
         for (int i = 0; i < displayCount; i++) {
             BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
             busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
