@@ -4,7 +4,7 @@
  */
 package raven.application.form.other;
 
-import bll.StationService;
+import bll.XeService;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.*;
 import java.awt.Graphics;
@@ -17,8 +17,10 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import model.Xe;
 import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
+import static raven.application.form.other.PanelDataStation.createStationPanel;
 
 /**
  *
@@ -30,26 +32,19 @@ public class StationForm extends javax.swing.JPanel {
     private ButtonGroup dropoffButtonGroup;
     private String selectedPickupStation;
     private String selectedDropoffStation;
-    protected StationService stationService;
+    private XeService xeSV;
     private ChooseBusForm previousForm;
 
     /**
      * Creates new form NewJPanel
      */
-    public StationForm(ChooseBusForm previousForm) {
-        this.previousForm = previousForm; // Lưu instance
+    public StationForm(ChooseBusForm chooseBusForm) {
         initComponents();
         pickupButtonGroup = new ButtonGroup();
         dropoffButtonGroup = new ButtonGroup();
-        try {
-            stationService = new StationService(this);
-            stationService.searchPickupStations("");
-            stationService.searchDropoffStations("");
-        } catch (SQLException ex) {
-            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Lỗi khi khởi tạo dữ liệu: " + ex.getMessage());
-            stationService = null;
-        }
+        xeSV = new XeService();
+        searchPickupStations(""); 
+        searchDropoffStations(""); 
         init();
     }
 
@@ -170,16 +165,15 @@ public class StationForm extends javax.swing.JPanel {
         System.out.println("Selected pickup: " + selectedPickupStation + ", dropoff: " + selectedDropoffStation);
         if (selectedPickupStation != null && selectedDropoffStation != null) {
             try {
-                String result = stationService.getFare(selectedPickupStation, selectedDropoffStation);
+                String result = xeSV.getPrice(selectedPickupStation, selectedDropoffStation);
                 jLabel1.setText(result);
-            } catch (RuntimeException ex) {
+            } catch (SQLException ex) {
                 Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
                 jLabel1.setText("Lỗi khi lấy giá vé");
             }
         } else {
             jLabel1.setText("Chưa chọn đủ điểm");
         }
-        // Làm mới giao diện
         roundedPanel6.revalidate();
         roundedPanel6.repaint();
         roundedPanel8.revalidate();
@@ -187,13 +181,88 @@ public class StationForm extends javax.swing.JPanel {
         jLabel1.revalidate();
         jLabel1.repaint();
     }
-//    private void updateFare() {
-//        if (selectedPickupStation != null && selectedDropoffStation != null) {
-//            jLabel1.setText("10000 VNĐ");
-//        } else {
-//            jLabel1.setText("Chưa chọn đủ điểm");
-//        }
-//    }
+    public void searchPickupStations(String searchText) {
+        try {
+            java.util.List<Xe> xeList;
+            if (searchText == null || searchText.trim().isEmpty() || searchText.equals(" 🔍  Tìm trong danh sách")) {
+                xeList = xeSV.ShowXe();
+            } else {
+                xeList = xeSV.findDiemDi(searchText);
+            }
+            getRoundedPanel6().removeAll();
+            getRoundedPanel6().setLayout(new BoxLayout(getRoundedPanel6(), BoxLayout.Y_AXIS));
+
+            // Sử dụng Set để theo dõi các điểm đi duy nhất
+            java.util.Set<String> uniqueDiemDi = new java.util.HashSet<>();
+            for (Xe xe : xeList) {
+                String diemDi = xe.getDiemDi();
+                if (uniqueDiemDi.add(diemDi)) { // Chỉ thêm nếu chưa tồn tại
+                    JPanel pickupPanel = createStationPanel(
+                        xe.getGioDi().toString(),
+                        diemDi,
+                        diemDi
+                    );
+                    getRoundedPanel6().add(pickupPanel);
+                }
+            }
+            getRoundedPanel6().revalidate();
+            getRoundedPanel6().repaint();
+            revalidate();
+            repaint();
+            addRadioButtonListeners();
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm kiếm điểm đón: " + e.getMessage());
+        }
+    }
+
+    public void searchDropoffStations(String searchText) {
+        try {
+            java.util.List<Xe> xeList;
+            if (searchText == null || searchText.trim().isEmpty() || searchText.equals(" 🔍  Tìm trong danh sách")) {
+                xeList = xeSV.ShowXe();
+            } else {
+                xeList = xeSV.findDiemDen(searchText);
+            }
+            getRoundedPanel8().removeAll();
+            getRoundedPanel8().setLayout(new BoxLayout(getRoundedPanel8(), BoxLayout.Y_AXIS));
+
+            // Sử dụng Set để theo dõi các điểm đến  duy nhất
+            java.util.Set<String> uniqueDiemDen = new java.util.HashSet<>();
+            for (Xe xe : xeList) {
+                String diemDen = xe.getDiemDen();
+                if (uniqueDiemDen.add(diemDen)) { // Chỉ thêm nếu chưa tồn tại
+                    JPanel dropoffPanel = createStationPanel(
+                        xe.getGioDen().toString(),
+                        diemDen,
+                        diemDen
+                    );
+                    getRoundedPanel8().add(dropoffPanel);
+                }
+            }
+            getRoundedPanel8().revalidate();
+            getRoundedPanel8().repaint();
+            revalidate();
+            repaint();
+            addRadioButtonListeners();
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm kiếm điểm trả: " + e.getMessage());
+        }
+    }
+    public javax.swing.JPanel getRoundedPanel6() {
+        return roundedPanel6;
+    }
+
+    public javax.swing.JPanel getRoundedPanel8() {
+        return roundedPanel8;
+    }
+
+    public javax.swing.JTextField getJTextField1() {
+        return jTextField1;
+    }
+
+    public javax.swing.JTextField getJTextField2() {
+        return jTextField2;
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -781,7 +850,7 @@ public class StationForm extends javax.swing.JPanel {
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
        try {
-            stationService.searchPickupStations(jTextField1.getText());
+            searchPickupStations(jTextField1.getText());
         } catch (RuntimeException ex) {
             Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, "Lỗi khi tìm kiếm điểm đón: " + ex.getMessage());
@@ -789,29 +858,56 @@ public class StationForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueActionPerformed
-        // TODO add your handling code here:
+        if (selectedPickupStation == null || selectedDropoffStation == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn điểm đón và điểm trả!");
+            return;
+        }
+
+        try {
+            // Lấy danh sách xe từ XeService
+            java.util.List<Xe> xeList = xeSV.ShowXe();
+            int maXe = 0;
+
+            for (Xe xe : xeList) {
+                if (xe.getDiemDi().equals(selectedPickupStation) && xe.getDiemDen().equals(selectedDropoffStation)) {
+                    maXe = xe.getMaXe();
+                    break; 
+                }
+            }
+
+            if (maXe == 0) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy xe phù hợp với điểm đón và điểm trả đã chọn!");
+                return;
+            }
+
+            // Chuyển sang NhapTTDatVeForm với maXe
+            Application.showForm(new NhapTTDatVeForm(maXe));
+        } catch (SQLException ex) {
+            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Lỗi khi lấy danh sách xe: " + ex.getMessage());
+        }
     }//GEN-LAST:event_btnContinueActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
         if (previousForm != null) {
-        // Khôi phục dữ liệu trên giao diện ChooseBusForm
-        previousForm.getJComboBox1().setSelectedItem(previousForm.getDepartureLocation());
-        previousForm.getJComboBox2().setSelectedItem(previousForm.getDestinationLocation());
-        previousForm.getJTextField1().setText(previousForm.getDepartureDate() != null ? previousForm.getDepartureDate() : "DD-MM-YYYY");
+            // Khôi phục dữ liệu trên giao diện ChooseBusForm
+            previousForm.getJComboBox1().setSelectedItem(previousForm.getDepartureLocation());
+            previousForm.getJComboBox2().setSelectedItem(previousForm.getDestinationLocation());
+            previousForm.getJTextField1().setText(previousForm.getDepartureDate() != null ? previousForm.getDepartureDate() : "DD-MM-YYYY");
 
-        // Hiển thị lại danh sách BusTicketForm
-        previousForm.displayBusTicketForms();
+            // Hiển thị lại danh sách BusTicketForm
+            previousForm.displayBusTicketForms();
 
-        // Chuyển về ChooseBusForm
-        Application.showForm(previousForm);
-    } else {
-        JOptionPane.showMessageDialog(this, "Không thể quay lại ChooseBusForm!");
-    }
+            // Chuyển về ChooseBusForm
+            Application.showForm(previousForm);
+        } else {
+            JOptionPane.showMessageDialog(this, "Không thể quay lại ChooseBusForm!");
+        }
     }//GEN-LAST:event_btnPreviousActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         try {
-            stationService.searchDropoffStations(jTextField2.getText());
+            searchDropoffStations(jTextField2.getText());
         } catch (RuntimeException ex) {
             Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, "Lỗi khi tìm kiếm điểm trả: " + ex.getMessage());
@@ -870,49 +966,4 @@ public class StationForm extends javax.swing.JPanel {
     private raven.application.form.other.RoundedPanel roundedPanel7;
     private raven.application.form.other.RoundedPanel roundedPanel8;
     // End of variables declaration//GEN-END:variables
-        // Getter cho jPanel3 và jPanel5
-    public javax.swing.JPanel getJPanel3() {
-        return jPanel3;
-    }
-
-    public javax.swing.JPanel getRoundedPanel6() {
-        return roundedPanel6;
-    }
-
-    public javax.swing.JPanel getRoundedPanel8() {
-        return roundedPanel8;
-    }
-
-    // Getter cho các JLabel
-    public javax.swing.JLabel getJLabel3() {
-        return jLabel3;
-    }
-
-    public javax.swing.JLabel getJLabel19() {
-        return jLabel19;
-    }
-
-    public javax.swing.JLabel getJLabel20() {
-        return jLabel20;
-    }
-
-    public javax.swing.JLabel getJLabel17() {
-        return jLabel17;
-    }
-
-    public javax.swing.JLabel getJLabel30() {
-        return jLabel30;
-    }
-
-    public javax.swing.JLabel getJLabel31() {
-        return jLabel31;
-    }
-
-    public javax.swing.JTextField getJTextField1() {
-        return jTextField1;
-    }
-
-    public javax.swing.JTextField getJTextField2() {
-        return jTextField2;
-    }
 }

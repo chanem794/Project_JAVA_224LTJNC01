@@ -5,9 +5,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class XeDAO {
     private Connection connection;  
@@ -161,4 +164,101 @@ public class XeDAO {
         }
         return xeList;
     }
+    
+     public List<Xe> findDiemDi(String searchText) throws SQLException {
+        List<Xe> result = new ArrayList<>();
+        String sql = "SELECT DISTINCT x.MaXe, x.MaTuyen, x.GioDi, x.GioDen, x.GiaVe, t.DiemDi, t.DiemDen "
+                + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen "
+                + "WHERE t.DiemDi LIKE ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + searchText.trim() + "%");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Xe xe = new Xe(
+                        rs.getInt("MaXe"),
+                        rs.getInt("MaTuyen"),
+                        rs.getTime("GioDi"),
+                        rs.getTime("GioDen"),
+                        rs.getInt("GiaVe"),
+                        rs.getString("DiemDi"),
+                        rs.getString("DiemDen")
+                    );
+                    result.add(xe);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(XeDAO.class.getName()).log(Level.SEVERE, "Lỗi khi tìm điểm đón: " + searchText, e);
+            throw new SQLException("Lỗi khi tìm điểm đón: " + e.getMessage(), e);
+        }
+        System.out.println("findDiemDi: Found " + result.size() + " records for searchText: " + searchText);
+        return result;
+    }
+
+    public List<Xe> findDiemDen(String searchText) throws SQLException {
+        List<Xe> result = new ArrayList<>();
+        String sql = "SELECT DISTINCT x.MaXe, x.MaTuyen, x.GioDi, x.GioDen, x.GiaVe, t.DiemDi, t.DiemDen "
+                + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen "
+                + "WHERE t.DiemDen LIKE ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + searchText.trim() + "%");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Xe xe = new Xe(
+                        rs.getInt("MaXe"),
+                        rs.getInt("MaTuyen"),
+                        rs.getTime("GioDi"),
+                        rs.getTime("GioDen"),
+                        rs.getInt("GiaVe"),
+                        rs.getString("DiemDi"),
+                        rs.getString("DiemDen")
+                    );
+                    result.add(xe);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(XeDAO.class.getName()).log(Level.SEVERE, "Lỗi khi tìm điểm trả: " + searchText, e);
+            throw new SQLException("Lỗi khi tìm điểm trả: " + e.getMessage(), e);
+        }
+        System.out.println("findDiemDen: Found " + result.size() + " records for searchText: " + searchText);
+        return result;
+    }
+
+    public String getprice(String pickupStation, String dropoffStation) throws SQLException {
+        String sql = "SELECT x.GiaVe "
+                + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen "
+                + "WHERE t.DiemDi = ? AND t.DiemDen = ?";
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        pstmt.setString(1, pickupStation);
+        pstmt.setString(2, dropoffStation);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            int fare = rs.getInt("GiaVe");
+            return fare + " VNĐ";
+        } else {
+            return "Không tìm thấy tuyến";
+        }
+    }
+    public List<Xe> showxe() throws SQLException {
+        List<Xe> result = new ArrayList<>();
+        Statement stm =connection.createStatement();
+        String sql = "SELECT x.MaXe, x.MaTuyen, x.GioDi, x.GioDen, x.GiaVe, t.DiemDi, t.DiemDen "
+                + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen";
+        ResultSet rs = stm.executeQuery(sql);
+
+        while (rs.next()) {
+            Xe xe = new Xe(
+                rs.getInt("MaXe"),
+                rs.getInt("MaTuyen"),
+                rs.getTime("GioDi"),
+                rs.getTime("GioDen"),
+                rs.getInt("GiaVe"),
+                rs.getString("DiemDi"),
+                rs.getString("DiemDen")
+            );
+            result.add(xe);
+        }
+        return result;
+    }
+    
 }

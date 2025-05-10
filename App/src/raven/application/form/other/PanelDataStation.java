@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 
     public class PanelDataStation {
-
         private static final Color BORDER_COLOR = new Color(102, 255, 51);
         private static final Color TEXT_COLOR = new Color(102, 102, 102);
         private static final Font STATION_FONT = new Font("Segoe UI", Font.BOLD, 14);

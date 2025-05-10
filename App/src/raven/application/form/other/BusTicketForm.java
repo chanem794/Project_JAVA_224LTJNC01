@@ -328,9 +328,9 @@ public class BusTicketForm extends javax.swing.JPanel {
         StationForm stationForm = new StationForm(chooseBusForm); // Truyền ChooseBusForm
         stationForm.getJTextField1().setText(xe.getDiemDi());
         stationForm.getJTextField2().setText(xe.getDiemDen());
-        if (stationForm.stationService != null) {
-            stationForm.stationService.searchPickupStations(xe.getDiemDi());
-            stationForm.stationService.searchDropoffStations(xe.getDiemDen());
+        if (stationForm != null) {
+            stationForm.searchPickupStations(xe.getDiemDi());
+            stationForm.searchDropoffStations(xe.getDiemDen());
         } else {
             JOptionPane.showMessageDialog(this, "Không thể khởi tạo dịch vụ trạm. Vui lòng thử lại!");
             return;

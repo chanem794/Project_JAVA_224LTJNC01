@@ -295,26 +295,18 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
 
         panelTTLienHe.setBackground(new java.awt.Color(235, 235, 235));
 
-        lbTTLienHe.setForeground(new java.awt.Color(0, 0, 0));
         lbTTLienHe.setText("Thông tin liên hệ");
 
-        txtTenNguoiDi.setForeground(new java.awt.Color(0, 0, 0));
         txtTenNguoiDi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTenNguoiDiActionPerformed(evt);
             }
         });
 
-        txtSDT.setForeground(new java.awt.Color(0, 0, 0));
-
-        cbSDT.setForeground(new java.awt.Color(0, 0, 0));
         cbSDT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "VN +84", "IN +91", "CN +86", "MM +95", "MO +835", "KR +82", "JP +81", "TH +66", "AU +61" }));
-
-        txtEmail.setForeground(new java.awt.Color(0, 0, 0));
 
         panelChuThich.setBackground(new java.awt.Color(204, 255, 204));
         panelChuThich.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 102), 2));
-        panelChuThich.setForeground(new java.awt.Color(0, 0, 0));
         panelChuThich.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         lbChuThichTTLH.setText("Số điện thoại và email được sử dụng để gửi thông tin đơn hàng và liên hệ khi cần thiết.");
@@ -372,7 +364,6 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         );
 
         cmdTiepTuc.setBackground(new java.awt.Color(255, 204, 0));
-        cmdTiepTuc.setForeground(new java.awt.Color(0, 0, 0));
         cmdTiepTuc.setText("Tiếp tục");
         cmdTiepTuc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,16 +407,13 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
 
         panelTienIch.setBackground(new java.awt.Color(235, 235, 235));
 
-        lbTienIch.setForeground(new java.awt.Color(0, 0, 0));
         lbTienIch.setText("Tiện ích");
 
         panelBaoHiem.setBackground(new java.awt.Color(235, 235, 235));
         panelBaoHiem.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 204, 51), 2));
 
-        lbBaoHiem3.setForeground(new java.awt.Color(0, 0, 0));
         lbBaoHiem3.setText("Bảo hiểm tai nạn");
 
-        lbBaoHiem4.setForeground(new java.awt.Color(0, 0, 0));
         lbBaoHiem4.setText("Chính sách Hoàn Hủy chuyến đi");
 
         lbMoTaBaoHiem3.setBackground(new java.awt.Color(235, 235, 235));
@@ -513,13 +501,16 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
 
         cmdQuayLai.setForeground(new java.awt.Color(0, 51, 255));
         cmdQuayLai.setText("Quay lại");
+        cmdQuayLai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdQuayLaiActionPerformed(evt);
+            }
+        });
 
         panelTamTinh.setBackground(new java.awt.Color(235, 235, 235));
 
-        lbTamTinh.setForeground(new java.awt.Color(0, 0, 0));
         lbTamTinh.setText("Tạm Tính");
 
-        lbGiaVe.setForeground(new java.awt.Color(0, 0, 0));
         lbGiaVe.setText("550.000đ");
 
         javax.swing.GroupLayout panelTamTinhLayout = new javax.swing.GroupLayout(panelTamTinh);
@@ -545,26 +536,20 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
 
         panelTTChuyenDi.setBackground(new java.awt.Color(235, 235, 235));
 
-        lbTTChuyenDi.setForeground(new java.awt.Color(0, 0, 0));
         lbTTChuyenDi.setText("Thông tin chuyến đi");
 
         panelTTChuyenDiCon.setBackground(new java.awt.Color(235, 235, 235));
 
-        lbTenNhaXe.setForeground(new java.awt.Color(0, 0, 0));
         lbTenNhaXe.setText("Đình Nhân");
 
         lbTTXe.setText("Limousine 32 phòng (WC)");
 
-        lbTGDi.setForeground(new java.awt.Color(0, 0, 0));
         lbTGDi.setText("16:30");
 
-        lbTGDen.setForeground(new java.awt.Color(0, 0, 0));
         lbTGDen.setText("10:20");
 
-        lbDiaChiDen.setForeground(new java.awt.Color(0, 0, 0));
         lbDiaChiDen.setText("VP An Sương");
 
-        lbDiaChiDi.setForeground(new java.awt.Color(0, 0, 0));
         lbDiaChiDi.setText("VP Đà Nẵng");
 
         lbDiaChiDiCuThe.setText("Tất cả các trạm đón trả khách");
@@ -595,7 +580,6 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
             }
         });
 
-        lbNgayThang.setForeground(new java.awt.Color(0, 0, 0));
         lbNgayThang.setText("CN, 19/06/2025");
 
         javax.swing.GroupLayout panelHeaderLayout = new javax.swing.GroupLayout(panelHeader);
@@ -825,6 +809,10 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
     private void cmdChiTietActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdChiTietActionPerformed
 
     }//GEN-LAST:event_cmdChiTietActionPerformed
+
+    private void cmdQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdQuayLaiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdQuayLaiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
