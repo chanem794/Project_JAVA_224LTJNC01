@@ -39,6 +39,7 @@ public class StationForm extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public StationForm(ChooseBusForm chooseBusForm) {
+        this.previousForm = chooseBusForm; // Gán previousForm để tránh null
         initComponents();
         pickupButtonGroup = new ButtonGroup();
         dropoffButtonGroup = new ButtonGroup();

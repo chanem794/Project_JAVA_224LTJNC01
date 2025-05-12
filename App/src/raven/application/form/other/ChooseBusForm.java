@@ -726,27 +726,29 @@ public class ChooseBusForm extends javax.swing.JPanel {
             departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
         }
 
-        // Lấy MaTuyen từ danh sách getAllTuyen()
-        int maTuyen = -1;
+        // Lấy tất cả MaTuyen từ danh sách getAllTuyen()
+        List<Integer> maTuyenList = new ArrayList<>();
         try {
             TuyenService tuyenService = new TuyenService();
             List<Tuyen> tuyenList = tuyenService.getAllTuyen();
             for (Tuyen tuyen : tuyenList) {
                 if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
-                    maTuyen = tuyen.getMaTuyen();
-                    break;
+                    maTuyenList.add(tuyen.getMaTuyen());
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // Lấy danh sách xe dựa trên MaTuyen
+        // Lấy danh sách xe dựa trên tất cả MaTuyen
         List<Xe> xeList = new ArrayList<>();
-        if (maTuyen != -1) {
+        if (!maTuyenList.isEmpty()) {
             try {
                 XeService xeService = new XeService();
-                xeList = xeService.getXeByMaTuyen(maTuyen);
+                for (int maTuyen : maTuyenList) {
+                    List<Xe> xeByMaTuyen = xeService.getXeByMaTuyen(maTuyen);
+                    xeList.addAll(xeByMaTuyen);
+                }
                 // Lọc thêm theo ngày nếu có departureDate hợp lệ
                 if (departureDate != null) {
                     java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
@@ -757,16 +759,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
             }
         }
 
+        // Hiển thị kết quả
         int totalXe = xeList.size();
-        // Kiểm tra nếu không tìm thấy chuyến xe nào
         if (totalXe == 0) {
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào, xin vui lòng chọn lại!");
-            return; // Dừng việc cập nhật giao diện
+            return;
         } else {
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm chuyến thành công!");
         }
 
-        // Cập nhật label với tổng số xe
         jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
 
         // Tạo hoặc cập nhật ticketContainer
@@ -798,7 +799,6 @@ public class ChooseBusForm extends javax.swing.JPanel {
             busTicketForm.setMinimumSize(new java.awt.Dimension(650, 250));
             // Đặt màu nền thủ công dựa trên theme hiện tại
             boolean isDarkMode = FlatLaf.isLafDark();
-            System.out.println("Dark mode detected when creating BusTicketForm: " + isDarkMode); // Debug
             if (isDarkMode) {
                 busTicketForm.setBackground(new Color(79, 92, 104, 255));
             } else {

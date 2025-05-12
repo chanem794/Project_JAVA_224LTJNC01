@@ -540,27 +540,29 @@ private String normalizeString(String str) {
             departureDate = new Date(); // Gán ngày hiện tại nếu không nhập
         }
 
-        // Lấy MaTuyen từ danh sách getAllTuyen()
-        int maTuyen = -1;
+        // Lấy tất cả MaTuyen từ danh sách getAllTuyen()
+        List<Integer> maTuyenList = new ArrayList<>();
         try {
             TuyenService tuyenService = new TuyenService();
             List<Tuyen> tuyenList = tuyenService.getAllTuyen();
             for (Tuyen tuyen : tuyenList) {
                 if (tuyen.getDiemDi().equals(departureLocation) && tuyen.getDiemDen().equals(destinationLocation)) {
-                    maTuyen = tuyen.getMaTuyen();
-                    break;
+                    maTuyenList.add(tuyen.getMaTuyen());
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // Lấy danh sách xe dựa trên MaTuyen
+        // Lấy danh sách xe dựa trên tất cả MaTuyen
         List<Xe> xeList = new ArrayList<>();
-        if (maTuyen != -1) {
+        if (!maTuyenList.isEmpty()) {
             try {
                 XeService xeService = new XeService();
-                xeList = xeService.getXeByMaTuyen(maTuyen);
+                for (int maTuyen : maTuyenList) {
+                    List<Xe> xeByMaTuyen = xeService.getXeByMaTuyen(maTuyen);
+                    xeList.addAll(xeByMaTuyen);
+                }
                 // Lọc thêm theo ngày nếu có departureDate hợp lệ
                 if (departureDate != null) {
                     java.sql.Date sqlDepartureDate = new java.sql.Date(departureDate.getTime());
