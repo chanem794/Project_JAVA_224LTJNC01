@@ -24,20 +24,20 @@ import raven.application.form.other.component.PanelNhapTTDatVe;
 public class ThanhToanForm extends javax.swing.JPanel {
     private PanelChiTiet PanelChiTiet;
     private JLayeredPane layeredPane;
+    private StationForm previousForm; // Thêm biến này vào lớp
     private int maXe;
     private int basePrice;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
-    public ThanhToanForm(String tenNguoiDi, String sdt, String email) {
+    public ThanhToanForm(String tenNguoiDi, String sdt, String email, StationForm previousForm) {
         initComponents();
         init();
-        this.maXe = maXe;
         jbTen.setText(tenNguoiDi);
         jbSdt.setText(sdt);
         jbEmail.setText(email);
-    }
-    
+        this.previousForm = previousForm; // Lưu tham chiếu đến StationForm
+}
     
     private void init() {
         TTChuyenDiDAO TTChuyenDiDAO = new TTChuyenDiDAO();
@@ -54,8 +54,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
             lbNguoiIcon.setText("1");
             basePrice = xe.getGiaVe();
             updateBasePriceOnly(); 
-
-        } 
+        }
         setLayout(new MigLayout("align left top", "", ""));
 
 //      Kích thước chữ cho các tiêu đề 
@@ -1001,7 +1000,10 @@ public class ThanhToanForm extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdThanhToanActionPerformed
 
     private void cmdChinhSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdChinhSuaActionPerformed
-        Application.showForm(new PanelNhapTTDatVe(1));
+        if (previousForm != null) {
+            Application.showForm(new PanelNhapTTDatVe(maXe, previousForm));
+
+    }
     }//GEN-LAST:event_cmdChinhSuaActionPerformed
 
 

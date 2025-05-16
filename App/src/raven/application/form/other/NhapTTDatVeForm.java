@@ -31,12 +31,13 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
     private static final int INSURANCE_COST = 20000;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
-    
-    public NhapTTDatVeForm(int maXe) {
+    private StationForm previousForm; // Thêm biến để lưu trữ StationForm
+
+    public NhapTTDatVeForm(int maXe, StationForm previousForm) {
+        this.maXe = maXe;
+        this.previousForm = previousForm; // Lưu instance của StationForm
         initComponents();
         init();
-        this.maXe = maXe;
- 
     }
     
     private void init() {
@@ -798,7 +799,7 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                 "Lỗi",
                 JOptionPane.ERROR_MESSAGE);
         } else {
-            Application.showForm(new PanelThanhToan(tenNguoiDi, sdt, email));
+            Application.showForm(new PanelThanhToan(tenNguoiDi, sdt, email, this.previousForm)); // Truyền thêm previousForm
         }
     }//GEN-LAST:event_cmdTiepTucActionPerformed
 
@@ -811,7 +812,23 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
     }//GEN-LAST:event_cmdChiTietActionPerformed
 
     private void cmdQuayLaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdQuayLaiActionPerformed
-        // TODO add your handling code here:
+        if (previousForm != null) {
+        // Khôi phục dữ liệu trên giao diện StationForm
+        previousForm.getJTextField1().setText(previousForm.getJTextField1().getText());
+        previousForm.getJTextField2().setText(previousForm.getJTextField2().getText());
+
+        // Hiển thị lại danh sách điểm đón và điểm trả
+        previousForm.searchPickupStations(previousForm.getJTextField1().getText());
+        previousForm.searchDropoffStations(previousForm.getJTextField2().getText());
+
+        // Khôi phục lựa chọn điểm đón và điểm trả
+        previousForm.addRadioButtonListeners();
+
+        // Chuyển về StationForm
+        Application.showForm(previousForm);
+    } else {
+        JOptionPane.showMessageDialog(this, "Không thể quay lại StationForm!");
+    }
     }//GEN-LAST:event_cmdQuayLaiActionPerformed
 
 

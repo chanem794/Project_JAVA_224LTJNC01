@@ -859,7 +859,7 @@ public class StationForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueActionPerformed
-        if (selectedPickupStation == null || selectedDropoffStation == null) {
+            if (selectedPickupStation == null || selectedDropoffStation == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn điểm đón và điểm trả!");
             return;
         }
@@ -881,8 +881,8 @@ public class StationForm extends javax.swing.JPanel {
                 return;
             }
 
-            // Chuyển sang NhapTTDatVeForm với maXe
-            Application.showForm(new NhapTTDatVeForm(maXe));
+            // Chuyển sang NhapTTDatVeForm với maXe và instance của StationForm
+            Application.showForm(new NhapTTDatVeForm(maXe, this));
         } catch (SQLException ex) {
             Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, "Lỗi khi lấy danh sách xe: " + ex.getMessage());
