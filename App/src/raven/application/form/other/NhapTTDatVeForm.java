@@ -42,7 +42,7 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
     
     private void init() {
         TTChuyenDiDAO TTChuyenDiDAO = new TTChuyenDiDAO();
-        TTChuyenDi xe = TTChuyenDiDAO.getTripDetails(101);
+        TTChuyenDi xe = TTChuyenDiDAO.getTripDetails(this.maXe);
         if (xe != null) {
             lbTenNhaXe.setText(xe.getTenXe());
             lbTTXe.setText(xe.getLoaiXe());
@@ -204,7 +204,7 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         this.add(layeredPane, java.awt.BorderLayout.CENTER);
 
         // Khởi tạo và thêm PanelChiTiet
-        PanelChiTiet = new PanelChiTiet(101);
+        PanelChiTiet = new PanelChiTiet(this.maXe);
         PanelChiTiet.setVisible(false);
         int formWidth = 1096;
         int formHeight = 752;
@@ -823,7 +823,6 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
 
         // Khôi phục lựa chọn điểm đón và điểm trả
         previousForm.addRadioButtonListeners();
-
         // Chuyển về StationForm
         Application.showForm(previousForm);
     } else {

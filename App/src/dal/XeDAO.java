@@ -223,15 +223,15 @@ public class XeDAO {
         return result;
     }
 
-    public String getprice(String pickupStation, String dropoffStation) throws SQLException {
+    public String getprice(String pickupStation, String dropoffStation,int maxe) throws SQLException {
         String sql = "SELECT x.GiaVe "
                 + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen "
-                + "WHERE t.DiemDi = ? AND t.DiemDen = ?";
+                + "WHERE x.MaXe =? AND t.DiemDi = ? AND t.DiemDen = ?";
         PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, pickupStation);
-        pstmt.setString(2, dropoffStation);
+        pstmt.setInt(1, maxe);
+        pstmt.setString(2, pickupStation);
+        pstmt.setString(3, dropoffStation);
         ResultSet rs = pstmt.executeQuery();
-
         if (rs.next()) {
             int fare = rs.getInt("GiaVe");
             return fare + " VNĐ";
@@ -245,7 +245,6 @@ public class XeDAO {
         String sql = "SELECT x.MaXe, x.MaTuyen, x.GioDi, x.GioDen, x.GiaVe, t.DiemDi, t.DiemDen "
                 + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen";
         ResultSet rs = stm.executeQuery(sql);
-
         while (rs.next()) {
             Xe xe = new Xe(
                 rs.getInt("MaXe"),

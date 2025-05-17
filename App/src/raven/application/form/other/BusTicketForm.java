@@ -296,14 +296,14 @@ public class BusTicketForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addComponent(roundedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(220, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addComponent(roundedPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -324,8 +324,7 @@ public class BusTicketForm extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Không tìm thấy ChooseBusForm!");
             return;
         }
-
-        StationForm stationForm = new StationForm(chooseBusForm); // Truyền ChooseBusForm
+        StationForm stationForm = new StationForm(chooseBusForm,xe.getMaXe()); // Truyền ChooseBusForm
         stationForm.getJTextField1().setText(xe.getDiemDi());
         stationForm.getJTextField2().setText(xe.getDiemDen());
         if (stationForm != null) {

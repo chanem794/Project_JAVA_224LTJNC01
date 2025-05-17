@@ -46,8 +46,8 @@ public class XeService {
         return xeDAO.findDiemDen(searchText);
     }
 
-    public String getPrice(String diemDi, String diemDen) throws SQLException {
-        return xeDAO.getprice(diemDi, diemDen);
+    public String getPrice(String diemDi, String diemDen,int maXe) throws SQLException {
+        return xeDAO.getprice(diemDi, diemDen,maXe);
     }
 
     public List<Xe> ShowXe() throws SQLException {

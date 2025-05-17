@@ -10,10 +10,12 @@ import java.awt.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -21,34 +23,33 @@ import model.Xe;
 import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import static raven.application.form.other.PanelDataStation.createStationPanel;
-
 /**
  *
  * @author MINH HUY
  */
 public class StationForm extends javax.swing.JPanel {
-
     private ButtonGroup pickupButtonGroup;
     private ButtonGroup dropoffButtonGroup;
     private String selectedPickupStation;
     private String selectedDropoffStation;
+    private int selectedMaxePickup,selectedMaxeDropoff ;
+    private int selectedMaxe;
     private XeService xeSV;
     private ChooseBusForm previousForm;
-
     /**
      * Creates new form NewJPanel
      */
-    public StationForm(ChooseBusForm chooseBusForm) {
+    public StationForm(ChooseBusForm chooseBusForm, int MaXe) {
         this.previousForm = chooseBusForm; // Gán previousForm để tránh null
+        selectedMaxe = MaXe;
         initComponents();
         pickupButtonGroup = new ButtonGroup();
         dropoffButtonGroup = new ButtonGroup();
         xeSV = new XeService();
-        searchPickupStations(""); 
-        searchDropoffStations(""); 
+        searchPickupStations("");
+        searchDropoffStations("");
         init();
     }
-
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs.create();
@@ -71,108 +72,103 @@ public class StationForm extends javax.swing.JPanel {
                 + "foreground:#2196F3;"
                 + "border:1,1,1,1,#2196F3;"
                 + "font:14");
-
         // Cấu hình UIManager cho JRadioButton
         UIManager.put("RadioButton.selectionColor", new Color(33, 150, 243)); // #2196F3
         UIManager.put("RadioButton.foreground", new Color(16, 33, 2)); // #102102
         UIManager.put("RadioButton.background", Color.WHITE);
         UIManager.put("RadioButton.select", new Color(33, 150, 243)); // Đảm bảo màu chọn
         SwingUtilities.updateComponentTreeUI(this);
-    }                                                   
-    
+    }
     public void addRadioButtonListeners() {
         pickupButtonGroup = new ButtonGroup();
         dropoffButtonGroup = new ButtonGroup();
-        for (Component comp : roundedPanel6.getComponents()) {
-            if (comp instanceof JPanel) {
-                JPanel panel = (JPanel) comp;
-                for (Component subComp : panel.getComponents()) {
-                    if (subComp instanceof JRadioButton) {
-                        JRadioButton radioButton = (JRadioButton) subComp;
+        try {
+            // Điểm đón (roundedPanel6)
+            for (Component comp : roundedPanel6.getComponents()) {
+                if (comp instanceof JPanel) {
+                    JPanel panel = (JPanel) comp;
+                    JRadioButton radioButton = null;
+                    JLabel stationLabel = null;
+                    for (Component subComp : panel.getComponents()) {
+                        if (subComp instanceof JRadioButton) {
+                            radioButton = (JRadioButton) subComp;
+                        } else if (subComp instanceof JLabel && ((JLabel) subComp).getFont().getStyle() == Font.BOLD) {
+                            stationLabel = (JLabel) subComp;
+                        }
+                    }
+                    if (radioButton != null && stationLabel != null) {
                         pickupButtonGroup.add(radioButton);
-                        radioButton.setSelected(false); // Đặt trạng thái ban đầu
-                        radioButton.setEnabled(true); // Đảm bảo có thể chọn
-                        radioButton.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                // Lấy tên trạm từ JLabel trong cùng panel
-                                for (Component c : panel.getComponents()) {
-                                    if (c instanceof JLabel && c.getFont().getStyle() == Font.BOLD) {
-                                        selectedPickupStation = ((JLabel) c).getText();
-                                        break;
-                                    }
-                                }
-                                System.out.println("Pickup selected: " + selectedPickupStation + ", isSelected: " + radioButton.isSelected());
-                                updateFare();
-                                // Làm mới giao diện
-                                radioButton.repaint();
-                                panel.revalidate();
-                                roundedPanel6.revalidate();
-                                roundedPanel6.repaint();
+                        radioButton.setSelected(false);
+                        radioButton.setEnabled(true);
+                        final String pickupStation = stationLabel.getText();
+                        final Integer maXe = (Integer) panel.getClientProperty("MaXe");
+                        radioButton.addActionListener(e -> {
+                            selectedPickupStation = pickupStation;
+                            if (maXe != null) {
+                                selectedMaxe = maXe;
+                                selectedMaxePickup=maXe;
                             }
+                            updateMaXeAndFare();
                         });
-                        radioButton.repaint();
-                        panel.revalidate();
                     }
                 }
             }
-        }
-
-        // Thêm sự kiện cho các JRadioButton trong roundedPanel8 (điểm trả)
-        for (Component comp : roundedPanel8.getComponents()) {
-            if (comp instanceof JPanel) {
-                JPanel panel = (JPanel) comp;
-                for (Component subComp : panel.getComponents()) {
-                    if (subComp instanceof JRadioButton) {
-                        JRadioButton radioButton = (JRadioButton) subComp;
+            // Điểm trả (roundedPanel8)
+            for (Component comp : roundedPanel8.getComponents()) {
+                if (comp instanceof JPanel) {
+                    JPanel panel = (JPanel) comp;
+                    JRadioButton radioButton = null;
+                    JLabel stationLabel = null;
+                    for (Component subComp : panel.getComponents()) {
+                        if (subComp instanceof JRadioButton) {
+                            radioButton = (JRadioButton) subComp;
+                        } else if (subComp instanceof JLabel && ((JLabel) subComp).getFont().getStyle() == Font.BOLD) {
+                            stationLabel = (JLabel) subComp;
+                        }
+                    }
+                    if (radioButton != null && stationLabel != null) {
                         dropoffButtonGroup.add(radioButton);
-                        radioButton.setSelected(false); // Đặt trạng thái ban đầu
-                        radioButton.setEnabled(true); // Đảm bảo có thể chọn
-                        radioButton.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                // Lấy tên trạm từ JLabel trong cùng panel
-                                for (Component c : panel.getComponents()) {
-                                    if (c instanceof JLabel && c.getFont().getStyle() == Font.BOLD) {
-                                        selectedDropoffStation = ((JLabel) c).getText();
-                                        break;
-                                    }
-                                }
-                                System.out.println("Dropoff selected: " + selectedDropoffStation + ", isSelected: " + radioButton.isSelected());
-                                updateFare();
-                                // Làm mới giao diện
-                                radioButton.repaint();
-                                panel.revalidate();
-                                roundedPanel8.revalidate();
-                                roundedPanel8.repaint();
+                        radioButton.setSelected(false);
+                        radioButton.setEnabled(true);
+                        final String dropoffStation = stationLabel.getText();
+                        final Integer maXe = (Integer) panel.getClientProperty("MaXe");
+                        radioButton.addActionListener(e -> {
+                            selectedDropoffStation = dropoffStation;
+                            if (maXe != null) {
+                                selectedMaxe = maXe;
+                                selectedMaxeDropoff=maXe;
                             }
+                            if(selectedMaxePickup==selectedMaxeDropoff && selectedMaxePickup!=0)
+                                updateMaXeAndFare();
+                            else
+                                jLabel1.setText("Vé không tồn tại");
                         });
-                        radioButton.repaint();
-                        panel.revalidate();
                     }
                 }
             }
+        } catch (Exception ex) {
+            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, "Lỗi khi thêm listener cho radio button", ex);
+            JOptionPane.showMessageDialog(this, "Lỗi khi xử lý lựa chọn điểm đón/trả!");
         }
-
-        // Làm mới toàn bộ giao diện
-        roundedPanel6.revalidate();
-        roundedPanel6.repaint();
-        roundedPanel8.revalidate();
-        roundedPanel8.repaint();
-        this.revalidate();
-        this.repaint();
     }
-    private void updateFare() {
-        System.out.println("Selected pickup: " + selectedPickupStation + ", dropoff: " + selectedDropoffStation);
-        if (selectedPickupStation != null && selectedDropoffStation != null) {
+    private void updateMaXeAndFare() {
+        System.out.println("Selected pickup: " + selectedPickupStation + ", dropoff: " + selectedDropoffStation + ", MaXe: " + selectedMaxe);
+        if (selectedPickupStation != null && selectedDropoffStation != null ) {
             try {
-                String result = xeSV.getPrice(selectedPickupStation, selectedDropoffStation);
-                jLabel1.setText(result);
+                if(selectedMaxe!=0)
+                {
+                    String result = xeSV.getPrice(selectedPickupStation, selectedDropoffStation, selectedMaxe);
+                    jLabel1.setText(result);
+                    progressIndicator1.setProgress(1f);
+                }
+               else
+                    jLabel1.setText("Vé không tồn tại");
             } catch (SQLException ex) {
-                Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, "Lỗi khi lấy giá vé", ex);
                 jLabel1.setText("Lỗi khi lấy giá vé");
             }
         } else {
+            progressIndicator1.setProgress(0.5f);
             jLabel1.setText("Chưa chọn đủ điểm");
         }
         roundedPanel6.revalidate();
@@ -184,87 +180,93 @@ public class StationForm extends javax.swing.JPanel {
     }
     public void searchPickupStations(String searchText) {
         try {
-            java.util.List<Xe> xeList;
-            if (searchText == null || searchText.trim().isEmpty() || searchText.equals(" 🔍  Tìm trong danh sách")) {
-                xeList = xeSV.ShowXe();
-            } else {
-                xeList = xeSV.findDiemDi(searchText);
+            // Lấy thông tin xe dựa trên selectedMaxe để lấy TenXe
+            Xe selectedXe = xeSV.getXeByMaXe(selectedMaxe);
+            if (selectedXe == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy xe với mã " + selectedMaxe);
+                return;
             }
-            getRoundedPanel6().removeAll();
-            getRoundedPanel6().setLayout(new BoxLayout(getRoundedPanel6(), BoxLayout.Y_AXIS));
+            String tenXe = selectedXe.getTenXe();
 
-            // Sử dụng Set để theo dõi các điểm đi duy nhất
-            java.util.Set<String> uniqueDiemDi = new java.util.HashSet<>();
-            for (Xe xe : xeList) {
-                String diemDi = xe.getDiemDi();
-                if (uniqueDiemDi.add(diemDi)) { // Chỉ thêm nếu chưa tồn tại
-                    JPanel pickupPanel = createStationPanel(
-                        xe.getGioDi().toString(),
-                        diemDi,
-                        diemDi
-                    );
-                    getRoundedPanel6().add(pickupPanel);
+            // Tìm các xe có cùng TenXe
+            List<Xe> xeList = new ArrayList<>();
+            for (Xe xe : xeSV.getAllXe()) {
+                if (xe.getTenXe().equals(tenXe)
+                        && (searchText.isEmpty() || xe.getDiemDi().toLowerCase().contains(searchText.trim().toLowerCase()))) {
+                    xeList.add(xe);
                 }
             }
-            getRoundedPanel6().revalidate();
-            getRoundedPanel6().repaint();
-            revalidate();
-            repaint();
+            // Cập nhật giao diện
+            roundedPanel6.removeAll();
+            roundedPanel6.setLayout(new BoxLayout(roundedPanel6, BoxLayout.Y_AXIS));
+            // Tạo panel cho từng xe, không lọc trùng lặp DiemDi
+            for (Xe xe : xeList) {
+                JPanel pickupPanel = createStationPanel(
+                        xe.getGioDi().toString()+"("+xe.getMaXe()+")",
+                        xe.getDiemDi(),
+                        xe.getDiemDi()
+                );
+                pickupPanel.putClientProperty("MaXe", xe.getMaXe()); // Lưu MaXe vào panel
+                roundedPanel6.add(pickupPanel);
+            }
+            roundedPanel6.revalidate();
+            roundedPanel6.repaint();
             addRadioButtonListeners();
         } catch (SQLException e) {
-            throw new RuntimeException("Lỗi khi tìm kiếm điểm đón: " + e.getMessage());
+            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, "Lỗi khi tìm kiếm điểm đón", e);
+            JOptionPane.showMessageDialog(this, "Lỗi khi tìm kiếm điểm đón!");
         }
     }
-
     public void searchDropoffStations(String searchText) {
         try {
-            java.util.List<Xe> xeList;
-            if (searchText == null || searchText.trim().isEmpty() || searchText.equals(" 🔍  Tìm trong danh sách")) {
-                xeList = xeSV.ShowXe();
-            } else {
-                xeList = xeSV.findDiemDen(searchText);
+            // Lấy thông tin xe dựa trên selectedMaxe để lấy TenXe
+            Xe selectedXe = xeSV.getXeByMaXe(selectedMaxe);
+            if (selectedXe == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy xe với mã " + selectedMaxe);
+                return;
             }
-            getRoundedPanel8().removeAll();
-            getRoundedPanel8().setLayout(new BoxLayout(getRoundedPanel8(), BoxLayout.Y_AXIS));
-
-            // Sử dụng Set để theo dõi các điểm đến  duy nhất
-            java.util.Set<String> uniqueDiemDen = new java.util.HashSet<>();
-            for (Xe xe : xeList) {
-                String diemDen = xe.getDiemDen();
-                if (uniqueDiemDen.add(diemDen)) { // Chỉ thêm nếu chưa tồn tại
-                    JPanel dropoffPanel = createStationPanel(
-                        xe.getGioDen().toString(),
-                        diemDen,
-                        diemDen
-                    );
-                    getRoundedPanel8().add(dropoffPanel);
+            String tenXe = selectedXe.getTenXe();
+            // Tìm các xe có cùng TenXe
+            List<Xe> xeList = new ArrayList<>();
+            for (Xe xe : xeSV.getAllXe()) {
+                if (xe.getTenXe().equals(tenXe)
+                        && (searchText.isEmpty() || xe.getDiemDen().toLowerCase().contains(searchText.trim().toLowerCase()))) {
+                    xeList.add(xe);
                 }
             }
-            getRoundedPanel8().revalidate();
-            getRoundedPanel8().repaint();
-            revalidate();
-            repaint();
+            // Cập nhật giao diện
+            roundedPanel8.removeAll();
+            roundedPanel8.setLayout(new BoxLayout(roundedPanel8, BoxLayout.Y_AXIS));
+            // Tạo panel cho từng xe, không lọc trùng lặp DiemDen
+            for (Xe xe : xeList) {
+                JPanel dropoffPanel = createStationPanel(
+                        xe.getGioDen().toString()+"("+xe.getMaXe()+")",
+                        xe.getDiemDen(),
+                        xe.getDiemDen()
+                );
+                dropoffPanel.putClientProperty("MaXe", xe.getMaXe()); // Lưu MaXe vào panel
+                roundedPanel8.add(dropoffPanel);
+            }
+            roundedPanel8.revalidate();
+            roundedPanel8.repaint();
             addRadioButtonListeners();
         } catch (SQLException e) {
-            throw new RuntimeException("Lỗi khi tìm kiếm điểm trả: " + e.getMessage());
+            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, "Lỗi khi tìm kiếm điểm trả", e);
+            JOptionPane.showMessageDialog(this, "Lỗi khi tìm kiếm điểm trả!");
         }
     }
     public javax.swing.JPanel getRoundedPanel6() {
         return roundedPanel6;
     }
-
     public javax.swing.JPanel getRoundedPanel8() {
         return roundedPanel8;
     }
-
     public javax.swing.JTextField getJTextField1() {
         return jTextField1;
     }
-
     public javax.swing.JTextField getJTextField2() {
         return jTextField2;
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -437,7 +439,7 @@ public class StationForm extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(131, 131, 131)
                 .addComponent(progressIndicator1, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(167, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,9 +543,10 @@ public class StationForm extends javax.swing.JPanel {
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        roundedPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 255, 51)));
+        roundedPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 255, 51)));
+        jPanel1.setBackground(new java.awt.Color(245, 249, 254));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(63, 171, 222)));
         jPanel1.setForeground(new java.awt.Color(102, 204, 255));
         jPanel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
@@ -575,7 +578,7 @@ public class StationForm extends javax.swing.JPanel {
                     .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel21)
                     .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -676,7 +679,7 @@ public class StationForm extends javax.swing.JPanel {
                 .addGroup(roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField2)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
                 .addGap(25, 25, 25))
         );
         roundedPanel7Layout.setVerticalGroup(
@@ -700,9 +703,10 @@ public class StationForm extends javax.swing.JPanel {
         jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        roundedPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 255, 51)));
+        roundedPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(217, 217, 217)));
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 255, 51)));
+        jPanel4.setBackground(new java.awt.Color(245, 249, 254));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(63, 171, 222)));
         jPanel4.setForeground(new java.awt.Color(102, 204, 255));
         jPanel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
@@ -838,7 +842,7 @@ public class StationForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(85, 85, 85)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -850,7 +854,7 @@ public class StationForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-       try {
+        try {
             searchPickupStations(jTextField1.getText());
         } catch (RuntimeException ex) {
             Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -859,34 +863,10 @@ public class StationForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnContinueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueActionPerformed
-            if (selectedPickupStation == null || selectedDropoffStation == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn điểm đón và điểm trả!");
-            return;
-        }
-
-        try {
-            // Lấy danh sách xe từ XeService
-            java.util.List<Xe> xeList = xeSV.ShowXe();
-            int maXe = 0;
-
-            for (Xe xe : xeList) {
-                if (xe.getDiemDi().equals(selectedPickupStation) && xe.getDiemDen().equals(selectedDropoffStation)) {
-                    maXe = xe.getMaXe();
-                    break; 
-                }
-            }
-
-            if (maXe == 0) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy xe phù hợp với điểm đón và điểm trả đã chọn!");
-                return;
-            }
-
-            // Chuyển sang NhapTTDatVeForm với maXe và instance của StationForm
-            Application.showForm(new NhapTTDatVeForm(maXe, this));
-        } catch (SQLException ex) {
-            Logger.getLogger(StationForm.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Lỗi khi lấy danh sách xe: " + ex.getMessage());
-        }
+        if(selectedMaxePickup==selectedMaxeDropoff && selectedMaxePickup!=0)
+            Application.showForm(new NhapTTDatVeForm(selectedMaxe, this));
+        else
+            JOptionPane.showMessageDialog(null,"Vé không tồn tại !");
     }//GEN-LAST:event_btnContinueActionPerformed
 
     private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
@@ -895,10 +875,8 @@ public class StationForm extends javax.swing.JPanel {
             previousForm.getJComboBox1().setSelectedItem(previousForm.getDepartureLocation());
             previousForm.getJComboBox2().setSelectedItem(previousForm.getDestinationLocation());
             previousForm.getJTextField1().setText(previousForm.getDepartureDate() != null ? previousForm.getDepartureDate() : "DD-MM-YYYY");
-
             // Hiển thị lại danh sách BusTicketForm
             previousForm.displayBusTicketForms();
-
             // Chuyển về ChooseBusForm
             Application.showForm(previousForm);
         } else {
