@@ -30,7 +30,8 @@ public class ThanhToanForm extends javax.swing.JPanel {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
-    public ThanhToanForm(String tenNguoiDi, String sdt, String email, StationForm previousForm) {
+    public ThanhToanForm(int maxe,String tenNguoiDi, String sdt, String email, StationForm previousForm) {
+        maXe=maxe;
         initComponents();
         init();
         jbTen.setText(tenNguoiDi);
@@ -41,7 +42,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
     
     private void init() {
         TTChuyenDiDAO TTChuyenDiDAO = new TTChuyenDiDAO();
-        TTChuyenDi xe = TTChuyenDiDAO.getTripDetails(101);
+        TTChuyenDi xe = TTChuyenDiDAO.getTripDetails(maXe);
         if (xe != null) {
             lbTenNhaXe.setText(xe.getTenXe());
             lbTTXe.setText(xe.getLoaiXe());
@@ -217,7 +218,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         this.add(layeredPane, java.awt.BorderLayout.CENTER);
 
         // Khởi tạo và thêm PanelChiTiet
-        PanelChiTiet = new PanelChiTiet(101);
+        PanelChiTiet = new PanelChiTiet(maXe);
         PanelChiTiet.setVisible(false);
         int formWidth = 1096;
         int formHeight = 752;

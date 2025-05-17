@@ -112,17 +112,11 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="lbTongTien">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="T&#x1ed5;ng ti&#x1ec1;n"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbGiaVe">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="550.000&#x111;"/>
               </Properties>
             </Component>
@@ -250,9 +244,6 @@
             </Container>
             <Component class="javax.swing.JLabel" name="lbPTThanhToan">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Ph&#x1b0;&#x1a1;ng th&#x1ee9;c thanh to&#xe1;n"/>
               </Properties>
             </Component>
@@ -592,9 +583,6 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="lbTTLienHe">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin li&#xea;n h&#x1ec7;"/>
               </Properties>
             </Component>
@@ -631,27 +619,18 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jbTen">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="L&#xea; Duy Qu&#x1ed1;c.."/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jbSdt">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="000000001"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jbEmail">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="leduyquoc2giaml.com"/>
               </Properties>
@@ -701,9 +680,6 @@
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="cc" red="ff" type="rgb"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Thanh To&#xe1;n"/>
               </Properties>
@@ -758,9 +734,6 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="lbTTChuyenDi">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="0" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin chuy&#x1ebf;n &#x111;i"/>
               </Properties>
             </Component>
@@ -887,9 +860,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbTenNhaXe">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="&#x110;&#xec;nh Nh&#xe2;n"/>
                   </Properties>
                 </Component>
@@ -900,33 +870,21 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbTGDi">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="16:30"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbTGDen">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="10:20"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbDiaChiDen">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="VP An S&#x1b0;&#x1a1;ng"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbDiaChiDi">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" red="0" type="rgb"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" value="VP &#x110;&#xe0; N&#x1eb5;ng"/>
                   </Properties>
                 </Component>
@@ -1018,9 +976,6 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbNgayThang">
                       <Properties>
-                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="0" green="0" red="0" type="rgb"/>
-                        </Property>
                         <Property name="text" type="java.lang.String" value="CN, 19/06/2025"/>
                       </Properties>
                     </Component>

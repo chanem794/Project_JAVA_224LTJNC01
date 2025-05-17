@@ -22,7 +22,6 @@ import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.application.form.other.component.PanelThanhToan;
 
-
 public class NhapTTDatVeForm extends javax.swing.JPanel {
     private PanelChiTiet PanelChiTiet;
     private JLayeredPane layeredPane;
@@ -799,7 +798,7 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
                 "Lỗi",
                 JOptionPane.ERROR_MESSAGE);
         } else {
-            Application.showForm(new PanelThanhToan(tenNguoiDi, sdt, email, this.previousForm)); // Truyền thêm previousForm
+            Application.showForm(new PanelThanhToan(maXe,tenNguoiDi, sdt, email, this.previousForm)); // Truyền thêm previousForm
         }
     }//GEN-LAST:event_cmdTiepTucActionPerformed
 
