@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import raven.application.form.other.StationForm;
-
+import model.NguoiDung; // Thêm import này
 
 public class Application extends javax.swing.JFrame { 
     private static Application app;
@@ -27,7 +27,7 @@ public class Application extends javax.swing.JFrame {
     private boolean isRegisterFlow;
     private String currentEmail;
     private final NguoiDungService nguoidungService;
-
+    private NguoiDung currentUser; // Thêm thuộc tính để lưu người dùng hiện tại
     public Application() {
         initComponents();
         setSize(new Dimension(1366, 768));
@@ -42,6 +42,15 @@ public class Application extends javax.swing.JFrame {
         setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
+    }
+    // Thêm phương thức getCurrentUser()
+    public static NguoiDung getCurrentUser() {
+        return app.currentUser;
+    }
+
+    // Thêm phương thức setCurrentUser() để cập nhật người dùng sau khi đăng nhập
+    public static void setCurrentUser(NguoiDung user) {
+        app.currentUser = user;
     }
     public static void showForm(Component component) {
         component.applyComponentOrientation(app.getComponentOrientation());
@@ -78,6 +87,7 @@ public class Application extends javax.swing.JFrame {
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
         app.previousForm = null;
         app.currentEmail = null;
+        app.currentUser = null; // Xóa thông tin người dùng khi đăng xuất
     }
 
     public static boolean isRegisterFlow() {

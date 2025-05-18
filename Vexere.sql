@@ -55,7 +55,7 @@ CREATE TABLE Xe (
 );
 GO
 
--- Tạo bảng DatCho
+-- Tạo bảng DatCho với các trường mới
 CREATE TABLE DatCho (
     MaDatCho         INT PRIMARY KEY,
     TrangThai        NVARCHAR(50),
@@ -68,6 +68,9 @@ CREATE TABLE DatCho (
     GiaVe            INT,
     MaNguoiDung      VARCHAR(10),
     MaXe             INT,
+    TenHanhKhach     NVARCHAR(50),          -- Trường mới
+    SoDienThoaiLienLac VARCHAR(15),         -- Trường mới
+    EmailLienLac     VARCHAR(100),          -- Trường mới
     CONSTRAINT FK_DatCho_NguoiDung FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung),
     CONSTRAINT FK_DatCho_Xe FOREIGN KEY (MaXe) REFERENCES Xe(MaXe)
 );
@@ -394,3 +397,7 @@ BEGIN
     SET @House = @House + 1;
 END;
 GO
+
+select * from Xe
+where DiemDi = N'Hải Châu - Đà Nẵng'
+select * from NguoiDung

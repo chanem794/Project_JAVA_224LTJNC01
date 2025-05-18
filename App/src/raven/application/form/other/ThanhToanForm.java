@@ -20,26 +20,40 @@ import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.application.form.other.component.PanelChiTiet;
 import raven.application.form.other.component.PanelNhapTTDatVe;
-
+import model.NguoiDung;
+import model.DatCho;
+import bll.DatChoService;
+import dal.TTChuyenDiDAO;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.SQLException;
 public class ThanhToanForm extends javax.swing.JPanel {
     private PanelChiTiet PanelChiTiet;
     private JLayeredPane layeredPane;
     private StationForm previousForm; // Thêm biến này vào lớp
     private int maXe;
     private int basePrice;
+    private String maNguoiDung; // Thêm thuộc tính 
+    private String tenNguoiDi; // Thêm biến instance
+    private String sdt;       // Thêm biến instance
+    private String email;     // Thêm biến instance
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
     public ThanhToanForm(int maXe, String tenNguoiDi, String sdt, String email, int totalCost, boolean hasInsurance, StationForm previousForm) {
         this.maXe = maXe;
+        this.tenNguoiDi = tenNguoiDi; // Thêm biến instance để lưu thông tin
+        this.sdt = sdt;
+        this.email = email;
+            this.maNguoiDung = Application.getCurrentUser().getMaNguoiDung(); // Lấy từ session
         initComponents();
         init();
         jbTen.setText(tenNguoiDi);
         jbSdt.setText(sdt);
         jbEmail.setText(email);
         this.previousForm = previousForm;
-        this.basePrice = totalCost; // Cập nhật basePrice với tổng tiền
-        updateBasePriceOnly(); // Hiển thị tổng tiền
+        this.basePrice = totalCost;
+        updateBasePriceOnly();
 }
     
     private void init() {
@@ -241,24 +255,67 @@ public class ThanhToanForm extends javax.swing.JPanel {
         this.repaint();
         
         cmdThanhToan.addActionListener(new java.awt.event.ActionListener() {
-        @Override
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-        // Kiểm tra xem có phương thức thanh toán nào được chọn hay không
-            if (!Rb1.isSelected() && !Rb2.isSelected() && !Rb3.isSelected() && !Rb4.isSelected() && !Rb5.isSelected()) {
-            // Hiển thị thông báo lỗi nếu chưa chọn phương thức
-                javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this, 
-                "Vui lòng chọn một phương thức thanh toán trước khi tiếp tục!", 
-                "Lỗi", 
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        if (!Rb1.isSelected() && !Rb2.isSelected() && !Rb3.isSelected() && !Rb4.isSelected() && !Rb5.isSelected()) {
+            javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                    "Vui lòng chọn một phương thức thanh toán trước khi tiếp tục!",
+                    "Lỗi",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
         } else {
-            // Xử lý logic thanh toán nếu đã chọn phương thức (có thể thêm code xử lý ở đây)
-            javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this, 
-                "Thanh toán thành công!", 
-                "Thông báo", 
-                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            try {
+                // Tạo đối tượng DatCho
+                DatCho datCho = new DatCho();
+                TTChuyenDiDAO ttChuyenDiDAO = new TTChuyenDiDAO();
+                TTChuyenDi xe = ttChuyenDiDAO.getTripDetails(maXe);
+
+                if (xe != null) {
+                    // Thiết lập các thuộc tính cho DatCho
+                    datCho.setMaDatCho(0); // Giả sử MaDatCho là IDENTITY trong DB
+                    datCho.setTrangThai("đang chờ xác nhận");
+                    datCho.setNgayDat(new Date(new java.util.Date().getTime())); // Ngày hiện tại: 18/05/2025
+                    datCho.setGioDat(new Time(new java.util.Date().getTime())); // Giờ hiện tại: 21:59
+                    datCho.setDiemDi(xe.getDiemDi());
+                    datCho.setDiemDen(xe.getDiemDen());
+                    datCho.setNgayGioKhoiHanh(new Date(xe.getNgayKhoiHanh().getTime()));
+                    datCho.setSoGheDat(1); // Mặc định 1 ghế
+                    datCho.setGiaVe(basePrice);
+                    datCho.setMaNguoiDung(maNguoiDung); // Sử dụng MaNguoiDung từ session
+                    datCho.setMaXe(maXe);
+                    datCho.setTenHanhKhach(tenNguoiDi);
+                    datCho.setSoDienThoaiLienLac(sdt);
+                    datCho.setEmailLienLac(email);
+
+                    // Gọi DatChoService để lưu vào DB
+                    DatChoService datChoService = new DatChoService();
+                    boolean success = datChoService.createDatCho(datCho);
+
+                    if (success) {
+                        javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                                "Thanh toán thành công! Đặt chỗ đã được ghi nhận.",
+                                "Thông báo",
+                                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                        // Quay lại StationForm sau khi thanh toán thành công
+                        if (previousForm != null) {
+                            Application.showForm(previousForm);
+                        }
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                                "Lỗi khi ghi nhận đặt chỗ. Vui lòng thử lại!",
+                                "Lỗi",
+                                javax.swing.JOptionPane.ERROR_MESSAGE);
+                    }
                 }
+            } catch (SQLException ex) {
+                javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                        "Lỗi kết nối cơ sở dữ liệu: " + ex.getMessage(),
+                        "Lỗi",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-        });
+        }
+    }
+});
         // Cập nhật lại giá vé dựa trên totalCost đã truyền vào
     lbGiaVe.setText(String.format("%,dđ", basePrice));
    }

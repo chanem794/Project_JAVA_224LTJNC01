@@ -8,7 +8,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 import raven.application.Application;
 import raven.toast.Notifications;
-
+import model.NguoiDung; // Thêm import này
 import java.sql.SQLException;
 /**
  *
@@ -115,10 +115,18 @@ public class OTPForm extends javax.swing.JPanel {
         try {
             String email = Application.getCurrentEmail();
             if (Application.getNguoiDungService().validateOTP(email, otp)) {
-                if (Application.getNguoiDungService().needsUserInfo(email)) {
-                    Application.showInfoForm();
+                // Lấy thông tin người dùng từ email sau khi OTP được xác thực
+                NguoiDung user = Application.getNguoiDungService().getUserByEmail(email); // Giả sử có phương thức này
+                if (user != null) {
+                    Application.setCurrentUser(user); // Lưu thông tin người dùng
+                    if (Application.getNguoiDungService().needsUserInfo(email)) {
+                        Application.showInfoForm();
+                    } else {
+                        Application.login();
+                    }
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, "Xác thực OTP thành công!");
                 } else {
-                    Application.login();
+                    Notifications.getInstance().show(Notifications.Type.ERROR, "Không thể lấy thông tin người dùng");
                 }
             } else {
                 Notifications.getInstance().show(Notifications.Type.WARNING, "Mã OTP không đúng hoặc đã hết hạn");
