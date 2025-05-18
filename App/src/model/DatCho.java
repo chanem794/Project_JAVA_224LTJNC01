@@ -14,12 +14,16 @@ public class DatCho {
     private int giaVe;
     private String maNguoiDung;
     private int maXe;
+    private String tenHanhKhach;
+    private String soDienThoaiLienLac;
+    private String emailLienLac;
 
     public DatCho() {
     }
 
     public DatCho(int maDatCho, String trangThai, Date ngayDat, java.sql.Time gioDat, String diemDi, String diemDen,
-                  Date ngayGioKhoiHanh, int soGheDat, int giaVe, String maNguoiDung, int maXe) {
+                  Date ngayGioKhoiHanh, int soGheDat, int giaVe, String maNguoiDung, int maXe,
+                  String tenHanhKhach, String soDienThoaiLienLac, String emailLienLac) {
         this.maDatCho = maDatCho;
         this.trangThai = trangThai;
         this.ngayDat = ngayDat;
@@ -31,6 +35,9 @@ public class DatCho {
         this.giaVe = giaVe;
         this.maNguoiDung = maNguoiDung;
         this.maXe = maXe;
+        this.tenHanhKhach = tenHanhKhach;
+        this.soDienThoaiLienLac = soDienThoaiLienLac;
+        this.emailLienLac = emailLienLac;
     }
 
     public int getMaDatCho() {
@@ -119,5 +126,29 @@ public class DatCho {
 
     public void setMaXe(int maXe) {
         this.maXe = maXe;
+    }
+
+    public String getTenHanhKhach() {
+        return tenHanhKhach;
+    }
+
+    public void setTenHanhKhach(String tenHanhKhach) {
+        this.tenHanhKhach = tenHanhKhach;
+    }
+
+    public String getSoDienThoaiLienLac() {
+        return soDienThoaiLienLac;
+    }
+
+    public void setSoDienThoaiLienLac(String soDienThoaiLienLac) {
+        this.soDienThoaiLienLac = soDienThoaiLienLac;
+    }
+
+    public String getEmailLienLac() {
+        return emailLienLac;
+    }
+
+    public void setEmailLienLac(String emailLienLac) {
+        this.emailLienLac = emailLienLac;
     }
 }

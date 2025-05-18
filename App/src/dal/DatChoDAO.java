@@ -18,7 +18,7 @@ public class DatChoDAO {
     }
 
     public boolean createDatCho(DatCho datCho) throws SQLException {
-        String sql = "INSERT INTO DatCho (MaDatCho, TrangThai, NgayDat, GioDat, DiemDi, DiemDen, NgayGioKhoiHanh, SoGheDat, GiaVe, MaNguoiDung, MaXe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DatCho (MaDatCho, TrangThai, NgayDat, GioDat, DiemDi, DiemDen, NgayGioKhoiHanh, SoGheDat, GiaVe, MaNguoiDung, MaXe, TenHanhKhach, SoDienThoaiLienLac, EmailLienLac) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, datCho.getMaDatCho());
@@ -40,6 +40,9 @@ public class DatChoDAO {
             stmt.setInt(9, datCho.getGiaVe());
             stmt.setString(10, datCho.getMaNguoiDung());
             stmt.setInt(11, datCho.getMaXe());
+            stmt.setString(12, datCho.getTenHanhKhach());
+            stmt.setString(13, datCho.getSoDienThoaiLienLac());
+            stmt.setString(14, datCho.getEmailLienLac());
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -65,6 +68,9 @@ public class DatChoDAO {
                 datCho.setGiaVe(rs.getInt("GiaVe"));
                 datCho.setMaNguoiDung(rs.getString("MaNguoiDung"));
                 datCho.setMaXe(rs.getInt("MaXe"));
+                datCho.setTenHanhKhach(rs.getString("TenHanhKhach"));
+                datCho.setSoDienThoaiLienLac(rs.getString("SoDienThoaiLienLac"));
+                datCho.setEmailLienLac(rs.getString("EmailLienLac"));
                 datChoList.add(datCho);
             }
         }
@@ -91,6 +97,9 @@ public class DatChoDAO {
                     datCho.setGiaVe(rs.getInt("GiaVe"));
                     datCho.setMaNguoiDung(rs.getString("MaNguoiDung"));
                     datCho.setMaXe(rs.getInt("MaXe"));
+                    datCho.setTenHanhKhach(rs.getString("TenHanhKhach"));
+                    datCho.setSoDienThoaiLienLac(rs.getString("SoDienThoaiLienLac"));
+                    datCho.setEmailLienLac(rs.getString("EmailLienLac"));
                     return datCho;
                 }
             }
@@ -99,7 +108,7 @@ public class DatChoDAO {
     }
 
     public boolean updateDatCho(DatCho datCho) throws SQLException {
-        String sql = "UPDATE DatCho SET TrangThai = ?, NgayDat = ?, GioDat = ?, DiemDi = ?, DiemDen = ?, NgayGioKhoiHanh = ?, SoGheDat = ?, GiaVe = ?, MaNguoiDung = ?, MaXe = ? WHERE MaDatCho = ?";
+        String sql = "UPDATE DatCho SET TrangThai = ?, NgayDat = ?, GioDat = ?, DiemDi = ?, DiemDen = ?, NgayGioKhoiHanh = ?, SoGheDat = ?, GiaVe = ?, MaNguoiDung = ?, MaXe = ?, TenHanhKhach = ?, SoDienThoaiLienLac = ?, EmailLienLac = ? WHERE MaDatCho = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, datCho.getTrangThai());
@@ -120,7 +129,10 @@ public class DatChoDAO {
             stmt.setInt(8, datCho.getGiaVe());
             stmt.setString(9, datCho.getMaNguoiDung());
             stmt.setInt(10, datCho.getMaXe());
-            stmt.setInt(11, datCho.getMaDatCho());
+            stmt.setString(11, datCho.getTenHanhKhach());
+            stmt.setString(12, datCho.getSoDienThoaiLienLac());
+            stmt.setString(13, datCho.getEmailLienLac());
+            stmt.setInt(14, datCho.getMaDatCho());
             
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -159,6 +171,9 @@ public class DatChoDAO {
                     datCho.setGiaVe(rs.getInt("GiaVe"));
                     datCho.setMaNguoiDung(rs.getString("MaNguoiDung"));
                     datCho.setMaXe(rs.getInt("MaXe"));
+                    datCho.setTenHanhKhach(rs.getString("TenHanhKhach"));
+                    datCho.setSoDienThoaiLienLac(rs.getString("SoDienThoaiLienLac"));
+                    datCho.setEmailLienLac(rs.getString("EmailLienLac"));
                     datChoList.add(datCho);
                 }
             }
