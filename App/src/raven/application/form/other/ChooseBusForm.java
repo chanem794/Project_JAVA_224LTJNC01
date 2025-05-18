@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -178,6 +179,21 @@ public class ChooseBusForm extends javax.swing.JPanel {
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
+        // Nhóm các radio button để chỉ cho phép chọn một
+        ButtonGroup filterGroup = new ButtonGroup();
+        filterGroup.add(jRadioButton1);
+        filterGroup.add(jRadioButton2);
+        filterGroup.add(jRadioButton3);
+        filterGroup.add(jRadioButton4);
+        filterGroup.add(jRadioButton5);
+        filterGroup.add(jRadioButton6);
+        filterGroup.add(jRadioButton7);
+        filterGroup.add(jRadioButton8);
+        filterGroup.add(jRadioButton9);
+
+        // Đặt mặc định chọn "Mặc định" (jRadioButton2)
+        jRadioButton2.setSelected(true);
+
         // Hiển thị BusTicketForm trực tiếp khi khởi tạo
         displayBusTicketForms();
 
@@ -191,6 +207,24 @@ public class ChooseBusForm extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không có chuyến xe nào để hiển thị!");
             return;
         }
+
+        // Sắp xếp danh sách xe dựa trên radio button được chọn
+        if (jRadioButton3.isSelected()) { // Giờ đi sớm nhất
+            xeList.sort((xe1, xe2) -> xe1.getGioDi().compareTo(xe2.getGioDi()));
+        } else if (jRadioButton4.isSelected()) { // Giờ đi muộn nhất
+            xeList.sort((xe1, xe2) -> xe2.getGioDi().compareTo(xe1.getGioDi()));
+        } else if (jRadioButton5.isSelected()) { // Giá tăng dần
+            xeList.sort((xe1, xe2) -> Integer.compare(xe1.getGiaVe(), xe2.getGiaVe()));
+        } else if (jRadioButton6.isSelected()) { // Giá giảm dần
+            xeList.sort((xe1, xe2) -> Integer.compare(xe2.getGiaVe(), xe1.getGiaVe()));
+        } else if (jRadioButton9.isSelected()) { // Nhiều chỗ trống nhất
+            xeList.sort((xe1, xe2) -> Integer.compare(xe2.getGheConTrong(), xe1.getGheConTrong()));
+        } else if (jRadioButton7.isSelected()) { // Giá rẻ nhất
+            xeList.sort((xe1, xe2) -> Integer.compare(xe1.getGiaVe(), xe2.getGiaVe()));
+        } else if (jRadioButton8.isSelected()) { // Giá đắt nhất
+            xeList.sort((xe1, xe2) -> Integer.compare(xe2.getGiaVe(), xe1.getGiaVe()));
+        }
+        // Nếu chọn "Mặc định" (jRadioButton2), giữ nguyên thứ tự từ dữ liệu gốc
 
         // Tạo hoặc cập nhật ticketContainer
         javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
@@ -213,7 +247,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
         busTicketForms.clear();
 
         // Thêm BusTicketForm với thông tin từ danh sách xeList
-        int displayCount = Math.min(xeList.size(), 300); // Hiển thị tối đa 300 xe
+        int displayCount;
+        if (jRadioButton7.isSelected() || jRadioButton8.isSelected()) {
+            // Chỉ hiển thị 1 xe (rẻ nhất hoặc đắt nhất)
+            displayCount = 1;
+        } else {
+            // Hiển thị tối đa 300 xe cho các trường hợp khác
+            displayCount = Math.min(xeList.size(), 300);
+        }
+
         for (int i = 0; i < displayCount; i++) {
             BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
             busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
@@ -759,6 +801,24 @@ public class ChooseBusForm extends javax.swing.JPanel {
             }
         }
 
+        // Sắp xếp danh sách xe dựa trên radio button được chọn
+        if (jRadioButton3.isSelected()) { // Giờ đi sớm nhất
+            xeList.sort((xe1, xe2) -> xe1.getGioDi().compareTo(xe2.getGioDi()));
+        } else if (jRadioButton4.isSelected()) { // Giờ đi muộn nhất
+            xeList.sort((xe1, xe2) -> xe2.getGioDi().compareTo(xe1.getGioDi()));
+        } else if (jRadioButton5.isSelected()) { // Giá tăng dần
+            xeList.sort((xe1, xe2) -> Integer.compare(xe1.getGiaVe(), xe2.getGiaVe()));
+        } else if (jRadioButton6.isSelected()) { // Giá giảm dần
+            xeList.sort((xe1, xe2) -> Integer.compare(xe2.getGiaVe(), xe1.getGiaVe()));
+        } else if (jRadioButton9.isSelected()) { // Nhiều chỗ trống nhất
+            xeList.sort((xe1, xe2) -> Integer.compare(xe2.getGheConTrong(), xe1.getGheConTrong()));
+        } else if (jRadioButton7.isSelected()) { // Giá rẻ nhất
+            xeList.sort((xe1, xe2) -> Integer.compare(xe1.getGiaVe(), xe2.getGiaVe()));
+        } else if (jRadioButton8.isSelected()) { // Giá đắt nhất
+            xeList.sort((xe1, xe2) -> Integer.compare(xe2.getGiaVe(), xe1.getGiaVe()));
+        }
+        // Nếu chọn "Mặc định" (jRadioButton2), giữ nguyên thứ tự từ dữ liệu gốc
+
         // Hiển thị kết quả
         int totalXe = xeList.size();
         if (totalXe == 0) {
@@ -769,6 +829,9 @@ public class ChooseBusForm extends javax.swing.JPanel {
         }
 
         jLabel1.setText("Tổng số xe đã tìm thấy: " + totalXe);
+
+        // Cập nhật danh sách xeList thành viên
+        this.xeList = xeList;
 
         // Tạo hoặc cập nhật ticketContainer
         javax.swing.JPanel ticketContainer = new javax.swing.JPanel();
@@ -791,7 +854,15 @@ public class ChooseBusForm extends javax.swing.JPanel {
         busTicketForms.clear();
 
         // Thêm BusTicketForm với thông tin từ danh sách xeList
-        int displayCount = Math.min(xeList.size(), 300); // Hiển thị tối đa 300 xe
+        int displayCount;
+        if (jRadioButton7.isSelected() || jRadioButton8.isSelected()) {
+            // Chỉ hiển thị 1 xe (rẻ nhất hoặc đắt nhất)
+            displayCount = 1;
+        } else {
+            // Hiển thị tối đa 300 xe cho các trường hợp khác
+            displayCount = Math.min(xeList.size(), 300);
+        }
+
         for (int i = 0; i < displayCount; i++) {
             BusTicketForm busTicketForm = new BusTicketForm(xeList.get(i)); // Truyền đối tượng Xe vào BusTicketForm
             busTicketForm.setPreferredSize(new java.awt.Dimension(650, 250));
