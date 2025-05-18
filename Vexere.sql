@@ -1,3 +1,4 @@
+-- Phần code gốc giữ nguyên từ đầu đến trước đoạn INSERT vào bảng Xe
 USE master;
 GO
 
@@ -36,10 +37,10 @@ CREATE TABLE Tuyen (
 );
 GO
 
--- Tạo bảng Xe
+-- Tạo bảng Xe với ràng buộc NOT NULL cho TenXe
 CREATE TABLE Xe (
     MaXe           INT PRIMARY KEY,
-    TenXe          NVARCHAR(100),
+    TenXe          NVARCHAR(100) NOT NULL, -- Thêm NOT NULL
     LoaiXe         NVARCHAR(50),
     DiemDi         NVARCHAR(100),
     DiemDen        NVARCHAR(100),
@@ -110,16 +111,15 @@ GO
 
 -- Thêm dữ liệu vào bảng Tuyen
 -- Mỗi nhà xe có 10 tuyến (5 chiều đi, 5 chiều về)
-DECLARE @MaTuyen INT = 2; -- Bắt đầu từ 2 vì tuyến 1 đã có trong dữ liệu mẫu
+DECLARE @MaTuyen INT = 2;
 DECLARE @i INT = 1;
 DECLARE @j INT;
 
-WHILE @i <= 5 -- 5 nhà xe
+WHILE @i <= 5
 BEGIN
     SET @j = 1;
-    WHILE @j <= 5 -- 5 cặp tuyến (đi và về)
+    WHILE @j <= 5
     BEGIN
-        -- Thêm tuyến chiều đi
         INSERT INTO Tuyen (MaTuyen, DiemDi, DiemDen, QuangDuong)
         VALUES (@MaTuyen, 
                 CASE @j 
@@ -138,7 +138,6 @@ BEGIN
                 END,
                 CASE @j WHEN 1 THEN 35 WHEN 2 THEN 25 WHEN 3 THEN 40 WHEN 4 THEN 60 WHEN 5 THEN 80 END);
 
-        -- Thêm tuyến chiều về
         INSERT INTO Tuyen (MaTuyen, DiemDi, DiemDen, QuangDuong)
         VALUES (@MaTuyen + 1, 
                 CASE @j 
@@ -164,53 +163,118 @@ BEGIN
 END;
 GO
 
--- Thêm dữ liệu vào bảng Xe
--- Mỗi tuyến có 1 chuyến đi và 1 chuyến về
-DECLARE @MaXe INT = 102; -- Bắt đầu từ 102 vì xe 101 đã có
+-- Xóa các bản ghi từ MaXe 102 trở đi để đảm bảo không có dữ liệu cũ
+DELETE FROM Xe WHERE MaXe >= 102;
+GO
+
+-- Thêm dữ liệu vào bảng Xe với đảm bảo TenXe không NULL
+DECLARE @MaXe INT = 102;
 DECLARE @MaTuyen INT = 2;
 DECLARE @House INT = 1;
 DECLARE @Route INT;
+DECLARE @RandomGiaVe INT;
+DECLARE @RandomGioDi TIME;
+DECLARE @RandomGioDen TIME;
+DECLARE @RandomSoGhe INT;
+DECLARE @RandomGheConTrong INT;
+DECLARE @RandomTenXe NVARCHAR(100);
 
-WHILE @House <= 5 -- 5 nhà xe
+WHILE @House <= 5
 BEGIN
     SET @Route = 1;
-    WHILE @Route <= 5 -- 5 cặp tuyến
+    WHILE @Route <= 5
     BEGIN
+        -- Tạo giá vé ngẫu nhiên từ 70000 đến 200000, bội của 10000
+        DECLARE @PricePoints INT = FLOOR(RAND() * 14);
+        SET @RandomGiaVe = 70000 + (@PricePoints * 10000);
+        
+        -- Tạo số chỗ ngồi ngẫu nhiên từ 15 đến 35
+        SET @RandomSoGhe = FLOOR(15 + (RAND() * (35 - 15 + 1)));
+        
+        -- Tạo số chỗ còn trống ngẫu nhiên từ 5 đến @RandomSoGhe
+        SET @RandomGheConTrong = FLOOR(5 + (RAND() * (@RandomSoGhe - 5 + 1)));
+        
+        -- Tạo tên xe ngẫu nhiên, đảm bảo không NULL
+        SET @RandomTenXe = CASE FLOOR(RAND() * 5)
+            WHEN 0 THEN N'Hoàng Long'
+            WHEN 1 THEN N'Thành Công'
+            WHEN 2 THEN N'Phú Quý'
+            WHEN 3 THEN N'Nam Phát'
+            WHEN 4 THEN N'Hải Âu'
+            ELSE N'Việt Nhật' -- Giá trị dự phòng để đảm bảo không NULL
+        END;
+
+        -- Tạo thời gian đi ngẫu nhiên từ 6:30 đến 23:30, cách nhau 30 phút
+        DECLARE @StartSlots INT = 0;
+        DECLARE @EndSlots INT = 34;
+        DECLARE @RandomSlot INT = FLOOR(RAND() * (@EndSlots + 1));
+        SET @RandomGioDi = DATEADD(MINUTE, 390 + (@RandomSlot * 30), '00:00:00');
+        
+        -- Tạo thời gian đến ngẫu nhiên, sau thời gian đi ít nhất 1 giờ
+        DECLARE @MinSlotDen INT = @RandomSlot + 2;
+        DECLARE @MaxSlotDen INT = CASE WHEN @RandomSlot + 6 <= @EndSlots THEN @RandomSlot + 6 ELSE @EndSlots END;
+        DECLARE @RandomDenSlot INT = @MinSlotDen + FLOOR(RAND() * (@MaxSlotDen - @MinSlotDen + 1));
+        SET @RandomGioDen = DATEADD(MINUTE, 390 + (@RandomDenSlot * 30), '00:00:00');
+
         -- Chuyến đi
         INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
         VALUES (@MaXe, 
-                CASE @House 
-                    WHEN 1 THEN N'Hữu Định'
-                    WHEN 2 THEN N'Thọ Khang'
-                    WHEN 3 THEN N'Minh Huy'
-                    WHEN 4 THEN N'Nguyễn Huỳnh'
-                    WHEN 5 THEN N'Duy Quốc'
-                END,
-                N'Ghế ngồi 29 chỗ',
+                @RandomTenXe,
+                N'Ghế ngồi ' + CAST(@RandomSoGhe AS NVARCHAR) + N' chỗ',
                 (SELECT DiemDi FROM Tuyen WHERE MaTuyen = @MaTuyen),
                 (SELECT DiemDen FROM Tuyen WHERE MaTuyen = @MaTuyen),
                 '2025-05-01',
-                CASE @Route WHEN 1 THEN '08:30' WHEN 2 THEN '09:00' WHEN 3 THEN '10:00' WHEN 4 THEN '11:30' WHEN 5 THEN '12:30' END,
-                CASE @Route WHEN 1 THEN '07:00' WHEN 2 THEN '07:30' WHEN 3 THEN '08:30' WHEN 4 THEN '09:30' WHEN 5 THEN '10:30' END,
-                29, 29, 70000, @MaTuyen);
+                @RandomGioDen,
+                @RandomGioDi,
+                @RandomSoGhe,
+                @RandomGheConTrong,
+                @RandomGiaVe,
+                @MaTuyen);
+
+        -- Tạo giá vé ngẫu nhiên cho chuyến về
+        SET @PricePoints = FLOOR(RAND() * 14);
+        SET @RandomGiaVe = 70000 + (@PricePoints * 10000);
+        
+        -- Tạo số chỗ ngồi ngẫu nhiên cho chuyến về
+        SET @RandomSoGhe = FLOOR(15 + (RAND() * (35 - 15 + 1)));
+        
+        -- Tạo số chỗ còn trống ngẫu nhiên cho chuyến về
+        SET @RandomGheConTrong = FLOOR(5 + (RAND() * (@RandomSoGhe - 5 + 1)));
+        
+        -- Tạo tên xe ngẫu nhiên cho chuyến về, đảm bảo không NULL
+        SET @RandomTenXe = CASE FLOOR(RAND() * 5)
+            WHEN 0 THEN N'Hoàng Long'
+            WHEN 1 THEN N'Thành Công'
+            WHEN 2 THEN N'Phú Quý'
+            WHEN 3 THEN N'Nam Phát'
+            WHEN 4 THEN N'Hải Âu'
+            ELSE N'Việt Nhật' -- Giá trị dự phòng
+        END;
+
+        -- Tạo thời gian đi ngẫu nhiên cho chuyến về
+        SET @RandomSlot = FLOOR(RAND() * (@EndSlots + 1));
+        SET @RandomGioDi = DATEADD(MINUTE, 390 + (@RandomSlot * 30), '00:00:00');
+        
+        -- Tạo thời gian đến ngẫu nhiên cho chuyến về
+        SET @MinSlotDen = @RandomSlot + 2;
+        SET @MaxSlotDen = CASE WHEN @RandomSlot + 6 <= @EndSlots THEN @RandomSlot + 6 ELSE @EndSlots END;
+        SET @RandomDenSlot = @MinSlotDen + FLOOR(RAND() * (@MaxSlotDen - @MinSlotDen + 1));
+        SET @RandomGioDen = DATEADD(MINUTE, 390 + (@RandomDenSlot * 30), '00:00:00');
 
         -- Chuyến về
         INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen)
         VALUES (@MaXe + 1, 
-                CASE @House 
-                    WHEN 1 THEN N'Hữu Định'
-                    WHEN 2 THEN N'Thọ Khang'
-                    WHEN 3 THEN N'Minh Huy'
-                    WHEN 4 THEN N'Nguyễn Huỳnh'
-                    WHEN 5 THEN N'Duy Quốc'
-                END,
-                N'Ghế ngồi 29 chỗ',
+                @RandomTenXe,
+                N'Ghế ngồi ' + CAST(@RandomSoGhe AS NVARCHAR) + N' chỗ',
                 (SELECT DiemDi FROM Tuyen WHERE MaTuyen = @MaTuyen + 1),
                 (SELECT DiemDen FROM Tuyen WHERE MaTuyen = @MaTuyen + 1),
                 '2025-05-01',
-                CASE @Route WHEN 1 THEN '15:30' WHEN 2 THEN '16:00' WHEN 3 THEN '17:00' WHEN 4 THEN '18:30' WHEN 5 THEN '19:30' END,
-                CASE @Route WHEN 1 THEN '14:00' WHEN 2 THEN '14:30' WHEN 3 THEN '15:30' WHEN 4 THEN '16:30' WHEN 5 THEN '17:30' END,
-                29, 29, 70000, @MaTuyen + 1);
+                @RandomGioDen,
+                @RandomGioDi,
+                @RandomSoGhe,
+                @RandomGheConTrong,
+                @RandomGiaVe,
+                @MaTuyen + 1);
 
         SET @MaXe = @MaXe + 2;
         SET @MaTuyen = @MaTuyen + 2;
@@ -221,17 +285,15 @@ END;
 GO
 
 -- Thêm dữ liệu vào bảng LichTrinhTuDong
--- Mỗi chuyến xe có 4–5 điểm dừng
 DECLARE @MaXe INT = 102;
 DECLARE @House INT = 1;
 DECLARE @Route INT;
 
-WHILE @House <= 5 -- 5 nhà xe
+WHILE @House <= 5
 BEGIN
     SET @Route = 1;
-    WHILE @Route <= 5 -- 5 cặp tuyến
+    WHILE @Route <= 5
     BEGIN
-        -- Lịch trình cho chuyến đi
         INSERT INTO LichTrinhTuDong (MaXe, ThuTu, DiaDiem, ThoiGianDuKien)
         VALUES 
             (@MaXe, 1, 
@@ -279,7 +341,6 @@ BEGIN
                 END, 
                 CASE @Route WHEN 1 THEN 900 WHEN 2 THEN 0 WHEN 3 THEN 0 WHEN 4 THEN 1200 WHEN 5 THEN 1500 END);
 
-        -- Lịch trình cho chuyến về
         INSERT INTO LichTrinhTuDong (MaXe, ThuTu, DiaDiem, ThoiGianDuKien)
         VALUES 
             (@MaXe + 1, 1, 

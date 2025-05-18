@@ -781,24 +781,60 @@ public class NhapTTDatVeForm extends javax.swing.JPanel {
         String tenNguoiDi = txtTenNguoiDi.getText().trim();
         String sdt = txtSDT.getText().trim();
         String email = txtEmail.getText().trim();
-        List<String> missingFields = new ArrayList<>();
+        String selectedCountryCode = cbSDT.getSelectedItem().toString().split(" ")[0]; // Lấy mã quốc gia (VD: VN, IN)
+        List<String> errors = new ArrayList<>();
+
+        // Kiểm tra tên
         if (tenNguoiDi.isEmpty()) {
-            missingFields.add("Tên người đi");
-        }
-        if (sdt.isEmpty()) {
-            missingFields.add("Số điện thoại");
-        }
-        if (email.isEmpty()) {
-            missingFields.add("Email");
-        }
-        if (!missingFields.isEmpty()) {
-            String errorMessage = "Vui lòng điền đầy đủ các thông tin sau: " + String.join(", ", missingFields) + "!";
-            JOptionPane.showMessageDialog(this,
-                errorMessage,
-                "Lỗi",
-                JOptionPane.ERROR_MESSAGE);
+            errors.add("Tên người đi không được để trống.");
         } else {
-            Application.showForm(new PanelThanhToan(maXe,tenNguoiDi, sdt, email, this.previousForm)); // Truyền thêm previousForm
+            String tenRegex = "^[\\p{L} \\-']{1,50}$"; // Chỉ cho phép chữ cái, khoảng trắng, dấu (-, ') và tối đa 50 ký tự
+            if (!tenNguoiDi.matches(tenRegex)) {
+                errors.add("Tên chỉ được chứa chữ cái, khoảng trắng và một số ký tự đặc biệt (dấu tiếng Việt hợp lệ).");
+            }
+        }
+
+        // Kiểm tra email
+        if (email.isEmpty()) {
+            errors.add("Email không được để trống.");
+        } else {
+            String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+            if (!email.matches(emailRegex)) {
+                errors.add("Email không hợp lệ (ví dụ: example@email.com).");
+            }
+        }
+
+        // Kiểm tra số điện thoại
+        if (sdt.isEmpty()) {
+            errors.add("Số điện thoại không được để trống.");
+        } else {
+            String sdtRegex;
+            if (selectedCountryCode.equals("VN") || selectedCountryCode.equals("+84")) {
+                sdtRegex = "^[0-9]{9,11}$"; // 9-11 số, áp dụng cho Việt Nam
+                if (!sdt.matches(sdtRegex)) {
+                    errors.add("Số điện thoại phải là 9-11 số và không chứa ký tự khác.");
+                } else if (!sdt.startsWith("0") && !sdt.startsWith("84")) {
+                    errors.add("Số điện thoại Việt Nam phải bắt đầu bằng 0 hoặc 84.");
+                }
+            } else {
+                sdtRegex = "^[0-9]{7,15}$"; // Độ dài linh hoạt cho các quốc gia khác (7-15 số)
+                if (!sdt.matches(sdtRegex)) {
+                    errors.add("Số điện thoại phải là 7-15 số và không chứa ký tự khác.");
+                }
+            }
+        }
+
+        // Hiển thị lỗi nếu có
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("\n", errors);
+            JOptionPane.showMessageDialog(this, errorMessage, "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int totalCost = basePrice;
+            boolean hasInsurance = CbBaoHiem.isSelected();
+            if (hasInsurance) {
+                totalCost += INSURANCE_COST;
+            }
+            Application.showForm(new PanelThanhToan(maXe, tenNguoiDi, sdt, email, totalCost, hasInsurance, this.previousForm));
         }
     }//GEN-LAST:event_cmdTiepTucActionPerformed
 

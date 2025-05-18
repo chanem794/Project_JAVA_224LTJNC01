@@ -30,14 +30,16 @@ public class ThanhToanForm extends javax.swing.JPanel {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
-    public ThanhToanForm(int maxe,String tenNguoiDi, String sdt, String email, StationForm previousForm) {
-        maXe=maxe;
+    public ThanhToanForm(int maXe, String tenNguoiDi, String sdt, String email, int totalCost, boolean hasInsurance, StationForm previousForm) {
+        this.maXe = maXe;
         initComponents();
         init();
         jbTen.setText(tenNguoiDi);
         jbSdt.setText(sdt);
         jbEmail.setText(email);
-        this.previousForm = previousForm; // Lưu tham chiếu đến StationForm
+        this.previousForm = previousForm;
+        this.basePrice = totalCost; // Cập nhật basePrice với tổng tiền
+        updateBasePriceOnly(); // Hiển thị tổng tiền
 }
     
     private void init() {
@@ -257,6 +259,8 @@ public class ThanhToanForm extends javax.swing.JPanel {
                 }
             }
         });
+        // Cập nhật lại giá vé dựa trên totalCost đã truyền vào
+    lbGiaVe.setText(String.format("%,dđ", basePrice));
    }
     private void updateBasePriceOnly() {
         lbGiaVe.setText(String.format("%,dđ", basePrice));
