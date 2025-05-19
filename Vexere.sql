@@ -57,7 +57,7 @@ GO
 
 -- Tạo bảng DatCho với các trường mới
 CREATE TABLE DatCho (
-    MaDatCho         INT PRIMARY KEY,
+    MaDatCho         INT PRIMARY KEY identity (1,1),
     TrangThai        NVARCHAR(50),
     NgayDat          DATE,
     GioDat           TIME,
@@ -401,3 +401,4 @@ GO
 select * from Xe
 where DiemDi = N'Hải Châu - Đà Nẵng'
 select * from NguoiDung
+select * from DatCho

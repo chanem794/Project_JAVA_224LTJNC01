@@ -13,6 +13,7 @@ import raven.toast.Notifications;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.sql.SQLException;
+import model.NguoiDung;
 /**
  *
  * @author dinhk
@@ -132,7 +133,11 @@ public class InfoForm extends javax.swing.JPanel {
             java.util.Date birthDate = sdf.parse(ngaysinh);
             String email = Application.getCurrentEmail();
             if (Application.getNguoiDungService().updateUserInfo(email, ten, birthDate)) {
+                // Tải lại thông tin người dùng và cập nhật currentUser
+                NguoiDung updatedUser = Application.getNguoiDungService().getUserByEmail(email);
+                Application.setCurrentUser(updatedUser);
                 Application.login();
+                Notifications.getInstance().show(Notifications.Type.SUCCESS, "Cập nhật thông tin thành công!");
             } else {
                 Notifications.getInstance().show(Notifications.Type.ERROR, "Không thể cập nhật thông tin");
             }

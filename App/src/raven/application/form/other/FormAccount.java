@@ -47,7 +47,7 @@ public class FormAccount extends javax.swing.JPanel {
         if (nguoiDung == null) {
             Notifications.getInstance().show(Notifications.Type.WARNING, "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.");
             System.out.println("Error: Current user is null");
-            Application.logout(); // Chuyển về màn hình đăng nhập nếu không có người dùng
+            Application.logout();
             return;
         }
 
@@ -61,7 +61,10 @@ public class FormAccount extends javax.swing.JPanel {
         if (nguoiDung.getNgaySinh() != null) {
             chDate.setSelectedDate(nguoiDung.getNgaySinh());
         } else {
-            chDate.setSelectedDate(null); // Đặt ngày sinh về rỗng nếu không có dữ liệu
+            // Đặt ngày mặc định (ví dụ: ngày hiện tại) nếu không có ngày sinh
+            chDate.setSelectedDate(new java.util.Date()); // Sử dụng ngày hiện tại
+            // Hoặc ẩn DateChooser nếu không muốn hiển thị ngày mặc định
+            // txtNgaySinh.setVisible(false); chDate.setVisible(false);
     }
 }
 

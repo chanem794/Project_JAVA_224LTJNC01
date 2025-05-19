@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.sql.SQLException;
 import raven.application.form.other.StationForm;
 import model.NguoiDung; // Thêm import này
 
@@ -45,8 +46,17 @@ public class Application extends javax.swing.JFrame {
     }
     // Thêm phương thức getCurrentUser()
     public static NguoiDung getCurrentUser() {
+        if (app.currentUser != null) {
+            try {
+                // Tải lại thông tin người dùng từ cơ sở dữ liệu
+                app.currentUser = app.nguoidungService.getUserByEmail(app.currentUser.getEmail());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi khi tải thông tin người dùng");
+            }
+        }
         return app.currentUser;
-    }
+}
 
     // Thêm phương thức setCurrentUser() để cập nhật người dùng sau khi đăng nhập
     public static void setCurrentUser(NguoiDung user) {

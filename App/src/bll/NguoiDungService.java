@@ -65,7 +65,6 @@ public class NguoiDungService {
     public NguoiDung getUserByEmail(String email) throws SQLException {
         return nguoiDungDAO.getUserByEmail(email);
     }
-
     private boolean isValidEmail(String email) {
         return email != null && email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
