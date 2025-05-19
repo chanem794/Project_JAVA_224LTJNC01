@@ -4,27 +4,39 @@
  */
 package raven.application.form.other;
 
+import bll.DatChoService;
+import bll.NguoiDungService;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
 import java.awt.Image;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.swing.ImageIcon;
+import model.DatCho;
+import model.NguoiDung;
 
 /**
  *
  * @author Admin
  */
 public class YourBusTicketForm extends javax.swing.JPanel {
-
+    private String maNguoiDung; // Mã người dùng hiện tại
+    private DatChoService datChoService;
+    private NguoiDungService nguoiDungService;
     /**
      * Creates new form YourBusTicketForm
      */
     
-    public YourBusTicketForm() {
+    public YourBusTicketForm(String maNguoiDung) {
+        this.maNguoiDung = maNguoiDung;
+        this.datChoService = new DatChoService();
+        this.nguoiDungService = new NguoiDungService();
         initComponents();
         init();
         updatePanelColors();
-        
-    }
+        loadUserAndTicketData();
+}
     private void init() {
         ImageIcon iconLabel17 = new ImageIcon(getClass().getResource("/raven/icon/png/electronic-ticket.png"));
         Image scaledIcon17 = iconLabel17.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
@@ -64,6 +76,53 @@ public class YourBusTicketForm extends javax.swing.JPanel {
             roundedPanel4.setBackground(new Color(255, 255, 255));
         }
     }
+    private void loadUserAndTicketData() {
+    try {
+        // Lấy thông tin người dùng qua NguoiDungService
+        NguoiDung nguoiDung = nguoiDungService.getUserByMaNguoiDung(maNguoiDung);
+
+        if (nguoiDung != null) {
+            jLabel12.setText(nguoiDung.getTenNguoiDung() != null && !nguoiDung.getTenNguoiDung().isEmpty() ? nguoiDung.getTenNguoiDung() : "Chưa cập nhật"); // Họ và tên
+            jLabel13.setText(nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "N/A"); // Email
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            jLabel14.setText(nguoiDung.getNgaySinh() != null ? sdf.format(nguoiDung.getNgaySinh()) : "Chưa cập nhật"); // Ngày sinh
+            jLabel15.setText(nguoiDung.getMaNguoiDung() != null ? nguoiDung.getMaNguoiDung() : "N/A"); // Mã người dùng
+        } else {
+            jLabel12.setText("Không tìm thấy");
+            jLabel13.setText("Không tìm thấy");
+            jLabel14.setText("Không tìm thấy");
+            jLabel15.setText("Không tìm thấy");
+        }
+
+        // Đếm số vé theo trạng thái qua DatChoService
+        int totalTickets = 0;
+        int completedTickets = 0;
+        int pendingTickets = 0;
+
+        List<DatCho> datChoList = datChoService.getAllDatCho();
+        for (DatCho datCho : datChoList) {
+            if (datCho.getMaNguoiDung().equals(maNguoiDung)) {
+                totalTickets++;
+                if ("Thành công".equalsIgnoreCase(datCho.getTrangThai())) {
+                    completedTickets++;
+                } else if ("Đang chờ xác nhận".equalsIgnoreCase(datCho.getTrangThai())) {
+                    pendingTickets++;
+                }
+            }
+        }
+
+        jLabel22.setText(String.valueOf(totalTickets)); // Tổng số vé đã đặt
+        jLabel23.setText(String.valueOf(completedTickets)); // Tổng vé đã hoàn thành
+        jLabel24.setText(String.valueOf(pendingTickets)); // Tổng vé đang chờ xác nhận
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this,
+                "Lỗi khi tải dữ liệu: " + e.getMessage(),
+                "Lỗi",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

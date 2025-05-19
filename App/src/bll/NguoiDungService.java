@@ -69,4 +69,7 @@ public class NguoiDungService {
     private boolean isValidEmail(String email) {
         return email != null && email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
+    public NguoiDung getUserByMaNguoiDung(String maNguoiDung) throws SQLException {
+        return nguoiDungDAO.getUserByMaNguoiDung(maNguoiDung);
+}
 }

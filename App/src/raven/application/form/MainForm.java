@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import model.NguoiDung;
 import raven.application.Application;
 import raven.application.form.other.FormAccount;
 import raven.application.form.other.FormInbox;
@@ -70,31 +71,32 @@ public class MainForm extends JLayeredPane {
 
     private void initMenuEvent() {
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
-            // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
-
             switch (index) {
                 case 0:
                     Application.showForm(new FormAccount());
                     break;
                 case 1:
-                    Application.showForm(new YourBusTicketForm()); 
+                    // Lấy người dùng hiện tại từ Application
+                    NguoiDung currentUser = Application.getCurrentUser();
+                    if (currentUser != null && currentUser.getMaNguoiDung() != null) {
+                        Application.showForm(new YourBusTicketForm(currentUser.getMaNguoiDung()));
+                    } else {
+                        // Nếu chưa đăng nhập, chuyển về màn hình đăng nhập
+                        Application.logout();
+                    }
                     break;
-                    
                 case 2:
-                    Application.showForm(new FormAccount()); 
+                    Application.showForm(new FormAccount());
                     break;
-                    
                 case 3:
-                    Application.showForm(new FormAccount()); 
+                    Application.showForm(new FormAccount());
                     break;
                 case 4:
-                    Application.showForm(new FormAccount()); 
+                    Application.showForm(new FormAccount());
                     break;
-                    
                 case 5:
-                    Application.showForm(new FormAccount()); 
+                    Application.showForm(new FormAccount());
                     break;
-                    
                 case 6:
                     Application.logout();
                     break;

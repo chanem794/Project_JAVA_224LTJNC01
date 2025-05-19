@@ -43,39 +43,27 @@ public class FormAccount extends javax.swing.JPanel {
         chDate.setDateFormat(new java.text.SimpleDateFormat("dd/MM/yyyy")); // Định dạng ngày
     }
     private void loadUserData() {
-        String email = Application.getCurrentEmail();
-        if (email == null || email.isEmpty()) {
-            Notifications.getInstance().show(Notifications.Type.WARNING, "Không tìm thấy email người dùng. Vui lòng đăng nhập lại.");
-            System.out.println("Error: Current email is null or empty");
+        NguoiDung nguoiDung = Application.getCurrentUser();
+        if (nguoiDung == null) {
+            Notifications.getInstance().show(Notifications.Type.WARNING, "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.");
+            System.out.println("Error: Current user is null");
+            Application.logout(); // Chuyển về màn hình đăng nhập nếu không có người dùng
             return;
         }
 
-        try {
-            NguoiDung nguoiDung = nguoiDungService.getUserByEmail(email);
-            if (nguoiDung == null) {
-                Notifications.getInstance().show(Notifications.Type.ERROR, "Không tìm thấy thông tin người dùng cho email: " + email);
-                System.out.println("Error: User not found for email: " + email);
-                return;
-            }
+        // Log để gỡ lỗi
+        System.out.println("Email từ nguoiDung: " + nguoiDung.getEmail());
+        System.out.println("Tên người dùng từ nguoiDung: " + nguoiDung.getTenNguoiDung());
+        System.out.println("Ngày sinh từ nguoiDung: " + nguoiDung.getNgaySinh());
 
-            // Log để gỡ lỗi
-            System.out.println("Email từ nguoiDung: " + nguoiDung.getEmail());
-            System.out.println("Tên người dùng từ nguoiDung: " + nguoiDung.getTenNguoiDung());
-            System.out.println("Ngày sinh từ nguoiDung: " + nguoiDung.getNgaySinh());
-
-            txtEmail.setText(nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "");
-            txtHovaten.setText(nguoiDung.getTenNguoiDung() != null ? nguoiDung.getTenNguoiDung() : "");
-            if (nguoiDung.getNgaySinh() != null) {
-                chDate.setSelectedDate(nguoiDung.getNgaySinh());
-            } else {
-                chDate.setSelectedDate(null); // Đặt ngày sinh về rỗng nếu không có dữ liệu
-            }
-        } catch (SQLException e) {
-            Notifications.getInstance().show(Notifications.Type.ERROR, "Lỗi khi nạp thông tin người dùng: " + e.getMessage());
-            System.out.println("SQLException: " + e.getMessage());
-            e.printStackTrace();
-        }
+        txtEmail.setText(nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "");
+        txtHovaten.setText(nguoiDung.getTenNguoiDung() != null ? nguoiDung.getTenNguoiDung() : "");
+        if (nguoiDung.getNgaySinh() != null) {
+            chDate.setSelectedDate(nguoiDung.getNgaySinh());
+        } else {
+            chDate.setSelectedDate(null); // Đặt ngày sinh về rỗng nếu không có dữ liệu
     }
+}
 
     private void saveUserData() {
         String email = txtEmail.getText();

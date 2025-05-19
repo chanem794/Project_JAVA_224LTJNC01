@@ -83,7 +83,26 @@ public class NguoiDungDAO {
             return ps.executeUpdate() > 0;
         }
     }
-
+    public NguoiDung getUserByMaNguoiDung(String maNguoiDung) throws SQLException {
+        String sql = "SELECT MaNguoiDung, TenNguoiDung, Email, NgaySinh, OtpCode, Otp_taoThoiGian " +
+                    "FROM NguoiDung WHERE MaNguoiDung = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, maNguoiDung);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new NguoiDung(
+                        rs.getString("MaNguoiDung"),
+                        rs.getString("TenNguoiDung"),
+                        rs.getString("Email"),
+                        rs.getDate("NgaySinh"),
+                        rs.getString("OtpCode"),
+                        rs.getTimestamp("Otp_taoThoiGian")
+                    );
+                }
+                return null;
+            }
+        }
+}
     public NguoiDung getUserByEmail(String email) throws SQLException {
         String sql = "SELECT MaNguoiDung, TenNguoiDung, Email, NgaySinh, OtpCode, Otp_taoThoiGian " +
                     "FROM NguoiDung WHERE Email = ?";
