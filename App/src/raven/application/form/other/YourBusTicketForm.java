@@ -24,10 +24,13 @@ import java.util.Comparator;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import model.Xe;
 
 
@@ -41,6 +44,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
     private NguoiDungService nguoiDungService;
     private JPanel ticketPanel; // Panel chứa danh sách vé
     private XeService xeService; // Thêm XeService
+    private List<JPanel> ticketItems = new ArrayList<>();
     /**
      * Creates new form YourBusTicketForm
      */
@@ -54,6 +58,14 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         init();
         updatePanelColors();
         loadUserAndTicketData();
+        // Đăng ký lắng nghe sự thay đổi theme
+        UIManager.addPropertyChangeListener(evt -> {
+            if ("lookAndFeel".equals(evt.getPropertyName())) {
+                SwingUtilities.invokeLater(() -> {
+                    refreshForm();
+                });
+            }
+        });
 }
     private void init() {
         ImageIcon iconLabel17 = new ImageIcon(getClass().getResource("/raven/icon/png/electronic-ticket.png"));
@@ -106,20 +118,67 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         roundedPanel4.revalidate();
         roundedPanel4.repaint();
 }
+    public void refreshForm() {
+        updatePanelColors();
+        updateTicketItemsTheme(); // Cập nhật theme cho ticketItems
+}
+    private void updateTicketItemsTheme() {
+        boolean isDarkMode = FlatLaf.isLafDark();
+        Color backgroundColor = isDarkMode ? new Color(60, 70, 80) : new Color(250, 250, 250);
+        Color borderColor = isDarkMode ? new Color(100, 110, 120) : new Color(200, 200, 200);
+        Color textColor = isDarkMode ? Color.WHITE : Color.BLACK;
+        Color confirmButtonColor = isDarkMode ? new Color(46, 204, 113) : new Color(46, 139, 87);
+        Color cancelButtonColor = isDarkMode ? new Color(231, 76, 60) : new Color(220, 20, 60);
+
+        for (JPanel ticketItem : ticketItems) {
+            ticketItem.setBackground(backgroundColor);
+            ticketItem.setBorder(new RoundedBorder(10, borderColor));
+            // Cập nhật màu cho các thành phần con
+            for (java.awt.Component comp : ticketItem.getComponents()) {
+                if (comp instanceof JLabel) {
+                    ((JLabel) comp).setForeground(textColor);
+                } else if (comp instanceof JPanel) {
+                    JPanel buttonPanel = (JPanel) comp;
+                    for (java.awt.Component btn : buttonPanel.getComponents()) {
+                        if (btn instanceof JButton) {
+                            JButton button = (JButton) btn;
+                            if (button.getText().equals("Hoàn Thành")) {
+                                button.setBackground(confirmButtonColor);
+                            } else if (button.getText().equals("Hủy vé")) {
+                                button.setBackground(cancelButtonColor);
+                            }
+                            button.setForeground(Color.WHITE);
+                        }
+                    }
+                }
+            }
+        }
+        ticketPanel.revalidate();
+        ticketPanel.repaint();
+    }
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
         if (FlatLaf.isLafDark()) {
-
-            roundedPanel1.setBackground(new Color(49, 62, 74, 255));
-            roundedPanel3.setBackground(new Color(49, 62, 74, 255));
-            roundedPanel4.setBackground(new Color(49, 62, 74, 255));
+            roundedPanel1.setBackground(new Color(40, 50, 60));
+            roundedPanel3.setBackground(new Color(40, 50, 60));
+            roundedPanel4.setBackground(new Color(40, 50, 60));
+            ticketPanel.setBackground(new Color(50, 60, 70));
+            jComboBox1.setBackground(new Color(60, 70, 80));
+            jComboBox1.setForeground(Color.WHITE);
         } else {
             roundedPanel1.setBackground(new Color(255, 255, 255));
             roundedPanel3.setBackground(new Color(255, 255, 255));
             roundedPanel4.setBackground(new Color(255, 255, 255));
+            ticketPanel.setBackground(new Color(245, 245, 250));
+            jComboBox1.setBackground(new Color(230, 230, 235));
+            jComboBox1.setForeground(Color.BLACK);
         }
+        updateTicketItemsTheme(); // Cập nhật theme cho ticketItems
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
     }
     private void updateTicketPanel(String selectedStatus) {
+        ticketItems.clear(); // Xóa danh sách cũ
         ticketPanel.removeAll();
         try {
             List<DatCho> datChoList = datChoService.getAllDatCho();
@@ -130,15 +189,10 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                 return;
             }
 
-            Collections.sort(datChoList, new Comparator<DatCho>() {
-                @Override
-                public int compare(DatCho d1, DatCho d2) {
-                    return d2.getNgayDat().compareTo(d1.getNgayDat());
-                }
-            });
+            Collections.sort(datChoList, (d1, d2) -> d2.getNgayDat().compareTo(d1.getNgayDat()));
 
             boolean hasTickets = false;
-            int ticketCount = 0; // Đếm số vé để tính chiều cao động
+            int ticketCount = 0;
             for (DatCho datCho : datChoList) {
                 if (datCho == null || datCho.getMaNguoiDung() == null || datCho.getTrangThai() == null) {
                     continue;
@@ -148,18 +202,15 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                     hasTickets = true;
                     ticketCount++;
 
-                    // Tạo ticketItem với MigLayout sử dụng bố cục lưới
                     JPanel ticketItem = new JPanel(new MigLayout("insets 10, fillx", "[grow][grow][grow][150px]", "[][][][]"));
                     ticketItem.setBackground(FlatLaf.isLafDark() ? new Color(60, 70, 80) : new Color(250, 250, 250));
-                    ticketItem.setBorder(new RoundedBorder(10, FlatLaf.isLafDark() ? Color.LIGHT_GRAY : new Color(200, 200, 200)));
-                    ticketItem.setPreferredSize(new Dimension(750, 160)); // Giảm chiều cao từ 250px xuống 160px
+                    ticketItem.setBorder(new RoundedBorder(10, FlatLaf.isLafDark() ? new Color(100, 110, 120) : new Color(200, 200, 200)));
+                    ticketItem.setPreferredSize(new Dimension(750, 160));
 
-                    // Định dạng ngày giờ
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     String ngayDatStr = datCho.getNgayDat() != null ? dateFormat.format(datCho.getNgayDat()) : "N/A";
                     String ngayGioKhoiHanhStr = datCho.getNgayGioKhoiHanh() != null ? dateFormat.format(datCho.getNgayGioKhoiHanh()) : "N/A";
 
-                    // Lấy tên xe từ XeService
                     String tenXe = "Không xác định";
                     try {
                         Xe xe = xeService.getXeByMaXe(datCho.getMaXe());
@@ -170,45 +221,47 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                         ex.printStackTrace();
                     }
 
-                    // Cột 1: Thông tin xe
                     JLabel tenXeLabel = new JLabel("🚍 " + tenXe);
                     tenXeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 16));
+                    tenXeLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(tenXeLabel, "cell 0 0, span 1 2");
 
-                    // Cột 2: Thông tin hành khách
                     JLabel tenHanhKhachLabel = new JLabel("👤 " + (datCho.getTenHanhKhach() != null ? datCho.getTenHanhKhach() : "N/A"));
                     tenHanhKhachLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
+                    tenHanhKhachLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(tenHanhKhachLabel, "cell 1 0");
 
                     JLabel emailLabel = new JLabel("📧 " + (datCho.getEmailLienLac() != null ? datCho.getEmailLienLac() : "N/A"));
                     emailLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    emailLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(emailLabel, "cell 1 1");
 
-                    // Cột 3: Thông tin chuyến đi
                     JLabel diemDiDenLabel = new JLabel(datCho.getDiemDi() + " ➡️ " + (datCho.getDiemDen() != null ? datCho.getDiemDen() : "N/A"));
                     diemDiDenLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
+                    diemDiDenLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(diemDiDenLabel, "cell 2 0");
 
                     JLabel ngayGioKhoiHanhLabel = new JLabel("🕒 " + ngayGioKhoiHanhStr);
                     ngayGioKhoiHanhLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    ngayGioKhoiHanhLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(ngayGioKhoiHanhLabel, "cell 2 1");
 
-                    // Cột 4: Thông tin vé và nút hành động
                     JLabel trangThaiLabel = new JLabel("Trạng thái: " + datCho.getTrangThai());
                     trangThaiLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    trangThaiLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(trangThaiLabel, "cell 3 0");
 
                     JLabel giaVeLabel = new JLabel("💵 " + datCho.getGiaVe() + " VNĐ");
                     giaVeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    giaVeLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
                     ticketItem.add(giaVeLabel, "cell 3 1");
 
-                    // Thêm nút nếu trạng thái là "Đang chờ xác nhận"
                     if ("Đang chờ xác nhận".equalsIgnoreCase(datCho.getTrangThai())) {
                         JPanel buttonPanel = new JPanel(new MigLayout("insets 0, gap 5", "[][]", ""));
                         buttonPanel.setOpaque(false);
 
                         JButton confirmButton = new JButton("Hoàn Thành");
-                        confirmButton.setBackground(new Color(46, 204, 113));
+                        confirmButton.setBackground(FlatLaf.isLafDark() ? new Color(46, 204, 113) : new Color(46, 139, 87));
                         confirmButton.setForeground(Color.WHITE);
                         confirmButton.setPreferredSize(new Dimension(100, 40));
                         confirmButton.setToolTipText("Xác nhận hoàn thành");
@@ -227,7 +280,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                         buttonPanel.add(confirmButton);
 
                         JButton cancelButton = new JButton("Hủy vé");
-                        cancelButton.setBackground(new Color(231, 76, 60));
+                        cancelButton.setBackground(FlatLaf.isLafDark() ? new Color(231, 76, 60) : new Color(220, 20, 60));
                         cancelButton.setForeground(Color.WHITE);
                         cancelButton.setPreferredSize(new Dimension(100, 40));
                         cancelButton.setToolTipText("Hủy vé");
@@ -249,14 +302,14 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                     }
 
                     ticketPanel.add(ticketItem, "growx, gapy 10");
+                    ticketItems.add(ticketItem); // Lưu ticketItem vào danh sách
                 }
             }
 
             if (!hasTickets) {
                 ticketPanel.add(new JLabel("Không có vé nào phù hợp với trạng thái này."), "align center");
             } else {
-                // Cập nhật chiều cao động cho ticketPanel
-                int panelHeight = ticketCount * 170 + 20; // 160px mỗi vé + 10px khoảng cách + 20px padding
+                int panelHeight = ticketCount * 170 + 20;
                 ticketPanel.setPreferredSize(new Dimension(750, panelHeight));
             }
 
@@ -269,15 +322,13 @@ public class YourBusTicketForm extends javax.swing.JPanel {
     }
     private void loadUserAndTicketData() {
         try {
-            // Lấy thông tin người dùng qua NguoiDungService
             NguoiDung nguoiDung = nguoiDungService.getUserByMaNguoiDung(maNguoiDung);
-
             if (nguoiDung != null) {
-                jLabel12.setText(nguoiDung.getTenNguoiDung() != null && !nguoiDung.getTenNguoiDung().isEmpty() ? nguoiDung.getTenNguoiDung() : "Chưa cập nhật"); // Họ và tên
-                jLabel13.setText(nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "N/A"); // Email
+                jLabel12.setText(nguoiDung.getTenNguoiDung() != null && !nguoiDung.getTenNguoiDung().isEmpty() ? nguoiDung.getTenNguoiDung() : "Chưa cập nhật");
+                jLabel13.setText(nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "N/A");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                jLabel14.setText(nguoiDung.getNgaySinh() != null ? sdf.format(nguoiDung.getNgaySinh()) : "Chưa cập nhật"); // Ngày sinh
-                jLabel15.setText(nguoiDung.getMaNguoiDung() != null ? nguoiDung.getMaNguoiDung() : "N/A"); // Mã người dùng
+                jLabel14.setText(nguoiDung.getNgaySinh() != null ? sdf.format(nguoiDung.getNgaySinh()) : "Chưa cập nhật");
+                jLabel15.setText(nguoiDung.getMaNguoiDung() != null ? nguoiDung.getMaNguoiDung() : "N/A");
             } else {
                 jLabel12.setText("Không tìm thấy");
                 jLabel13.setText("Không tìm thấy");
@@ -285,7 +336,6 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                 jLabel15.setText("Không tìm thấy");
             }
 
-            // Cập nhật số vé tổng quát
             int totalTickets = 0;
             int completedTickets = 0;
             int pendingTickets = 0;
@@ -302,19 +352,14 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                 }
             }
 
-            jLabel22.setText(String.valueOf(totalTickets)); // Tổng số vé đã đặt
-            jLabel23.setText(String.valueOf(completedTickets)); // Tổng vé đã hoàn thành
-            jLabel24.setText(String.valueOf(pendingTickets)); // Tổng vé đang chờ xác nhận
+            jLabel22.setText(String.valueOf(totalTickets));
+            jLabel23.setText(String.valueOf(completedTickets));
+            jLabel24.setText(String.valueOf(pendingTickets));
 
-            // Khởi tạo danh sách vé với trạng thái mặc định
-            updateTicketPanel("Tất cả");
-
+            updateTicketPanel((String) jComboBox1.getSelectedItem());
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Lỗi khi tải dữ liệu: " + e.getMessage(),
-                    "Lỗi",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
         }
 }
     /**
