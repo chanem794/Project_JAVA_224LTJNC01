@@ -254,7 +254,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         this.revalidate();
         this.repaint();
         
-        cmdThanhToan.addActionListener(new java.awt.event.ActionListener() {
+    cmdThanhToan.addActionListener(new java.awt.event.ActionListener() {
     @Override
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         if (!Rb1.isSelected() && !Rb2.isSelected() && !Rb3.isSelected() && !Rb4.isSelected() && !Rb5.isSelected()) {
@@ -271,10 +271,11 @@ public class ThanhToanForm extends javax.swing.JPanel {
 
                 if (xe != null) {
                     // Thiết lập các thuộc tính cho DatCho
-                    datCho.setMaDatCho(0); // Giả sử MaDatCho là IDENTITY trong DB
+                    // Xóa dòng này vì MaDatCho là IDENTITY và sẽ do cơ sở dữ liệu tự tạo
+                    // datCho.setMaDatCho(0); // Dòng này gây lỗi, đã xóa
                     datCho.setTrangThai("đang chờ xác nhận");
-                    datCho.setNgayDat(new Date(new java.util.Date().getTime())); // Ngày hiện tại: 18/05/2025
-                    datCho.setGioDat(new Time(new java.util.Date().getTime())); // Giờ hiện tại: 21:59
+                    datCho.setNgayDat(new Date(new java.util.Date().getTime())); // Ngày hiện tại: 19/05/2025
+                    datCho.setGioDat(new Time(new java.util.Date().getTime())); // Giờ hiện tại: 14:47
                     datCho.setDiemDi(xe.getDiemDi());
                     datCho.setDiemDen(xe.getDiemDen());
                     datCho.setNgayGioKhoiHanh(new Date(xe.getNgayKhoiHanh().getTime()));
@@ -316,7 +317,8 @@ public class ThanhToanForm extends javax.swing.JPanel {
         }
     }
 });
-        // Cập nhật lại giá vé dựa trên totalCost đã truyền vào
+    
+// Cập nhật lại giá vé dựa trên totalCost đã truyền vào
     lbGiaVe.setText(String.format("%,dđ", basePrice));
    }
     private void updateBasePriceOnly() {

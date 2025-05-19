@@ -18,36 +18,37 @@ public class DatChoDAO {
     }
 
     public boolean createDatCho(DatCho datCho) throws SQLException {
-        String sql = "INSERT INTO DatCho (MaDatCho, TrangThai, NgayDat, GioDat, DiemDi, DiemDen, NgayGioKhoiHanh, SoGheDat, GiaVe, MaNguoiDung, MaXe, TenHanhKhach, SoDienThoaiLienLac, EmailLienLac) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+        // Xóa cột MaDatCho khỏi câu lệnh INSERT
+        String sql = "INSERT INTO DatCho (TrangThai, NgayDat, GioDat, DiemDi, DiemDen, NgayGioKhoiHanh, SoGheDat, GiaVe, MaNguoiDung, MaXe, TenHanhKhach, SoDienThoaiLienLac, EmailLienLac) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, datCho.getMaDatCho());
-            stmt.setString(2, datCho.getTrangThai());
+            // Bỏ dòng stmt.setInt(1, datCho.getMaDatCho()); vì không còn cột MaDatCho
+            stmt.setString(1, datCho.getTrangThai());
             if (datCho.getNgayDat() != null) {
-                stmt.setDate(3, new java.sql.Date(datCho.getNgayDat().getTime()));
+                stmt.setDate(2, new java.sql.Date(datCho.getNgayDat().getTime()));
             } else {
-                stmt.setNull(3, java.sql.Types.DATE);
+                stmt.setNull(2, java.sql.Types.DATE);
             }
-            stmt.setTime(4, datCho.getGioDat());
-            stmt.setString(5, datCho.getDiemDi());
-            stmt.setString(6, datCho.getDiemDen());
+            stmt.setTime(3, datCho.getGioDat());
+            stmt.setString(4, datCho.getDiemDi());
+            stmt.setString(5, datCho.getDiemDen());
             if (datCho.getNgayGioKhoiHanh() != null) {
-                stmt.setTimestamp(7, new Timestamp(datCho.getNgayGioKhoiHanh().getTime()));
+                stmt.setTimestamp(6, new Timestamp(datCho.getNgayGioKhoiHanh().getTime()));
             } else {
-                stmt.setNull(7, java.sql.Types.TIMESTAMP);
+                stmt.setNull(6, java.sql.Types.TIMESTAMP);
             }
-            stmt.setInt(8, datCho.getSoGheDat());
-            stmt.setInt(9, datCho.getGiaVe());
-            stmt.setString(10, datCho.getMaNguoiDung());
-            stmt.setInt(11, datCho.getMaXe());
-            stmt.setString(12, datCho.getTenHanhKhach());
-            stmt.setString(13, datCho.getSoDienThoaiLienLac());
-            stmt.setString(14, datCho.getEmailLienLac());
-            
+            stmt.setInt(7, datCho.getSoGheDat());
+            stmt.setInt(8, datCho.getGiaVe());
+            stmt.setString(9, datCho.getMaNguoiDung());
+            stmt.setInt(10, datCho.getMaXe());
+            stmt.setString(11, datCho.getTenHanhKhach());
+            stmt.setString(12, datCho.getSoDienThoaiLienLac());
+            stmt.setString(13, datCho.getEmailLienLac());
+
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
-    }
+}
 
     public List<DatCho> getAllDatCho() throws SQLException {
         List<DatCho> datChoList = new ArrayList<>();
