@@ -6,6 +6,7 @@ package raven.application.form.other;
 
 import bll.DatChoService;
 import bll.NguoiDungService;
+import bll.XeService;
 import com.formdev.flatlaf.FlatLaf;
 import java.awt.Color;
 import java.awt.Image;
@@ -21,9 +22,15 @@ import javax.swing.JPanel;
 import java.util.Collections;
 import java.util.Comparator;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Insets;
+import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import model.Xe;
+
+
 /**
  *
  * @author Admin
@@ -33,7 +40,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
     private DatChoService datChoService;
     private NguoiDungService nguoiDungService;
     private JPanel ticketPanel; // Panel chứa danh sách vé
-    
+    private XeService xeService; // Thêm XeService
     /**
      * Creates new form YourBusTicketForm
      */
@@ -42,6 +49,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         this.maNguoiDung = maNguoiDung;
         this.datChoService = new DatChoService();
         this.nguoiDungService = new NguoiDungService();
+        this.xeService = new XeService(); // Khởi tạo XeService
         initComponents();
         init();
         updatePanelColors();
@@ -72,19 +80,31 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         jLabel21.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jLabel21.setVerticalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        // Khởi tạo ticketPanel (thuộc tính của class) và thêm vào roundedPanel5
-        ticketPanel = new JPanel(new MigLayout("insets 10, wrap 1, fillx")); // Sửa: bỏ từ khóa "JPanel" để sử dụng biến thuộc tính
+        // Khởi tạo ticketPanel với MigLayout
+        ticketPanel = new JPanel(new MigLayout("insets 10, wrap 1, fillx", "[grow]", ""));
         ticketPanel.setBackground(FlatLaf.isLafDark() ? new Color(50, 60, 70) : new Color(245, 245, 245));
 
-        // Thêm JScrollPane để hỗ trợ cuộn nếu danh sách vé dài
+        // Thêm JScrollPane để hỗ trợ cuộn
         JScrollPane scrollPane = new JScrollPane(ticketPanel);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getViewport().setBackground(FlatLaf.isLafDark() ? new Color(50, 60, 70) : new Color(245, 245, 245));
+        scrollPane.setBackground(FlatLaf.isLafDark() ? new Color(49, 62, 74, 255) : new Color(255, 255, 255));
 
-        roundedPanel5.setLayout(new BorderLayout());
-        roundedPanel5.add(scrollPane, BorderLayout.CENTER);
+        // Đặt layout BorderLayout cho jPanel1 và thêm scrollPane
+        jPanel1.setLayout(new BorderLayout());
+        jPanel1.add(scrollPane, BorderLayout.CENTER);
+
+        // Đặt kích thước cho jPanel1
+        jPanel1.setPreferredSize(new Dimension(780, 550));
+        jPanel1.setMinimumSize(new Dimension(780, 550));
+        // Bỏ setMaximumSize để hỗ trợ cuộn
+        // jPanel1.setMaximumSize(new Dimension(780, 550));
+
+        // Làm mới giao diện
+        roundedPanel4.revalidate();
+        roundedPanel4.repaint();
 }
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
@@ -110,35 +130,88 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                 return;
             }
 
-            // Sắp xếp theo thời gian gần nhất (giả định có trường ngayDat)
             Collections.sort(datChoList, new Comparator<DatCho>() {
                 @Override
                 public int compare(DatCho d1, DatCho d2) {
-                    return d2.getNgayDat().compareTo(d1.getNgayDat()); // Sắp xếp giảm dần
+                    return d2.getNgayDat().compareTo(d1.getNgayDat());
                 }
             });
 
             boolean hasTickets = false;
+            int ticketCount = 0; // Đếm số vé để tính chiều cao động
             for (DatCho datCho : datChoList) {
                 if (datCho == null || datCho.getMaNguoiDung() == null || datCho.getTrangThai() == null) {
-                    continue; // Bỏ qua phần tử null
+                    continue;
                 }
-                if (datCho.getMaNguoiDung().equals(maNguoiDung) && 
+                if (datCho.getMaNguoiDung().equals(maNguoiDung) &&
                     (selectedStatus.equals("Tất cả") || datCho.getTrangThai().equalsIgnoreCase(selectedStatus))) {
                     hasTickets = true;
-                    JPanel ticketItem = new JPanel(new MigLayout("insets 10, gap 10, fillx"));
-                    ticketItem.setBackground(FlatLaf.isLafDark() ? new Color(60, 70, 80) : new Color(240, 240, 240));
-                    ticketItem.setBorder(javax.swing.BorderFactory.createLineBorder(FlatLaf.isLafDark() ? Color.LIGHT_GRAY : Color.DARK_GRAY, 1));
+                    ticketCount++;
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    String ngayDatStr = datCho.getNgayDat() != null ? sdf.format(datCho.getNgayDat()) : "N/A";
-                    ticketItem.add(new JLabel("Ngày đặt: " + ngayDatStr), "wrap");
-                    ticketItem.add(new JLabel("Trạng thái: " + datCho.getTrangThai()), "wrap");
+                    // Tạo ticketItem với MigLayout sử dụng bố cục lưới
+                    JPanel ticketItem = new JPanel(new MigLayout("insets 10, fillx", "[grow][grow][grow][150px]", "[][][][]"));
+                    ticketItem.setBackground(FlatLaf.isLafDark() ? new Color(60, 70, 80) : new Color(250, 250, 250));
+                    ticketItem.setBorder(new RoundedBorder(10, FlatLaf.isLafDark() ? Color.LIGHT_GRAY : new Color(200, 200, 200)));
+                    ticketItem.setPreferredSize(new Dimension(750, 160)); // Giảm chiều cao từ 250px xuống 160px
 
+                    // Định dạng ngày giờ
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    String ngayDatStr = datCho.getNgayDat() != null ? dateFormat.format(datCho.getNgayDat()) : "N/A";
+                    String ngayGioKhoiHanhStr = datCho.getNgayGioKhoiHanh() != null ? dateFormat.format(datCho.getNgayGioKhoiHanh()) : "N/A";
+
+                    // Lấy tên xe từ XeService
+                    String tenXe = "Không xác định";
+                    try {
+                        Xe xe = xeService.getXeByMaXe(datCho.getMaXe());
+                        if (xe != null && xe.getTenXe() != null) {
+                            tenXe = xe.getTenXe();
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    // Cột 1: Thông tin xe
+                    JLabel tenXeLabel = new JLabel("🚍 " + tenXe);
+                    tenXeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 16));
+                    ticketItem.add(tenXeLabel, "cell 0 0, span 1 2");
+
+                    // Cột 2: Thông tin hành khách
+                    JLabel tenHanhKhachLabel = new JLabel("👤 " + (datCho.getTenHanhKhach() != null ? datCho.getTenHanhKhach() : "N/A"));
+                    tenHanhKhachLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
+                    ticketItem.add(tenHanhKhachLabel, "cell 1 0");
+
+                    JLabel emailLabel = new JLabel("📧 " + (datCho.getEmailLienLac() != null ? datCho.getEmailLienLac() : "N/A"));
+                    emailLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    ticketItem.add(emailLabel, "cell 1 1");
+
+                    // Cột 3: Thông tin chuyến đi
+                    JLabel diemDiDenLabel = new JLabel(datCho.getDiemDi() + " ➡️ " + (datCho.getDiemDen() != null ? datCho.getDiemDen() : "N/A"));
+                    diemDiDenLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
+                    ticketItem.add(diemDiDenLabel, "cell 2 0");
+
+                    JLabel ngayGioKhoiHanhLabel = new JLabel("🕒 " + ngayGioKhoiHanhStr);
+                    ngayGioKhoiHanhLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    ticketItem.add(ngayGioKhoiHanhLabel, "cell 2 1");
+
+                    // Cột 4: Thông tin vé và nút hành động
+                    JLabel trangThaiLabel = new JLabel("Trạng thái: " + datCho.getTrangThai());
+                    trangThaiLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    ticketItem.add(trangThaiLabel, "cell 3 0");
+
+                    JLabel giaVeLabel = new JLabel("💵 " + datCho.getGiaVe() + " VNĐ");
+                    giaVeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    ticketItem.add(giaVeLabel, "cell 3 1");
+
+                    // Thêm nút nếu trạng thái là "Đang chờ xác nhận"
                     if ("Đang chờ xác nhận".equalsIgnoreCase(datCho.getTrangThai())) {
-                        JButton confirmButton = new JButton("Xác nhận hoàn thành");
+                        JPanel buttonPanel = new JPanel(new MigLayout("insets 0, gap 5", "[][]", ""));
+                        buttonPanel.setOpaque(false);
+
+                        JButton confirmButton = new JButton("Hoàn Thành");
                         confirmButton.setBackground(new Color(46, 204, 113));
                         confirmButton.setForeground(Color.WHITE);
+                        confirmButton.setPreferredSize(new Dimension(100, 40));
+                        confirmButton.setToolTipText("Xác nhận hoàn thành");
                         confirmButton.addActionListener(e -> {
                             try {
                                 datCho.setTrangThai("Thành công");
@@ -151,11 +224,13 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                                 ex.printStackTrace();
                             }
                         });
-                        ticketItem.add(confirmButton, "split 2");
+                        buttonPanel.add(confirmButton);
 
                         JButton cancelButton = new JButton("Hủy vé");
                         cancelButton.setBackground(new Color(231, 76, 60));
                         cancelButton.setForeground(Color.WHITE);
+                        cancelButton.setPreferredSize(new Dimension(100, 40));
+                        cancelButton.setToolTipText("Hủy vé");
                         cancelButton.addActionListener(e -> {
                             try {
                                 datCho.setTrangThai("Đã hủy");
@@ -168,15 +243,21 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                                 ex.printStackTrace();
                             }
                         });
-                        ticketItem.add(cancelButton);
+                        buttonPanel.add(cancelButton);
+
+                        ticketItem.add(buttonPanel, "cell 3 2, align right");
                     }
 
-                    ticketPanel.add(ticketItem, "growx");
+                    ticketPanel.add(ticketItem, "growx, gapy 10");
                 }
             }
 
             if (!hasTickets) {
                 ticketPanel.add(new JLabel("Không có vé nào phù hợp với trạng thái này."), "align center");
+            } else {
+                // Cập nhật chiều cao động cho ticketPanel
+                int panelHeight = ticketCount * 170 + 20; // 160px mỗi vé + 10px khoảng cách + 20px padding
+                ticketPanel.setPreferredSize(new Dimension(750, panelHeight));
             }
 
             ticketPanel.revalidate();
@@ -185,7 +266,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi khi tải danh sách vé: " + e.getMessage());
             e.printStackTrace();
         }
-}
+    }
     private void loadUserAndTicketData() {
         try {
             // Lấy thông tin người dùng qua NguoiDungService
@@ -276,7 +357,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
-        roundedPanel5 = new raven.application.form.other.RoundedPanel();
+        jPanel1 = new javax.swing.JPanel();
 
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
@@ -482,15 +563,15 @@ public class YourBusTicketForm extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout roundedPanel5Layout = new javax.swing.GroupLayout(roundedPanel5);
-        roundedPanel5.setLayout(roundedPanel5Layout);
-        roundedPanel5Layout.setHorizontalGroup(
-            roundedPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 809, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 808, Short.MAX_VALUE)
         );
-        roundedPanel5Layout.setVerticalGroup(
-            roundedPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 538, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout roundedPanel4Layout = new javax.swing.GroupLayout(roundedPanel4);
@@ -498,17 +579,17 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         roundedPanel4Layout.setHorizontalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel4Layout.createSequentialGroup()
-                .addContainerGap(315, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addGap(199, 199, 199))
+                .addGap(268, 268, 268))
             .addGroup(roundedPanel4Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(14, 14, 14)
                 .addGroup(roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(roundedPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         roundedPanel4Layout.setVerticalGroup(
             roundedPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -520,8 +601,8 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(roundedPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -585,10 +666,10 @@ public class YourBusTicketForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JPanel jPanel1;
     private raven.application.form.other.RoundedPanel roundedPanel1;
     private raven.application.form.other.RoundedPanel roundedPanel2;
     private raven.application.form.other.RoundedPanel roundedPanel3;
     private raven.application.form.other.RoundedPanel roundedPanel4;
-    private raven.application.form.other.RoundedPanel roundedPanel5;
     // End of variables declaration//GEN-END:variables
 }
