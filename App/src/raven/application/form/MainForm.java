@@ -19,6 +19,7 @@ import raven.application.Application;
 import raven.application.form.other.FormAccount;
 import raven.application.form.other.FormInbox;
 import raven.application.form.other.FormRead;
+import raven.application.form.other.YourBusTicketForm;
 import raven.menu.Menu;
 import raven.menu.MenuAction;
 
@@ -76,7 +77,7 @@ public class MainForm extends JLayeredPane {
                     Application.showForm(new FormAccount());
                     break;
                 case 1:
-                    Application.showForm(new FormAccount()); 
+                    Application.showForm(new YourBusTicketForm()); 
                     break;
                     
                 case 2:
