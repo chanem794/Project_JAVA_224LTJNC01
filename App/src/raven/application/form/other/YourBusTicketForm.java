@@ -133,7 +133,6 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         for (JPanel ticketItem : ticketItems) {
             ticketItem.setBackground(backgroundColor);
             ticketItem.setBorder(new RoundedBorder(10, borderColor));
-            // Cập nhật màu cho các thành phần con
             for (java.awt.Component comp : ticketItem.getComponents()) {
                 if (comp instanceof JLabel) {
                     ((JLabel) comp).setForeground(textColor);
@@ -155,7 +154,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         }
         ticketPanel.revalidate();
         ticketPanel.repaint();
-    }
+}
     // Phương thức cập nhật màu nền của roundedPanel2 dựa trên theme
     private void updatePanelColors() {
         if (FlatLaf.isLafDark()) {
@@ -183,7 +182,9 @@ public class YourBusTicketForm extends javax.swing.JPanel {
         try {
             List<DatCho> datChoList = datChoService.getAllDatCho();
             if (datChoList == null || datChoList.isEmpty()) {
-                ticketPanel.add(new JLabel("Không có vé nào."), "align center");
+                JLabel noTicketsLabel = new JLabel("Không có vé nào.");
+                noTicketsLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
+                ticketPanel.add(noTicketsLabel, "align center");
                 ticketPanel.revalidate();
                 ticketPanel.repaint();
                 return;
@@ -193,6 +194,13 @@ public class YourBusTicketForm extends javax.swing.JPanel {
 
             boolean hasTickets = false;
             int ticketCount = 0;
+            boolean isDarkMode = FlatLaf.isLafDark();
+            Color ticketBackground = isDarkMode ? new Color(60, 70, 80) : new Color(250, 250, 250);
+            Color borderColor = isDarkMode ? new Color(100, 110, 120) : new Color(200, 200, 200);
+            Color textColor = isDarkMode ? Color.WHITE : Color.BLACK;
+            Color confirmButtonColor = isDarkMode ? new Color(46, 204, 113) : new Color(46, 139, 87);
+            Color cancelButtonColor = isDarkMode ? new Color(231, 76, 60) : new Color(220, 20, 60);
+
             for (DatCho datCho : datChoList) {
                 if (datCho == null || datCho.getMaNguoiDung() == null || datCho.getTrangThai() == null) {
                     continue;
@@ -202,68 +210,87 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                     hasTickets = true;
                     ticketCount++;
 
-                    JPanel ticketItem = new JPanel(new MigLayout("insets 10, fillx", "[grow][grow][grow][150px]", "[][][][]"));
-                    ticketItem.setBackground(FlatLaf.isLafDark() ? new Color(60, 70, 80) : new Color(250, 250, 250));
-                    ticketItem.setBorder(new RoundedBorder(10, FlatLaf.isLafDark() ? new Color(100, 110, 120) : new Color(200, 200, 200)));
-                    ticketItem.setPreferredSize(new Dimension(750, 160));
+                    // Tạo ticketItem với layout mới (2 cột, 3 hàng)
+                    JPanel ticketItem = new JPanel(new MigLayout("insets 10, fillx", "[grow][200px]", "[][][]"));
+                    ticketItem.setBackground(ticketBackground);
+                    ticketItem.setBorder(new RoundedBorder(10, borderColor));
+                    ticketItem.setPreferredSize(new Dimension(750, 110)); // Giảm chiều cao
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    // Định dạng ngày giờ
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
+                    // Lấy thông tin Ngày đặt và Thời gian đặt
                     String ngayDatStr = datCho.getNgayDat() != null ? dateFormat.format(datCho.getNgayDat()) : "N/A";
-                    String ngayGioKhoiHanhStr = datCho.getNgayGioKhoiHanh() != null ? dateFormat.format(datCho.getNgayGioKhoiHanh()) : "N/A";
+                    String gioDatStr = "N/A";
+                    if (datCho.getGioDat() != null) {
+                        try {
+                            // Chuyển đổi GioDat (java.sql.Time) sang định dạng HH:mm
+                            gioDatStr = timeFormat.format(datCho.getGioDat());
+                        } catch (Exception e) {
+                            System.out.println("Lỗi khi định dạng GioDat: " + e.getMessage());
+                        }
+                    } else {
+                        System.out.println("GioDat là null cho MaDatCho: " + datCho.getMaDatCho());
+                    }
 
+                    // Lấy thông tin xe
                     String tenXe = "Không xác định";
+                    String gioDiStr = "N/A";
+                    String gioDenStr = "N/A";
                     try {
                         Xe xe = xeService.getXeByMaXe(datCho.getMaXe());
-                        if (xe != null && xe.getTenXe() != null) {
-                            tenXe = xe.getTenXe();
+                        if (xe != null) {
+                            if (xe.getTenXe() != null) {
+                                tenXe = xe.getTenXe();
+                            }
+                            if (xe.getGioDi() != null) {
+                                gioDiStr = timeFormat.format(xe.getGioDi());
+                            }
+                            if (xe.getGioDen() != null) {
+                                gioDenStr = timeFormat.format(xe.getGioDen());
+                            }
                         }
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
 
+                    // Cột 1: Thông tin chính
                     JLabel tenXeLabel = new JLabel("🚍 " + tenXe);
-                    tenXeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 16));
-                    tenXeLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(tenXeLabel, "cell 0 0, span 1 2");
+                    tenXeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
+                    tenXeLabel.setForeground(textColor);
+                    ticketItem.add(tenXeLabel, "cell 0 0");
 
-                    JLabel tenHanhKhachLabel = new JLabel("👤 " + (datCho.getTenHanhKhach() != null ? datCho.getTenHanhKhach() : "N/A"));
-                    tenHanhKhachLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
-                    tenHanhKhachLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(tenHanhKhachLabel, "cell 1 0");
+                    JLabel hanhKhachLabel = new JLabel("👤 " + (datCho.getTenHanhKhach() != null ? datCho.getTenHanhKhach() : "N/A") + " | 📧 " + (datCho.getEmailLienLac() != null ? datCho.getEmailLienLac() : "N/A"));
+                    hanhKhachLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    hanhKhachLabel.setForeground(textColor);
+                    ticketItem.add(hanhKhachLabel, "cell 0 1");
 
-                    JLabel emailLabel = new JLabel("📧 " + (datCho.getEmailLienLac() != null ? datCho.getEmailLienLac() : "N/A"));
-                    emailLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
-                    emailLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(emailLabel, "cell 1 1");
+                    JLabel diemDiDenLabel = new JLabel(datCho.getDiemDi() + " ➡️ " + (datCho.getDiemDen() != null ? datCho.getDiemDen() : "N/A") + " | 🕒 " + gioDiStr + " - " + gioDenStr);
+                    diemDiDenLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    diemDiDenLabel.setForeground(textColor);
+                    ticketItem.add(diemDiDenLabel, "cell 0 2");
 
-                    JLabel diemDiDenLabel = new JLabel(datCho.getDiemDi() + " ➡️ " + (datCho.getDiemDen() != null ? datCho.getDiemDen() : "N/A"));
-                    diemDiDenLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
-                    diemDiDenLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(diemDiDenLabel, "cell 2 0");
+                    // Cột 2: Thông tin đặt vé và hành động
+                    JLabel datVeLabel = new JLabel("📅 " + ngayDatStr + " ⏰ " + gioDatStr);
+                    datVeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    datVeLabel.setForeground(textColor);
+                    ticketItem.add(datVeLabel, "cell 1 0");
 
-                    JLabel ngayGioKhoiHanhLabel = new JLabel("🕒 " + ngayGioKhoiHanhStr);
-                    ngayGioKhoiHanhLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
-                    ngayGioKhoiHanhLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(ngayGioKhoiHanhLabel, "cell 2 1");
-
-                    JLabel trangThaiLabel = new JLabel("Trạng thái: " + datCho.getTrangThai());
-                    trangThaiLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
-                    trangThaiLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(trangThaiLabel, "cell 3 0");
-
-                    JLabel giaVeLabel = new JLabel("💵 " + datCho.getGiaVe() + " VNĐ");
-                    giaVeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
-                    giaVeLabel.setForeground(FlatLaf.isLafDark() ? Color.WHITE : Color.BLACK);
-                    ticketItem.add(giaVeLabel, "cell 3 1");
+                    JLabel trangThaiGiaVeLabel = new JLabel("Trạng thái: " + datCho.getTrangThai() + " | 💵 " + datCho.getGiaVe() + " VNĐ");
+                    trangThaiGiaVeLabel.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
+                    trangThaiGiaVeLabel.setForeground(textColor);
+                    ticketItem.add(trangThaiGiaVeLabel, "cell 1 1");
 
                     if ("Đang chờ xác nhận".equalsIgnoreCase(datCho.getTrangThai())) {
                         JPanel buttonPanel = new JPanel(new MigLayout("insets 0, gap 5", "[][]", ""));
                         buttonPanel.setOpaque(false);
 
                         JButton confirmButton = new JButton("Hoàn Thành");
-                        confirmButton.setBackground(FlatLaf.isLafDark() ? new Color(46, 204, 113) : new Color(46, 139, 87));
+                        confirmButton.setBackground(confirmButtonColor);
                         confirmButton.setForeground(Color.WHITE);
-                        confirmButton.setPreferredSize(new Dimension(100, 40));
+                        confirmButton.setPreferredSize(new Dimension(90, 30));
+                        confirmButton.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
                         confirmButton.setToolTipText("Xác nhận hoàn thành");
                         confirmButton.addActionListener(e -> {
                             try {
@@ -280,9 +307,10 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                         buttonPanel.add(confirmButton);
 
                         JButton cancelButton = new JButton("Hủy vé");
-                        cancelButton.setBackground(FlatLaf.isLafDark() ? new Color(231, 76, 60) : new Color(220, 20, 60));
+                        cancelButton.setBackground(cancelButtonColor);
                         cancelButton.setForeground(Color.WHITE);
-                        cancelButton.setPreferredSize(new Dimension(100, 40));
+                        cancelButton.setPreferredSize(new Dimension(90, 30));
+                        cancelButton.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 12));
                         cancelButton.setToolTipText("Hủy vé");
                         cancelButton.addActionListener(e -> {
                             try {
@@ -298,18 +326,20 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                         });
                         buttonPanel.add(cancelButton);
 
-                        ticketItem.add(buttonPanel, "cell 3 2, align right");
+                        ticketItem.add(buttonPanel, "cell 1 2, align right");
                     }
 
-                    ticketPanel.add(ticketItem, "growx, gapy 10");
-                    ticketItems.add(ticketItem); // Lưu ticketItem vào danh sách
+                    ticketPanel.add(ticketItem, "growx, gapy 8");
+                    ticketItems.add(ticketItem);
                 }
             }
 
             if (!hasTickets) {
-                ticketPanel.add(new JLabel("Không có vé nào phù hợp với trạng thái này."), "align center");
+                JLabel noTicketsLabel = new JLabel("Không có vé nào phù hợp với trạng thái này.");
+                noTicketsLabel.setForeground(textColor);
+                ticketPanel.add(noTicketsLabel, "align center");
             } else {
-                int panelHeight = ticketCount * 170 + 20;
+                int panelHeight = ticketCount * 120 + 20; // Điều chỉnh chiều cao panel
                 ticketPanel.setPreferredSize(new Dimension(750, panelHeight));
             }
 
@@ -319,7 +349,7 @@ public class YourBusTicketForm extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi khi tải danh sách vé: " + e.getMessage());
             e.printStackTrace();
         }
-    }
+}
     private void loadUserAndTicketData() {
         try {
             NguoiDung nguoiDung = nguoiDungService.getUserByMaNguoiDung(maNguoiDung);
