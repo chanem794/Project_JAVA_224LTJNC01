@@ -32,12 +32,13 @@ public class Menu extends JPanel {
         {"~TÀI KHOẢN~"},
         {"Thông tin tài khoản"},
         {"~TIỆN ÍCH~"},
-        {"Đơn hàng của tôi"},
-        {"~OTHER~"},
-        {"Thành viên"},
-        {"Ưu đãi"},
-        {"Quản lý thẻ"},
-        {"Nhận xét chuyến đi"},
+        {"Vé của tôi"},
+        {"~FROM LÁI XE~"},
+        {"Đăng kí chuyến xe"},
+        {"Quản lý chuyến xe của bạn"},
+        {"~FROM ADMIN~"},
+        {"Quản lý chuyến xe"},
+        {"Duyệt chuyến đi"},
         {"Đăng xuất"}
     };
 

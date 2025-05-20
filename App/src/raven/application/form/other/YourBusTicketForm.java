@@ -359,7 +359,23 @@ public class YourBusTicketForm extends javax.swing.JPanel {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 jLabel14.setText(nguoiDung.getNgaySinh() != null ? sdf.format(nguoiDung.getNgaySinh()) : "Chưa cập nhật");
                 jLabel15.setText(nguoiDung.getMaNguoiDung() != null ? nguoiDung.getMaNguoiDung() : "N/A");
+
+                // Kiểm tra mã người dùng và cập nhật jLabel11
+                String maNguoiDung = nguoiDung.getMaNguoiDung();
+                if (maNguoiDung != null && maNguoiDung.length() >= 2) {
+                    String prefix = maNguoiDung.substring(0, 2).toUpperCase();
+                    if ("AD".equals(prefix)) {
+                        jLabel11.setText("Admin");
+                    } else if ("LX".equals(prefix)) {
+                        jLabel11.setText("Người lái xe");
+                    } else {
+                        jLabel11.setText("Khách hàng"); // Trường hợp mặc định
+                    }
+                } else {
+                    jLabel11.setText("Khách hàng"); // Nếu mã người dùng không hợp lệ
+                }
             } else {
+                jLabel11.setText("Không tìm thấy");
                 jLabel12.setText("Không tìm thấy");
                 jLabel13.setText("Không tìm thấy");
                 jLabel14.setText("Không tìm thấy");

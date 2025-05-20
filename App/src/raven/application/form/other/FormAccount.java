@@ -52,20 +52,34 @@ public class FormAccount extends javax.swing.JPanel {
         }
 
         // Log để gỡ lỗi
+        System.out.println("Mã người dùng: " + nguoiDung.getMaNguoiDung());
         System.out.println("Email từ nguoiDung: " + nguoiDung.getEmail());
         System.out.println("Tên người dùng từ nguoiDung: " + nguoiDung.getTenNguoiDung());
         System.out.println("Ngày sinh từ nguoiDung: " + nguoiDung.getNgaySinh());
 
+        // Cập nhật các trường thông tin
         txtEmail.setText(nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "");
         txtHovaten.setText(nguoiDung.getTenNguoiDung() != null ? nguoiDung.getTenNguoiDung() : "");
         if (nguoiDung.getNgaySinh() != null) {
             chDate.setSelectedDate(nguoiDung.getNgaySinh());
         } else {
-            // Đặt ngày mặc định (ví dụ: ngày hiện tại) nếu không có ngày sinh
             chDate.setSelectedDate(new java.util.Date()); // Sử dụng ngày hiện tại
-            // Hoặc ẩn DateChooser nếu không muốn hiển thị ngày mặc định
-            // txtNgaySinh.setVisible(false); chDate.setVisible(false);
-    }
+        }
+
+        // Kiểm tra mã người dùng và cập nhật jLabel2
+        String maNguoiDung = nguoiDung.getMaNguoiDung();
+        if (maNguoiDung != null && maNguoiDung.length() >= 2) {
+            String prefix = maNguoiDung.substring(0, 2).toUpperCase();
+            if ("AD".equals(prefix)) {
+                jLabel2.setText("Admin");
+            } else if ("LX".equals(prefix)) {
+                jLabel2.setText("Người lái xe");
+            } else {
+                jLabel2.setText("Khách hàng"); // Trường hợp mặc định
+            }
+        } else {
+            jLabel2.setText("Khách hàng"); // Nếu mã người dùng không hợp lệ
+        }
 }
 
     private void saveUserData() {
@@ -102,25 +116,39 @@ public class FormAccount extends javax.swing.JPanel {
         txtEmail = new javax.swing.JTextField();
         lbNgaySinh = new javax.swing.JLabel();
         txtNgaySinh = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         cmdLuu = new javax.swing.JButton();
 
+        lbTitle.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTitle.setText("Thông tin tài khoản");
         panelAccount1.add(lbTitle);
 
+        lbHovaten.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         lbHovaten.setText("Họ và tên");
         panelAccount1.add(lbHovaten);
         panelAccount1.add(txtHovaten);
 
+        lbEmail.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         lbEmail.setText("Email");
         panelAccount1.add(lbEmail);
 
         txtEmail.setEditable(false);
         panelAccount1.add(txtEmail);
 
+        lbNgaySinh.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         lbNgaySinh.setText("Ngày sinh");
         panelAccount1.add(lbNgaySinh);
         panelAccount1.add(txtNgaySinh);
+
+        jLabel1.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        jLabel1.setText("Loại tài khoản");
+        panelAccount1.add(jLabel1);
+
+        jLabel2.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        jLabel2.setText("jLabel2");
+        panelAccount1.add(jLabel2);
 
         cmdLuu.setText("Lưu");
         cmdLuu.addActionListener(new java.awt.event.ActionListener() {
@@ -135,16 +163,15 @@ public class FormAccount extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(188, 188, 188)
+                .addGap(652, 652, 652)
                 .addComponent(panelAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
                 .addComponent(panelAccount1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     
@@ -155,6 +182,8 @@ public class FormAccount extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdLuu;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbEmail;
     private javax.swing.JLabel lbHovaten;
     private javax.swing.JLabel lbNgaySinh;

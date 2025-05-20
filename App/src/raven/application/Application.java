@@ -16,7 +16,6 @@ import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 import raven.application.form.other.StationForm;
 import model.NguoiDung; // Thêm import này
-
 public class Application extends javax.swing.JFrame { 
     private static Application app;
     private final MainForm mainForm;
@@ -39,8 +38,8 @@ public class Application extends javax.swing.JFrame {
         otpForm = new OTPForm();
         infoForm = new InfoForm();
         nguoidungService = new NguoiDungService();
-       //setContentPane(mainForm);
-   setContentPane(loginForm);
+        //setContentPane(mainForm);
+        setContentPane(loginForm);
         getRootPane().putClientProperty(FlatClientProperties.FULL_WINDOW_CONTENT, true);
         Notifications.getInstance().setJFrame(this);
     }
