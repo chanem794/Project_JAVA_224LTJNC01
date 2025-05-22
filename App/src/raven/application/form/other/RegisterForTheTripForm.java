@@ -21,6 +21,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
@@ -40,8 +41,6 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
     private XeService xeService;
     private DateChooser dateChooser5;
     private Integer selectedMaTuyen = null;
-    private JSpinner jSpinner6; // Thêm JSpinner cho giờ đi
-    private JSpinner jSpinner7;
     /**
      * Creates new form RegisterForTheTripForm
      */
@@ -134,27 +133,37 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             }
         });
 
-        // Ẩn jTextField6 và jTextField7, thay bằng JSpinner
-        jTextField6.setVisible(false);
-        jTextField7.setVisible(false);
+        // Thiết lập bộ chọn giờ cho jTextField6 và jTextField7
+        setupTimePicker(jTextField6, "Giờ đi");
+        setupTimePicker(jTextField7, "Giờ đến");
 
-        // Cấu hình JSpinner cho giờ đi (jSpinner6)
-        SpinnerDateModel dateModel6 = new SpinnerDateModel();
-        jSpinner6 = new JSpinner(dateModel6);
-        JSpinner.DateEditor timeEditor6 = new JSpinner.DateEditor(jSpinner6, "HH:mm");
-        jSpinner6.setEditor(timeEditor6);
-        jSpinner6.setValue(new Date()); // Giá trị mặc định
+        // Đảm bảo jTextField6 và jTextField7 hiển thị
+        jTextField6.setVisible(true);
+        jTextField7.setVisible(true);
+    }
+    private void setupTimePicker(JTextField textField, String title) {
+        JPopupMenu popup = new JPopupMenu();
+        SpinnerDateModel model = new SpinnerDateModel();
+        JSpinner spinner = new JSpinner(model);
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm");
+        spinner.setEditor(editor);
+        spinner.setValue(new Date());
+        popup.add(spinner);
 
-        // Cấu hình JSpinner cho giờ đến (jSpinner7)
-        SpinnerDateModel dateModel7 = new SpinnerDateModel();
-        jSpinner7 = new JSpinner(dateModel7);
-        JSpinner.DateEditor timeEditor7 = new JSpinner.DateEditor(jSpinner7, "HH:mm");
-        jSpinner7.setEditor(timeEditor7);
-        jSpinner7.setValue(new Date()); // Giá trị mặc định
+        textField.setEditable(false); // Không cho phép nhập tay
+        textField.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                popup.show(textField, 0, textField.getHeight());
+            }
+        });
 
-        // Thêm JSpinner vào jPanel2
-        jPanel2.add(jSpinner6, "cell 1 5, width 137px");
-        jPanel2.add(jSpinner7, "cell 1 6, width 137px");
+        spinner.addChangeListener(e -> {
+            Date time = (Date) spinner.getValue();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            textField.setText(sdf.format(time));
+            popup.setVisible(false);
+        });
     }
     private void setupAutoComplete(JComboBox<String> comboBox, List<String> items) {
         comboBox.setEditable(true);
@@ -218,6 +227,10 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         roundedPanel7.setBackground(new Color(255, 255, 255));
     }
 }
+    private int generateNewMaXe() throws SQLException {
+        int maxMaXe = xeService.getMaxMaXe();
+        return maxMaXe + 1;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -770,133 +783,124 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jRadioButton1ActionPerformed
     
-    private int generateNewMaXe() {
-        try {
-            int maxMaXe = xeService.getMaxMaXe(); // Giả định cần thêm getMaxMaXe trong XeService
-            return maxMaXe + 1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return (int) (System.currentTimeMillis() % 10000); // Fallback, tạo mã tạm thời
-        }
-    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    String tenXe = jTextField3.getText().trim();
-        String loaiXe = jTextField4.getText().trim();
-        String ngayKhoiHanhStr = jTextField5.getText().trim();
-        Date gioDiDate = (Date) jSpinner6.getValue(); // Lấy giá trị từ JSpinner
-        Date gioDenDate = (Date) jSpinner7.getValue(); // Lấy giá trị từ JSpinner
-        String soGheStr = jTextField8.getText().trim();
-        String giaVeStr = jTextField9.getText().trim();
+    try {
+            // Lấy dữ liệu từ các trường nhập liệu
+            String tenXe = jTextField3.getText().trim();
+            String loaiXe = jTextField4.getText().trim();
+            String ngayKhoiHanhStr = jTextField5.getText().trim();
+            String gioDiStr = jTextField6.getText().trim();
+            String gioDenStr = jTextField7.getText().trim();
+            String soGheStr = jTextField8.getText().trim();
+            String giaVeStr = jTextField9.getText().trim();
 
-        // Kiểm tra ràng buộc
-        if (tenXe.isEmpty() || loaiXe.isEmpty() || ngayKhoiHanhStr.equals("DD/MM/YYYY") || ngayKhoiHanhStr.isEmpty() ||
-            soGheStr.isEmpty() || giaVeStr.isEmpty()) {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
+            // Kiểm tra dữ liệu đầu vào
+            if (tenXe.isEmpty() || loaiXe.isEmpty() || ngayKhoiHanhStr.isEmpty() || gioDiStr.isEmpty() || gioDenStr.isEmpty() || soGheStr.isEmpty() || giaVeStr.isEmpty()) {
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Vui lòng điền đầy đủ thông tin!");
+                return;
+            }
+            if (selectedMaTuyen == null) {
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Vui lòng tìm tuyến trước khi đăng ký!");
+                return;
+            }
 
-        Date ngayKhoiHanh = null;
-        if (!ngayKhoiHanhStr.equals("DD/MM/YYYY")) {
+            // Chuyển đổi dữ liệu
+            Date ngayKhoiHanh = null;
             try {
-                ngayKhoiHanh = new SimpleDateFormat("dd-MM-yyyy").parse(ngayKhoiHanhStr);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                ngayKhoiHanh = sdf.parse(ngayKhoiHanhStr);
             } catch (ParseException e) {
-                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Định dạng ngày không hợp lệ!");
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Ngày khởi hành không hợp lệ!");
                 return;
             }
-        }
 
-        java.sql.Time gioDi = new java.sql.Time(gioDiDate.getTime());
-        java.sql.Time gioDen = new java.sql.Time(gioDenDate.getTime());
-
-        int soGhe;
-        int giaVe;
-        try {
-            soGhe = Integer.parseInt(soGheStr);
-            giaVe = (int) Double.parseDouble(giaVeStr); // Ép kiểu double thành int
-            if (soGhe <= 0 || giaVe <= 0) {
-                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Số ghế và giá vé phải lớn hơn 0!");
+            java.sql.Time gioDi = null;
+            java.sql.Time gioDen = null;
+            try {
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                Date gioDiDate = timeFormat.parse(gioDiStr);
+                Date gioDenDate = timeFormat.parse(gioDenStr);
+                gioDi = new java.sql.Time(gioDiDate.getTime());
+                gioDen = new java.sql.Time(gioDenDate.getTime());
+            } catch (ParseException e) {
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Giờ đi hoặc giờ đến không hợp lệ!");
                 return;
             }
-        } catch (NumberFormatException e) {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Số ghế và giá vé phải là số!");
-            return;
-        }
 
-        if (selectedMaTuyen == null) {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Vui lòng tìm kiếm tuyến trước!");
-            return;
-        }
+            int soGhe;
+            int giaVe;
+            try {
+                soGhe = Integer.parseInt(soGheStr);
+                giaVe = Integer.parseInt(giaVeStr);
+                if (soGhe <= 0 || giaVe <= 0) {
+                    Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Số ghế và giá vé phải lớn hơn 0!");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Số ghế hoặc giá vé không hợp lệ!");
+                return;
+            }
 
-        // Tạo và lưu xe mới
-        Xe xe = new Xe();
-        xe.setTenXe(tenXe);
-        xe.setLoaiXe(loaiXe);
-        xe.setMaTuyen(selectedMaTuyen);
-        xe.setNgayKhoiHanh(new java.sql.Date(ngayKhoiHanh != null ? ngayKhoiHanh.getTime() : 0));
-        xe.setGioDi(gioDi);
-        xe.setGioDen(gioDen);
-        xe.setSoGhe(soGhe);
-        xe.setGheConTrong(soGhe); // Mặc định GheConTrong bằng SoGhe
-        xe.setGiaVe(giaVe);
-        xe.setMaXe(generateNewMaXe()); // Sử dụng logic tạo mã xe mới
+            // Tạo đối tượng Xe
+            Xe xe = new Xe();
+            xe.setTenXe(tenXe);
+            xe.setLoaiXe(loaiXe);
+            xe.setDiemDi(jComboBox1.getSelectedItem().toString());
+            xe.setDiemDen(jComboBox2.getSelectedItem().toString());
+            xe.setMaTuyen(selectedMaTuyen);
+            xe.setNgayKhoiHanh(new java.sql.Date(ngayKhoiHanh.getTime()));
+            xe.setGioDi(gioDi);
+            xe.setGioDen(gioDen);
+            xe.setSoGhe(soGhe);
+            xe.setGheConTrong(soGhe);
+            xe.setGiaVe(giaVe);
+            xe.setMaXe(generateNewMaXe());
 
-        try {
-            xeService.createXe(xe); // Thay addXe bằng createXe
+            // Lưu vào cơ sở dữ liệu
+            System.out.println("Đang lưu xe: MaXe=" + xe.getMaXe() + ", MaTuyen=" + xe.getMaTuyen() + ", DiemDi=" + xe.getDiemDi() + ", DiemDen=" + xe.getDiemDen());
+            xeService.createXe(xe);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Đăng ký chuyến xe thành công!");
+
             // Reset form
             jTextField3.setText("");
             jTextField4.setText("");
             jTextField5.setText("DD/MM/YYYY");
-            jSpinner6.setValue(new Date()); // Reset JSpinner
-            jSpinner7.setValue(new Date()); // Reset JSpinner
+            jTextField6.setText("");
+            jTextField7.setText("");
             jTextField8.setText("");
             jTextField9.setText("");
-            jLabel6.setText("Điểm đi: Chưa chọn");
-            jLabel7.setText("Điểm đến: Chưa chọn");
-            jLabel29.setText("Mã tuyến: Chưa chọn");
+            jComboBox1.setSelectedIndex(0);
+            jComboBox2.setSelectedIndex(0);
             selectedMaTuyen = null;
+
         } catch (SQLException e) {
             e.printStackTrace();
-            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Lỗi khi lưu chuyến xe!");
+            System.err.println("Lỗi SQL: " + e.getMessage());
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Lỗi khi lưu chuyến xe: " + e.getMessage());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String diemDi = (String) jComboBox1.getSelectedItem();
-    String diemDen = (String) jComboBox2.getSelectedItem();
-
-    if (diemDi == null || diemDen == null || diemDi.equals("Lỗi tải dữ liệu") || diemDen.equals("Lỗi tải dữ liệu")) {
-        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Vui lòng chọn điểm đi và điểm đến hợp lệ!");
-        return;
-    }
-
-    try {
-        // Tìm tuyến dựa trên DiemDi và DiemDen
-        List<Tuyen> tuyenList = tuyenService.getAllTuyen();
-        Tuyen selectedTuyen = null;
-        for (Tuyen tuyen : tuyenList) {
-            if (tuyen.getDiemDi().equals(diemDi) && tuyen.getDiemDen().equals(diemDen)) {
-                selectedTuyen = tuyen;
-                break;
-            }
-        }
-        if (selectedTuyen != null) {
-            selectedMaTuyen = selectedTuyen.getMaTuyen();
-            jLabel6.setText("Điểm đi: " + diemDi);
-            jLabel7.setText("Điểm đến: " + diemDen);
-            jLabel29.setText("Mã tuyến: " + selectedMaTuyen);
-            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm tuyến thành công!");
-        } else {
-            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không tìm thấy tuyến!");
+     String diemDi = jComboBox1.getSelectedItem() != null ? jComboBox1.getSelectedItem().toString() : "";
+        String diemDen = jComboBox2.getSelectedItem() != null ? jComboBox2.getSelectedItem().toString() : "";
+        try {
+            List<Tuyen> tuyenList = tuyenService.getAllTuyen();
             selectedMaTuyen = null;
-            jLabel6.setText("Điểm đi: Chưa chọn");
-            jLabel7.setText("Điểm đến: Chưa chọn");
-            jLabel29.setText("Mã tuyến: Chưa chọn");
+            for (Tuyen tuyen : tuyenList) {
+                if (tuyen.getDiemDi().equals(diemDi) && tuyen.getDiemDen().equals(diemDen)) {
+                    selectedMaTuyen = tuyen.getMaTuyen();
+                    break;
+                }
+            }
+            if (selectedMaTuyen != null) {
+                Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm thấy tuyến: " + diemDi + " -> " + diemDen);
+            } else {
+                Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không tìm thấy tuyến phù hợp!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Lỗi khi tìm tuyến!");
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Lỗi khi tìm tuyến!");
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
