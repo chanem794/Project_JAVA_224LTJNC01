@@ -53,5 +53,7 @@ public class XeService {
     public List<Xe> ShowXe() throws SQLException {
         return xeDAO.showxe();
     }
-    
+    public int getMaxMaXe() throws SQLException {
+    return xeDAO.getMaxMaXe();
+}
 }

@@ -259,5 +259,14 @@ public class XeDAO {
         }
         return result;
     }
-    
+    public int getMaxMaXe() throws SQLException {
+    String sql = "SELECT MAX(MaXe) AS maxMaXe FROM Xe";
+    try (PreparedStatement stmt = connection.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+            return rs.getInt("maxMaXe");
+        }
+    }
+    return 0; // Trả về 0 nếu bảng rỗng
+}
 }
