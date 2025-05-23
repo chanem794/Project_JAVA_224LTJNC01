@@ -20,6 +20,7 @@ import raven.application.Application;
 import raven.application.form.other.FormAccount;
 import raven.application.form.other.FormInbox;
 import raven.application.form.other.FormRead;
+import raven.application.form.other.ManageTripForm;
 import raven.application.form.other.RegisterForTheTripForm;
 import raven.application.form.other.YourBusTicketForm;
 import raven.menu.Menu;
@@ -99,15 +100,17 @@ public class MainForm extends JLayeredPane {
                     }
                     break;
             case 3:
-                Application.showForm(new FormAccount());
-                break;
+                // Kiểm tra quyền admin
+                    currentUser = Application.getCurrentUser();
+                    if (currentUser != null && currentUser.getMaNguoiDung() != null && currentUser.getMaNguoiDung().startsWith("AD")) {
+                        Application.showForm(new ManageTripForm(currentUser.getMaNguoiDung())); // Thay thế bằng ManageTripForm
+                    } else {
+                        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, 
+                            "Không thể vào vì tài khoản không được cấp quyền!");
+                        action.cancel();
+                    }
+                    break;
             case 4:
-                Application.showForm(new FormAccount());
-                break;
-            case 5:
-                Application.showForm(new FormAccount());
-                break;
-            case 6:
                 Application.logout();
                 break;
             default:
