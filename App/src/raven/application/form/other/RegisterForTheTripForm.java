@@ -31,6 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import model.Tuyen;
 import model.Xe;
 import net.miginfocom.swing.MigLayout;
@@ -59,7 +60,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         tuyenService = new TuyenService();
         xeService = new XeService();
 
-        // Thiết lập icon và thuộc tính (giữ nguyên như cũ)
+        // Thiết lập icon và thuộc tính
         ImageIcon iconLabel3 = new ImageIcon(getClass().getResource("/raven/icon/png/exclamation.png"));
         Image scaledIcon3 = iconLabel3.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         jLabel3.setIcon(new ImageIcon(scaledIcon3));
@@ -96,19 +97,19 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         jLabel23.setVerticalTextPosition(SwingConstants.CENTER);
 
         // Thêm ảnh vào jPanel1
-        jPanel1.setLayout(new java.awt.BorderLayout()); // Đặt layout để hình ảnh chiếm toàn bộ panel
+        jPanel1.setLayout(new java.awt.BorderLayout());
         JLabel imageLabel1 = new JLabel();
         ImageIcon iconPanel1 = new ImageIcon(getClass().getResource("/raven/icon/png/t1.png"));
-        Image scaledImage1 = iconPanel1.getImage().getScaledInstance(193, 287, Image.SCALE_SMOOTH); // Kích thước của jPanel1
+        Image scaledImage1 = iconPanel1.getImage().getScaledInstance(193, 287, Image.SCALE_SMOOTH);
         imageLabel1.setIcon(new ImageIcon(scaledImage1));
         imageLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jPanel1.add(imageLabel1, java.awt.BorderLayout.CENTER);
 
         // Thêm ảnh vào jPanel3
-        jPanel3.setLayout(new java.awt.BorderLayout()); // Đặt layout để hình ảnh chiếm toàn bộ panel
+        jPanel3.setLayout(new java.awt.BorderLayout());
         JLabel imageLabel3 = new JLabel();
         ImageIcon iconPanel3 = new ImageIcon(getClass().getResource("/raven/icon/png/images.jpg"));
-        Image scaledImage3 = iconPanel3.getImage().getScaledInstance(193, 183, Image.SCALE_SMOOTH); // Kích thước của jPanel3
+        Image scaledImage3 = iconPanel3.getImage().getScaledInstance(193, 183, Image.SCALE_SMOOTH);
         imageLabel3.setIcon(new ImageIcon(scaledImage3));
         imageLabel3.setHorizontalAlignment(SwingConstants.CENTER);
         jPanel3.add(imageLabel3, java.awt.BorderLayout.CENTER);
@@ -137,11 +138,11 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         if (!diemDiList.isEmpty()) jComboBox1.setSelectedIndex(0);
         if (!diemDenList.isEmpty()) jComboBox2.setSelectedIndex(0);
 
-        // Thiết lập kích thước cố định cho jComboBox1 và jComboBox2 để khớp với thiết kế
-        jComboBox1.setMinimumSize(new java.awt.Dimension(154, 41)); // Kích thước từ roundedPanel6Layout
+        // Thiết lập kích thước cố định cho jComboBox1 và jComboBox2
+        jComboBox1.setMinimumSize(new java.awt.Dimension(154, 41));
         jComboBox1.setPreferredSize(new java.awt.Dimension(154, 41));
         jComboBox1.setMaximumSize(new java.awt.Dimension(154, 41));
-        jComboBox2.setMinimumSize(new java.awt.Dimension(154, 41)); // Giả sử kích thước giống jComboBox1
+        jComboBox2.setMinimumSize(new java.awt.Dimension(154, 41));
         jComboBox2.setPreferredSize(new java.awt.Dimension(154, 41));
         jComboBox2.setMaximumSize(new java.awt.Dimension(154, 41));
 
@@ -149,7 +150,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
-        // Thiết lập DateChooser cho jTextField5 (giữ nguyên như cũ)
+        // Thiết lập DateChooser cho jTextField5
         dateChooser5 = new DateChooser();
         jTextField5.setText("DD/MM/YYYY");
         jTextField5.setFont(new java.awt.Font("SansSerif", 1, 14));
@@ -188,7 +189,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         jLabel16.setText("");
         jLabel17.setText("");
 
-        // Thiết lập placeholder cho các trường nhập liệu khác (giữ nguyên như cũ)
+        // Thiết lập placeholder cho các trường nhập liệu khác
         jTextField3.setText("Nhập tên xe");
         jTextField3.setForeground(Color.GRAY);
         jTextField3.addFocusListener(new FocusAdapter() {
@@ -264,7 +265,45 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 }
             }
         });
-}
+
+        // Thêm lắng nghe sự kiện thay đổi giao diện
+        UIManager.addPropertyChangeListener(evt -> {
+            if ("lookAndFeel".equals(evt.getPropertyName())) {
+                updatePanelColors();
+            }
+        });
+    }
+
+    private void updatePanelColors() {
+        if (FlatLaf.isLafDark()) {
+            // Màu xám cho dark mode
+            roundedPanel1.setBackground(new Color(79, 92, 104, 255));
+            roundedPanel2.setBackground(new Color(49, 62, 74, 255));
+            roundedPanel3.setBackground(new Color(51, 62, 74, 255));
+            roundedPanel4.setBackground(new Color(49, 62, 74, 255));
+            roundedPanel5.setBackground(new Color(49, 62, 74, 255));
+            roundedPanel6.setBackground(new Color(79, 92, 104, 255));
+            roundedPanel7.setBackground(new Color(49, 62, 74, 255));
+            jPanel2.setBackground(new Color(79, 92, 104, 255));
+            jButton1.setBackground(new Color(49, 62, 74, 255));
+            jButton2.setBackground(new Color(79, 92, 104, 255));
+        } else {
+            // Màu trắng cho light mode
+            roundedPanel1.setBackground(new Color(255, 255, 255));
+            roundedPanel2.setBackground(new Color(255, 255, 255));
+            roundedPanel3.setBackground(new Color(255, 255, 255));
+            roundedPanel4.setBackground(new Color(255, 255, 255));
+            roundedPanel5.setBackground(new Color(230, 230, 230));
+            roundedPanel6.setBackground(new Color(255, 255, 255));
+            roundedPanel7.setBackground(new Color(255, 255, 255));
+            jPanel2.setBackground(new Color(255, 255, 255));
+            jButton1.setBackground(new Color(255, 149, 0));
+            jButton2.setBackground(new Color(36, 116, 229, 255));
+        }
+        // Cập nhật giao diện
+        revalidate();
+        repaint();
+    }
 
     private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
 
@@ -416,21 +455,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             }
         });
     }
-    private void updatePanelColors() {
-    if (FlatLaf.isLafDark()) {
-
-        roundedPanel1.setBackground(new Color(49, 62, 74, 255));
-        roundedPanel4.setBackground(new Color(49, 62, 74, 255));
-        roundedPanel5.setBackground(new Color(49, 62, 74, 255));
-        roundedPanel7.setBackground(new Color(49, 62, 74, 255));
-    } else {
- 
-        roundedPanel1.setBackground(new Color(255, 255, 255));
-        roundedPanel4.setBackground(new Color(255, 255, 255));
-        roundedPanel5.setBackground(new Color(255, 255, 255));
-        roundedPanel7.setBackground(new Color(255, 255, 255));
-    }
-}
+    
     private int generateNewMaXe() throws SQLException {
         int maxMaXe = xeService.getMaxMaXe();
         return maxMaXe + 1;
@@ -871,7 +896,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 193, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -886,10 +911,9 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 .addComponent(roundedPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         roundedPanel2Layout.setVerticalGroup(
