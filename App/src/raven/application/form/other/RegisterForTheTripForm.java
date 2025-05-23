@@ -12,6 +12,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +24,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -41,6 +45,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
     private XeService xeService;
     private DateChooser dateChooser5;
     private Integer selectedMaTuyen = null;
+    
     /**
      * Creates new form RegisterForTheTripForm
      */
@@ -54,7 +59,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         tuyenService = new TuyenService();
         xeService = new XeService();
 
-        // Thiết lập icon và thuộc tính
+        // Thiết lập icon và thuộc tính (giữ nguyên như cũ)
         ImageIcon iconLabel3 = new ImageIcon(getClass().getResource("/raven/icon/png/exclamation.png"));
         Image scaledIcon3 = iconLabel3.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         jLabel3.setIcon(new ImageIcon(scaledIcon3));
@@ -90,16 +95,40 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         jLabel23.setHorizontalTextPosition(SwingConstants.RIGHT);
         jLabel23.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // Tải danh sách điểm đi và điểm đến từ cơ sở dữ liệu
+        // Thêm ảnh vào jPanel1
+        jPanel1.setLayout(new java.awt.BorderLayout()); // Đặt layout để hình ảnh chiếm toàn bộ panel
+        JLabel imageLabel1 = new JLabel();
+        ImageIcon iconPanel1 = new ImageIcon(getClass().getResource("/raven/icon/png/t1.png"));
+        Image scaledImage1 = iconPanel1.getImage().getScaledInstance(193, 287, Image.SCALE_SMOOTH); // Kích thước của jPanel1
+        imageLabel1.setIcon(new ImageIcon(scaledImage1));
+        imageLabel1.setHorizontalAlignment(SwingConstants.CENTER);
+        jPanel1.add(imageLabel1, java.awt.BorderLayout.CENTER);
+
+        // Thêm ảnh vào jPanel3
+        jPanel3.setLayout(new java.awt.BorderLayout()); // Đặt layout để hình ảnh chiếm toàn bộ panel
+        JLabel imageLabel3 = new JLabel();
+        ImageIcon iconPanel3 = new ImageIcon(getClass().getResource("/raven/icon/png/images.jpg"));
+        Image scaledImage3 = iconPanel3.getImage().getScaledInstance(193, 183, Image.SCALE_SMOOTH); // Kích thước của jPanel3
+        imageLabel3.setIcon(new ImageIcon(scaledImage3));
+        imageLabel3.setHorizontalAlignment(SwingConstants.CENTER);
+        jPanel3.add(imageLabel3, java.awt.BorderLayout.CENTER);
+
+        // Đọc dữ liệu từ file "Tỉnh, Huyện.txt" để làm gợi ý
         List<String> diemDiList = new ArrayList<>();
         List<String> diemDenList = new ArrayList<>();
-        try {
-            diemDiList = tuyenService.getAllDiemDi();
-            diemDenList = tuyenService.getAllDiemDen();
-        } catch (SQLException e) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("Tỉnh, Huyện.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    diemDiList.add(line);
+                    diemDenList.add(line);
+                }
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            diemDiList.add("Lỗi tải dữ liệu");
-            diemDenList.add("Lỗi tải dữ liệu");
+            diemDiList.add("Error loading data from file");
+            diemDenList.add("Error loading data from file");
         }
 
         // Cài đặt model cho jComboBox1 và jComboBox2
@@ -108,11 +137,19 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         if (!diemDiList.isEmpty()) jComboBox1.setSelectedIndex(0);
         if (!diemDenList.isEmpty()) jComboBox2.setSelectedIndex(0);
 
+        // Thiết lập kích thước cố định cho jComboBox1 và jComboBox2 để khớp với thiết kế
+        jComboBox1.setMinimumSize(new java.awt.Dimension(154, 41)); // Kích thước từ roundedPanel6Layout
+        jComboBox1.setPreferredSize(new java.awt.Dimension(154, 41));
+        jComboBox1.setMaximumSize(new java.awt.Dimension(154, 41));
+        jComboBox2.setMinimumSize(new java.awt.Dimension(154, 41)); // Giả sử kích thước giống jComboBox1
+        jComboBox2.setPreferredSize(new java.awt.Dimension(154, 41));
+        jComboBox2.setMaximumSize(new java.awt.Dimension(154, 41));
+
         // Thiết lập gợi ý tự động
         setupAutoComplete(jComboBox1, diemDiList);
         setupAutoComplete(jComboBox2, diemDenList);
 
-        // Thiết lập DateChooser cho jTextField5
+        // Thiết lập DateChooser cho jTextField5 (giữ nguyên như cũ)
         dateChooser5 = new DateChooser();
         jTextField5.setText("DD/MM/YYYY");
         jTextField5.setFont(new java.awt.Font("SansSerif", 1, 14));
@@ -133,44 +170,111 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             }
         });
 
-        // Thiết lập bộ chọn giờ cho jTextField6 và jTextField7
+        // Thiết lập placeholder và bộ chọn giờ cho jTextField6 (Giờ đi)
+        jTextField6.setText("Nhập thời gian đi");
+        jTextField6.setForeground(Color.GRAY);
         setupTimePicker(jTextField6, "Giờ đi");
+
+        // Thiết lập placeholder và bộ chọn giờ cho jTextField7 (Giờ đến)
+        jTextField7.setText("Nhập thời gian đến");
+        jTextField7.setForeground(Color.GRAY);
         setupTimePicker(jTextField7, "Giờ đến");
 
         // Đảm bảo jTextField6 và jTextField7 hiển thị
         jTextField6.setVisible(true);
         jTextField7.setVisible(true);
-    }
-    private void setupTimePicker(JTextField textField, String title) {
-        JPopupMenu popup = new JPopupMenu();
-        SpinnerDateModel model = new SpinnerDateModel();
-        JSpinner spinner = new JSpinner(model);
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm");
-        spinner.setEditor(editor);
-        spinner.setValue(new Date());
-        popup.add(spinner);
 
-        textField.setEditable(false); // Không cho phép nhập tay
-        textField.addMouseListener(new java.awt.event.MouseAdapter() {
+        // Đặt giá trị mặc định cho jLabel16 và jLabel17
+        jLabel16.setText("");
+        jLabel17.setText("");
+
+        // Thiết lập placeholder cho các trường nhập liệu khác (giữ nguyên như cũ)
+        jTextField3.setText("Nhập tên xe");
+        jTextField3.setForeground(Color.GRAY);
+        jTextField3.addFocusListener(new FocusAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                popup.show(textField, 0, textField.getHeight());
+            public void focusGained(FocusEvent e) {
+                if (jTextField3.getText().equals("Nhập tên xe")) {
+                    jTextField3.setText("");
+                    jTextField3.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField3.getText().isEmpty()) {
+                    jTextField3.setText("Nhập tên xe");
+                    jTextField3.setForeground(Color.GRAY);
+                }
             }
         });
 
-        spinner.addChangeListener(e -> {
-            Date time = (Date) spinner.getValue();
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            textField.setText(sdf.format(time));
-            popup.setVisible(false);
+        jTextField4.setText("Nhập loại xe");
+        jTextField4.setForeground(Color.GRAY);
+        jTextField4.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField4.getText().equals("Nhập loại xe")) {
+                    jTextField4.setText("");
+                    jTextField4.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField4.getText().isEmpty()) {
+                    jTextField4.setText("Nhập loại xe");
+                    jTextField4.setForeground(Color.GRAY);
+                }
+            }
         });
-    }
+
+        jTextField8.setText("Nhập số ghế");
+        jTextField8.setForeground(Color.GRAY);
+        jTextField8.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField8.getText().equals("Nhập số ghế")) {
+                    jTextField8.setText("");
+                    jTextField8.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField8.getText().isEmpty()) {
+                    jTextField8.setText("Nhập số ghế");
+                    jTextField8.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        jTextField9.setText("Nhập giá vé");
+        jTextField9.setForeground(Color.GRAY);
+        jTextField9.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (jTextField9.getText().equals("Nhập giá vé")) {
+                    jTextField9.setText("");
+                    jTextField9.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (jTextField9.getText().isEmpty()) {
+                    jTextField9.setText("Nhập giá vé");
+                    jTextField9.setForeground(Color.GRAY);
+                }
+            }
+        });
+}
+
+    private boolean isUpdating = false; // Biến cờ để tránh vòng lặp cập nhật
+
     private void setupAutoComplete(JComboBox<String> comboBox, List<String> items) {
         comboBox.setEditable(true);
         JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
         if (comboBox.getSelectedItem() != null) {
             textField.setText(comboBox.getSelectedItem().toString());
         }
+
         textField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) { updateSuggestions(); }
@@ -178,37 +282,137 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             public void removeUpdate(javax.swing.event.DocumentEvent e) { updateSuggestions(); }
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updateSuggestions(); }
+
             private void updateSuggestions() {
+                if (isUpdating) return; // Tránh vòng lặp cập nhật
+                isUpdating = true;
+
                 SwingUtilities.invokeLater(() -> {
-                    String input = textField.getText();
-                    if (input.isEmpty()) {
-                        comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
-                        comboBox.setPopupVisible(false);
-                        comboBox.setSelectedIndex(-1);
-                        return;
-                    }
-                    List<String> matchedItems = new ArrayList<>();
-                    for (String item : items) {
-                        if (item.toLowerCase().contains(input.toLowerCase())) {
-                            matchedItems.add(item);
+                    try {
+                        String input = textField.getText();
+                        if (input.isEmpty()) {
+                            comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new String[0])));
+                            comboBox.setPopupVisible(false);
+                            comboBox.setSelectedIndex(-1);
+                            return;
                         }
+                        List<String> matchedItems = new ArrayList<>();
+                        for (String item : items) {
+                            if (normalizeString(item).toLowerCase().contains(normalizeString(input).toLowerCase())) {
+                                matchedItems.add(item);
+                            }
+                        }
+                        comboBox.setModel(new DefaultComboBoxModel<>(matchedItems.toArray(new String[0])));
+                        comboBox.setSelectedItem(input); // Giữ nguyên nội dung đang nhập
+                        comboBox.setPopupVisible(!input.isEmpty() && !matchedItems.isEmpty());
+                    } finally {
+                        isUpdating = false; // Đặt lại cờ sau khi hoàn tất
                     }
-                    comboBox.setModel(new DefaultComboBoxModel<>(matchedItems.toArray(new String[0])));
-                    comboBox.setSelectedItem(input);
-                    comboBox.setPopupVisible(!input.isEmpty() && !matchedItems.isEmpty());
                 });
             }
         });
+
         comboBox.addActionListener(e -> {
-            if (comboBox.getSelectedItem() != null) {
-                textField.setText(comboBox.getSelectedItem().toString());
-                comboBox.setPopupVisible(false);
+            if (!isUpdating && comboBox.getSelectedItem() != null) {
+                isUpdating = true;
+                try {
+                    textField.setText(comboBox.getSelectedItem().toString());
+                    comboBox.setPopupVisible(false);
+                } finally {
+                    isUpdating = false;
+                }
             }
         });
+
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 comboBox.setPopupVisible(false);
+            }
+        });
+    }
+
+    private String normalizeString(String str) {
+        if (str == null) return "";
+        String normalized = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", "").replace("đ", "d").replace("Đ", "D");
+}
+    private void setupTimePicker(JTextField textField, String title) {
+        JPopupMenu popup = new JPopupMenu();
+        SpinnerDateModel model = new SpinnerDateModel();
+        JSpinner spinner = new JSpinner(model);
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm");
+        spinner.setEditor(editor);
+        spinner.setValue(new Date()); // Giá trị mặc định là thời gian hiện tại
+        popup.add(spinner);
+
+        textField.setEditable(false); // Không cho phép nhập tay
+        textField.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (textField.getText().equals("Nhập thời gian đi") || textField.getText().equals("Nhập thời gian đến")) {
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK);
+                }
+                popup.show(textField, 0, textField.getHeight());
+            }
+        });
+
+        // Xử lý thay đổi thời gian
+        spinner.addChangeListener(e -> {
+            Date selectedTime = (Date) spinner.getValue();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            String timeStr = sdf.format(selectedTime);
+
+            if (textField == jTextField6) { // Giờ đi
+                jTextField6.setText(timeStr);
+                // Kiểm tra và cập nhật giờ đến nếu cần
+                if (!jTextField7.getText().isEmpty() && !jTextField7.getText().equals("Nhập thời gian đến")) {
+                    try {
+                        Date currentArrival = sdf.parse(jTextField7.getText());
+                        Date currentDeparture = sdf.parse(timeStr);
+                        long diff = currentArrival.getTime() - currentDeparture.getTime();
+                        if (diff < 30 * 60 * 1000) { // Ít hơn 30 phút
+                            Date newArrival = new Date(currentDeparture.getTime() + 30 * 60 * 1000);
+                            jTextField7.setText(sdf.format(newArrival));
+                        }
+                    } catch (ParseException ex) {
+                        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Lỗi xử lý thời gian!");
+                    }
+                }
+            } else if (textField == jTextField7) { // Giờ đến
+                if (!jTextField6.getText().isEmpty() && !jTextField6.getText().equals("Nhập thời gian đi")) {
+                    try {
+                        Date departureTime = sdf.parse(jTextField6.getText());
+                        Date arrivalTime = sdf.parse(timeStr);
+                        long diff = arrivalTime.getTime() - departureTime.getTime();
+                        if (diff < 30 * 60 * 1000) { // Ít hơn 30 phút
+                            Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Giờ đến phải sau giờ đi ít nhất 30 phút!");
+                            Date newArrival = new Date(departureTime.getTime() + 30 * 60 * 1000);
+                            jTextField7.setText(sdf.format(newArrival));
+                            return;
+                        }
+                    } catch (ParseException ex) {
+                        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Lỗi xử lý thời gian!");
+                    }
+                }
+                jTextField7.setText(timeStr);
+            }
+            popup.setVisible(false);
+        });
+
+        // Xử lý khi mất focus
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    if (textField == jTextField6) {
+                        textField.setText("Nhập thời gian đi");
+                    } else if (textField == jTextField7) {
+                        textField.setText("Nhập thời gian đến");
+                    }
+                    textField.setForeground(Color.GRAY);
+                }
             }
         });
     }
@@ -336,7 +540,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jLabel6.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
@@ -366,24 +570,24 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
                     .addGroup(roundedPanel6Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(6, 6, 6)
                 .addGroup(roundedPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(roundedPanel6Layout.createSequentialGroup()
                         .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(27, 27, 27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18))))
         );
@@ -405,7 +609,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                                         .addGap(2, 2, 2)
                                         .addGroup(roundedPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel6Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(roundedPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -506,9 +710,8 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             }
         });
 
-        jLabel28.setText("jLabel28");
-
-        jLabel29.setText("jLabel29");
+        jLabel28.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel28.setText("Mã tuyến:");
 
         javax.swing.GroupLayout roundedPanel7Layout = new javax.swing.GroupLayout(roundedPanel7);
         roundedPanel7.setLayout(roundedPanel7Layout);
@@ -548,7 +751,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                     .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel26)
@@ -585,18 +788,17 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                             .addComponent(jLabel21))
                         .addGap(101, 101, 101)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel17)
-                                        .addComponent(jLabel16))))
                             .addComponent(jTextField3)
                             .addComponent(jTextField6)
                             .addComponent(jTextField4)
                             .addComponent(jTextField7)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel16)))))
                     .addComponent(jLabel18))
                 .addGap(18, 18, 18)
                 .addComponent(roundedPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -673,7 +875,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 183, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
@@ -684,11 +886,10 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 .addComponent(roundedPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(roundedPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(roundedPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         roundedPanel2Layout.setVerticalGroup(
@@ -702,8 +903,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(roundedPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 8, Short.MAX_VALUE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -784,7 +984,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    try {
+        try {
             // Lấy dữ liệu từ các trường nhập liệu
             String tenXe = jTextField3.getText().trim();
             String loaiXe = jTextField4.getText().trim();
@@ -795,7 +995,8 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             String giaVeStr = jTextField9.getText().trim();
 
             // Kiểm tra dữ liệu đầu vào
-            if (tenXe.isEmpty() || loaiXe.isEmpty() || ngayKhoiHanhStr.isEmpty() || gioDiStr.isEmpty() || gioDenStr.isEmpty() || soGheStr.isEmpty() || giaVeStr.isEmpty()) {
+            if (tenXe.equals("Nhập tên xe") || loaiXe.equals("Nhập loại xe") || ngayKhoiHanhStr.equals("DD/MM/YYYY") || 
+                gioDiStr.equals("Nhập thời gian đi") || gioDenStr.equals("Nhập thời gian đến") || soGheStr.equals("Nhập số ghế") || giaVeStr.equals("Nhập giá vé")) {
                 Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Vui lòng điền đầy đủ thông tin!");
                 return;
             }
@@ -862,15 +1063,23 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Đăng ký chuyến xe thành công!");
 
             // Reset form
-            jTextField3.setText("");
-            jTextField4.setText("");
+            jTextField3.setText("Nhập tên xe");
+            jTextField3.setForeground(Color.GRAY);
+            jTextField4.setText("Nhập loại xe");
+            jTextField4.setForeground(Color.GRAY);
             jTextField5.setText("DD/MM/YYYY");
-            jTextField6.setText("");
-            jTextField7.setText("");
-            jTextField8.setText("");
-            jTextField9.setText("");
+            jTextField6.setText("Nhập thời gian đi");
+            jTextField6.setForeground(Color.GRAY);
+            jTextField7.setText("Nhập thời gian đến");
+            jTextField7.setForeground(Color.GRAY);
+            jTextField8.setText("Nhập số ghế");
+            jTextField8.setForeground(Color.GRAY);
+            jTextField9.setText("Nhập giá vé");
+            jTextField9.setForeground(Color.GRAY);
             jComboBox1.setSelectedIndex(0);
             jComboBox2.setSelectedIndex(0);
+            jLabel16.setText("");
+            jLabel17.setText("");
             selectedMaTuyen = null;
 
         } catch (SQLException e) {
@@ -881,7 +1090,7 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     String diemDi = jComboBox1.getSelectedItem() != null ? jComboBox1.getSelectedItem().toString() : "";
+        String diemDi = jComboBox1.getSelectedItem() != null ? jComboBox1.getSelectedItem().toString() : "";
         String diemDen = jComboBox2.getSelectedItem() != null ? jComboBox2.getSelectedItem().toString() : "";
         try {
             List<Tuyen> tuyenList = tuyenService.getAllTuyen();
@@ -893,12 +1102,21 @@ public class RegisterForTheTripForm extends javax.swing.JPanel {
                 }
             }
             if (selectedMaTuyen != null) {
+                jLabel16.setText(diemDi); // Hiển thị điểm đi
+                jLabel17.setText(diemDen); // Hiển thị điểm đến
+                jLabel29.setText(String.valueOf(selectedMaTuyen)); // Hiển thị mã tuyến
                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Tìm thấy tuyến: " + diemDi + " -> " + diemDen);
             } else {
+                jLabel16.setText("");
+                jLabel17.setText("");
+                jLabel29.setText(""); // Đặt lại mã tuyến nếu không tìm thấy
                 Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, "Không tìm thấy tuyến phù hợp!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            jLabel16.setText("");
+            jLabel17.setText("");
+            jLabel29.setText(""); // Đặt lại mã tuyến nếu có lỗi
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Lỗi khi tìm tuyến!");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
