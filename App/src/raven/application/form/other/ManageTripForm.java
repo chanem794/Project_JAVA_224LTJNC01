@@ -404,7 +404,7 @@ public class ManageTripForm extends javax.swing.JPanel {
             new String[]{"Mã Xe", "Tên Xe", "Loại Xe", "Điểm Đi", "Điểm Đến", "Ngày", "Giờ Đi", "Giờ Đến", "Số Ghế", "Ghế Còn", "Giá Vé", "Mã Tuyến"}
         ));
         jScrollPane1.setViewportView(jTable1);
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(650, 360));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(650, 446));
 
         jButton1.setFont(new Font("SansSerif", Font.BOLD, 14));
         jButton1.setText("Xóa Chuyến Xe");
@@ -554,7 +554,7 @@ public class ManageTripForm extends javax.swing.JPanel {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        roundedPanel3.setPreferredSize(new java.awt.Dimension(400, 460));
+        roundedPanel3.setPreferredSize(new java.awt.Dimension(350, 510));
 
         javax.swing.GroupLayout roundedPanel2Layout = new javax.swing.GroupLayout(roundedPanel2);
         roundedPanel2.setLayout(roundedPanel2Layout);
@@ -586,11 +586,11 @@ public class ManageTripForm extends javax.swing.JPanel {
                             .addComponent(jButtonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
-        roundedPanel2.setPreferredSize(new java.awt.Dimension(1020, 460));
+        roundedPanel2.setPreferredSize(new java.awt.Dimension(1020, 518));
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -615,7 +615,7 @@ public class ManageTripForm extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        roundedPanel1.setPreferredSize(new java.awt.Dimension(1050, 540));
+        roundedPanel1.setPreferredSize(new java.awt.Dimension(1050, 590));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
