@@ -20,9 +20,11 @@ import raven.application.Application;
 import raven.application.form.other.FormAccount;
 import raven.application.form.other.FormInbox;
 import raven.application.form.other.FormRead;
+import raven.application.form.other.RegisterForTheTripForm;
 import raven.application.form.other.YourBusTicketForm;
 import raven.menu.Menu;
 import raven.menu.MenuAction;
+import raven.toast.Notifications;
 
 /**
  *
@@ -70,42 +72,50 @@ public class MainForm extends JLayeredPane {
     }
 
     private void initMenuEvent() {
-        menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
-            switch (index) {
-                case 0:
-                    Application.showForm(new FormAccount());
-                    break;
-                case 1:
-                    // Lấy người dùng hiện tại từ Application
-                    NguoiDung currentUser = Application.getCurrentUser();
-                    if (currentUser != null && currentUser.getMaNguoiDung() != null) {
-                        Application.showForm(new YourBusTicketForm(currentUser.getMaNguoiDung()));
+    menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
+        switch (index) {
+            case 0:
+                Application.showForm(new FormAccount());
+                break;
+            case 1:
+                // Lấy người dùng hiện tại từ Application
+                NguoiDung currentUser = Application.getCurrentUser();
+                if (currentUser != null && currentUser.getMaNguoiDung() != null) {
+                    Application.showForm(new YourBusTicketForm(currentUser.getMaNguoiDung()));
+                } else {
+                    // Nếu chưa đăng nhập, chuyển về màn hình đăng nhập
+                    Application.logout();
+                }
+                break;
+            case 2:
+                // Kiểm tra quyền admin
+                    currentUser = Application.getCurrentUser();
+                    if (currentUser != null && currentUser.getMaNguoiDung() != null && currentUser.getMaNguoiDung().startsWith("AD")) {
+                        Application.showForm(new RegisterForTheTripForm());
                     } else {
-                        // Nếu chưa đăng nhập, chuyển về màn hình đăng nhập
-                        Application.logout();
+                        Notifications.getInstance().show(Notifications.Type.WARNING, Notifications.Location.TOP_RIGHT, 
+                            "Không thể vào vì tài khoản không được cấp quyền!");
+                        action.cancel();
                     }
                     break;
-                case 2:
-                    Application.showForm(new FormAccount());
-                    break;
-                case 3:
-                    Application.showForm(new FormAccount());
-                    break;
-                case 4:
-                    Application.showForm(new FormAccount());
-                    break;
-                case 5:
-                    Application.showForm(new FormAccount());
-                    break;
-                case 6:
-                    Application.logout();
-                    break;
-                default:
-                    action.cancel();
-                    break;
-            }
-        });
-    }
+            case 3:
+                Application.showForm(new FormAccount());
+                break;
+            case 4:
+                Application.showForm(new FormAccount());
+                break;
+            case 5:
+                Application.showForm(new FormAccount());
+                break;
+            case 6:
+                Application.logout();
+                break;
+            default:
+                action.cancel();
+                break;
+        }
+    });
+}
                 
     private void setMenuFull(boolean full) {
         String icon;
