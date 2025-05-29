@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XeService {
+
     private XeDAO xeDAO;
 
     public XeService() {
@@ -46,14 +47,18 @@ public class XeService {
         return xeDAO.findDiemDen(searchText);
     }
 
-    public String getPrice(String diemDi, String diemDen,int maXe) throws SQLException {
-        return xeDAO.getprice(diemDi, diemDen,maXe);
+    public String getPrice(String diemDi, String diemDen, int maXe) throws SQLException {
+        return xeDAO.getprice(diemDi, diemDen, maXe);
     }
 
     public List<Xe> ShowXe() throws SQLException {
         return xeDAO.showxe();
     }
+
     public int getMaxMaXe() throws SQLException {
-    return xeDAO.getMaxMaXe();
-}
+        return xeDAO.getMaxMaXe();
+    }
+    public int setGheTrong(int maXe) throws SQLException {
+        return xeDAO.setGheTrong(maXe);
+    }
 }

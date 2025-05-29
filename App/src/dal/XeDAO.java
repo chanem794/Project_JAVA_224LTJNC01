@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class XeDAO {
-    private Connection connection;  
+
+    private Connection connection;
 
     public XeDAO() {
         this.connection = DatabaseConnection.getInstance().getConnection();
@@ -21,7 +23,7 @@ public class XeDAO {
 
     public boolean createXe(Xe xe) throws SQLException {
         String sql = "INSERT INTO Xe (MaXe, TenXe, LoaiXe, DiemDi, DiemDen, NgayKhoiHanh, GioDen, GioDi, SoGhe, GheConTrong, GiaVe, MaTuyen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, xe.getMaXe());
             stmt.setString(2, xe.getTenXe());
@@ -39,7 +41,7 @@ public class XeDAO {
             stmt.setInt(10, xe.getGheConTrong());
             stmt.setInt(11, xe.getGiaVe());
             stmt.setInt(12, xe.getMaTuyen());
-            
+
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
@@ -48,9 +50,8 @@ public class XeDAO {
     public List<Xe> getAllXe() throws SQLException {
         List<Xe> xeList = new ArrayList<>();
         String sql = "SELECT * FROM Xe";
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Xe xe = new Xe();
                 xe.setMaXe(rs.getInt("MaXe"));
@@ -73,10 +74,10 @@ public class XeDAO {
 
     public Xe getXeByMaXe(int maXe) throws SQLException {
         String sql = "SELECT * FROM Xe WHERE MaXe = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, maXe);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     Xe xe = new Xe();
@@ -101,7 +102,7 @@ public class XeDAO {
 
     public boolean updateXe(Xe xe) throws SQLException {
         String sql = "UPDATE Xe SET TenXe = ?, LoaiXe = ?, DiemDi = ?, DiemDen = ?, NgayKhoiHanh = ?, GioDen = ?, GioDi = ?, SoGhe = ?, GheConTrong = ?, GiaVe = ?, MaTuyen = ? WHERE MaXe = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, xe.getTenXe());
             stmt.setString(2, xe.getLoaiXe());
@@ -119,7 +120,7 @@ public class XeDAO {
             stmt.setInt(10, xe.getGiaVe());
             stmt.setInt(11, xe.getMaTuyen());
             stmt.setInt(12, xe.getMaXe());
-            
+
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
@@ -127,10 +128,10 @@ public class XeDAO {
 
     public boolean deleteXe(int maXe) throws SQLException {
         String sql = "DELETE FROM Xe WHERE MaXe = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, maXe);
-            
+
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
@@ -139,10 +140,10 @@ public class XeDAO {
     public List<Xe> getXeByMaTuyen(int maTuyen) throws SQLException {
         List<Xe> xeList = new ArrayList<>();
         String sql = "SELECT * FROM Xe WHERE MaTuyen = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, maTuyen);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Xe xe = new Xe();
@@ -164,8 +165,8 @@ public class XeDAO {
         }
         return xeList;
     }
-    
-     public List<Xe> findDiemDi(String searchText) throws SQLException {
+
+    public List<Xe> findDiemDi(String searchText) throws SQLException {
         List<Xe> result = new ArrayList<>();
         String sql = "SELECT DISTINCT x.MaXe, x.MaTuyen, x.GioDi, x.GioDen, x.GiaVe, t.DiemDi, t.DiemDen "
                 + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen "
@@ -175,13 +176,13 @@ public class XeDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Xe xe = new Xe(
-                        rs.getInt("MaXe"),
-                        rs.getInt("MaTuyen"),
-                        rs.getTime("GioDi"),
-                        rs.getTime("GioDen"),
-                        rs.getInt("GiaVe"),
-                        rs.getString("DiemDi"),
-                        rs.getString("DiemDen")
+                            rs.getInt("MaXe"),
+                            rs.getInt("MaTuyen"),
+                            rs.getTime("GioDi"),
+                            rs.getTime("GioDen"),
+                            rs.getInt("GiaVe"),
+                            rs.getString("DiemDi"),
+                            rs.getString("DiemDen")
                     );
                     result.add(xe);
                 }
@@ -204,13 +205,13 @@ public class XeDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Xe xe = new Xe(
-                        rs.getInt("MaXe"),
-                        rs.getInt("MaTuyen"),
-                        rs.getTime("GioDi"),
-                        rs.getTime("GioDen"),
-                        rs.getInt("GiaVe"),
-                        rs.getString("DiemDi"),
-                        rs.getString("DiemDen")
+                            rs.getInt("MaXe"),
+                            rs.getInt("MaTuyen"),
+                            rs.getTime("GioDi"),
+                            rs.getTime("GioDen"),
+                            rs.getInt("GiaVe"),
+                            rs.getString("DiemDi"),
+                            rs.getString("DiemDen")
                     );
                     result.add(xe);
                 }
@@ -223,7 +224,7 @@ public class XeDAO {
         return result;
     }
 
-    public String getprice(String pickupStation, String dropoffStation,int maxe) throws SQLException {
+    public String getprice(String pickupStation, String dropoffStation, int maxe) throws SQLException {
         String sql = "SELECT x.GiaVe "
                 + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen "
                 + "WHERE x.MaXe =? AND t.DiemDi = ? AND t.DiemDen = ?";
@@ -239,34 +240,48 @@ public class XeDAO {
             return "Không tìm thấy tuyến";
         }
     }
+
     public List<Xe> showxe() throws SQLException {
         List<Xe> result = new ArrayList<>();
-        Statement stm =connection.createStatement();
+        Statement stm = connection.createStatement();
         String sql = "SELECT x.MaXe, x.MaTuyen, x.GioDi, x.GioDen, x.GiaVe, t.DiemDi, t.DiemDen "
                 + "FROM Xe x JOIN Tuyen t ON x.MaTuyen = t.MaTuyen";
         ResultSet rs = stm.executeQuery(sql);
         while (rs.next()) {
             Xe xe = new Xe(
-                rs.getInt("MaXe"),
-                rs.getInt("MaTuyen"),
-                rs.getTime("GioDi"),
-                rs.getTime("GioDen"),
-                rs.getInt("GiaVe"),
-                rs.getString("DiemDi"),
-                rs.getString("DiemDen")
+                    rs.getInt("MaXe"),
+                    rs.getInt("MaTuyen"),
+                    rs.getTime("GioDi"),
+                    rs.getTime("GioDen"),
+                    rs.getInt("GiaVe"),
+                    rs.getString("DiemDi"),
+                    rs.getString("DiemDen")
             );
             result.add(xe);
         }
         return result;
     }
+
     public int getMaxMaXe() throws SQLException {
-    String sql = "SELECT MAX(MaXe) AS maxMaXe FROM Xe";
-    try (PreparedStatement stmt = connection.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-            return rs.getInt("maxMaXe");
+        String sql = "SELECT MAX(MaXe) AS maxMaXe FROM Xe";
+        try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("maxMaXe");
+            }
+        }
+        return 0;
+    }
+    public int setGheTrong(int maxe) {
+        String sql = "UPDATE XE SET GheConTrong = GheConTrong - 1 WHERE MAXE = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, maxe);
+            int sodong = pstmt.executeUpdate();
+            if (sodong == 0) 
+                JOptionPane.showMessageDialog(null, "Xe đã hết chỗ!");
+            return sodong;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0; 
         }
     }
-    return 0; // Trả về 0 nếu bảng rỗng
-}
 }

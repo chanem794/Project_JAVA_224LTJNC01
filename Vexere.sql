@@ -92,7 +92,9 @@ INSERT INTO NguoiDung (MaNguoiDung, TenNguoiDung, Email, NgaySinh) VALUES
 ('ND001', N'Nguyễn Văn A', 'user1@example.com', '1990-01-01'),
 ('ND002', N'Trần Thị B', 'dinhknd3@gmail.com', '1995-05-15'),
 ('LX001', N'Phan Văn Sanh', 'Khangheheqt123@gmail.com', '1995-05-15'),
-('AD001', N'Nguyễn Văn Sang', 'Khangheheqt1234@gmail.com', '1995-05-15');
+('AD001', N'Nguyễn Văn Sang', 'Khangheheqt1234@gmail.com', '1995-05-15'),
+('AD002', N'Phạm Minh Huy', 'phamminhhuy0901tk@gmail.com', '1995-05-15'),
+('AD003', N'huy', 'a@gmail.com', '1995-05-15');
 
 GO
 

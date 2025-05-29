@@ -23,11 +23,15 @@ import raven.application.form.other.component.PanelNhapTTDatVe;
 import model.NguoiDung;
 import model.DatCho;
 import bll.DatChoService;
+import bll.XeService;
 import dal.TTChuyenDiDAO;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.SQLException;
+import model.Xe;
+
 public class ThanhToanForm extends javax.swing.JPanel {
+
     private PanelChiTiet PanelChiTiet;
     private JLayeredPane layeredPane;
     private StationForm previousForm; // Thêm biến này vào lớp
@@ -37,15 +41,15 @@ public class ThanhToanForm extends javax.swing.JPanel {
     private String tenNguoiDi; // Thêm biến instance
     private String sdt;       // Thêm biến instance
     private String email;     // Thêm biến instance
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy",new Locale("vi", "VN"));
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("E, dd/MM/yyyy", new Locale("vi", "VN"));
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
-    
+
     public ThanhToanForm(int maXe, String tenNguoiDi, String sdt, String email, int totalCost, boolean hasInsurance, StationForm previousForm) {
         this.maXe = maXe;
         this.tenNguoiDi = tenNguoiDi; // Thêm biến instance để lưu thông tin
         this.sdt = sdt;
         this.email = email;
-            this.maNguoiDung = Application.getCurrentUser().getMaNguoiDung(); // Lấy từ session
+        this.maNguoiDung = Application.getCurrentUser().getMaNguoiDung(); // Lấy từ session
         initComponents();
         init();
         jbTen.setText(tenNguoiDi);
@@ -54,8 +58,8 @@ public class ThanhToanForm extends javax.swing.JPanel {
         this.previousForm = previousForm;
         this.basePrice = totalCost;
         updateBasePriceOnly();
-}
-    
+    }
+
     private void init() {
         TTChuyenDiDAO TTChuyenDiDAO = new TTChuyenDiDAO();
         TTChuyenDi xe = TTChuyenDiDAO.getTripDetails(maXe);
@@ -70,7 +74,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
             lbGheIcon.setText("A1.1");
             lbNguoiIcon.setText("1");
             basePrice = xe.getGiaVe();
-            updateBasePriceOnly(); 
+            updateBasePriceOnly();
         }
         setLayout(new MigLayout("align left top", "", ""));
 
@@ -91,23 +95,22 @@ public class ThanhToanForm extends javax.swing.JPanel {
                 + "font:$h2.font");
         cmdThanhToan.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h3.font");
-        
-        
+
         panelPTTT.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         panelTongTien.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         panelTTChuyenDi.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         panelTTChuyenDiCon.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         panelTTLienHe.putClientProperty(FlatClientProperties.STYLE, "arc:20");
-        panelTTChuyenDiCon.putClientProperty(FlatClientProperties.STYLE, ""+ "arc:20;"+ "border:2,2,2,2,#E0E0E0,,20");
-        panelHeader.putClientProperty(FlatClientProperties.STYLE, ""+ "arc:20;"+ "border:2,2,2,2,#F1F7FD,,20");
-        
+        panelTTChuyenDiCon.putClientProperty(FlatClientProperties.STYLE, "" + "arc:20;" + "border:2,2,2,2,#E0E0E0,,20");
+        panelHeader.putClientProperty(FlatClientProperties.STYLE, "" + "arc:20;" + "border:2,2,2,2,#F1F7FD,,20");
+
         lb1.setText("<html><b>Thanh toán khi lên xe</b></html>");
         lb2.setText("<html><b>Thẻ ATM nội địa / Internet Banking</b></html>");
         lb3.setText("<html><b>Thanh toán VNPAY - QR</b></html>");
         lb4.setText("<html><b>Thanh toán qua Viettel Money</b></html>");
         lb5.setText("<html><b>Tại cửa hàng tiện lợi hoặc siêu thị</b></html>");
         cmdChinhSua.setText("<html><u><b>Chỉnh sửa</b></u></html>");
-        
+
         //      Set in đậm cho các chữ
         lbTenNhaXe.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:bold +1");
@@ -126,106 +129,105 @@ public class ThanhToanForm extends javax.swing.JPanel {
         group.add(Rb3);
         group.add(Rb4);
         group.add(Rb5);
-        
+
 //      Thêm image vào panel Thong tin chuyen di
         ImageIcon icon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/xebuyt.jpg"));
         Image image = icon.getImage().getScaledInstance(88, 88, Image.SCALE_SMOOTH);
         lbImage.setIcon(new ImageIcon(image));
-        
+
 //      Set icon bằng faltlat
         FlatSVGIcon Busicon = new FlatSVGIcon("raven/thanhtoan/icon/busbus.svg");
         Busicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lb1.setIcon(Busicon);
-        
+
         FlatSVGIcon atmicon = new FlatSVGIcon("raven/thanhtoan/icon/atm.svg");
         atmicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lb2.setIcon(atmicon);
-        
+
         FlatSVGIcon vnpayicon = new FlatSVGIcon("raven/thanhtoan/icon/vnpay.svg");
         vnpayicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lb3.setIcon(vnpayicon);
-        
+
         FlatSVGIcon viettelicon = new FlatSVGIcon("raven/thanhtoan/icon/viettel.svg");
         viettelicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lb4.setIcon(viettelicon);
-        
+
         FlatSVGIcon cuahangtlicon = new FlatSVGIcon("raven/thanhtoan/icon/cuahangtienloi.svg");
         cuahangtlicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lb5.setIcon(cuahangtlicon);
-        
+
         FlatSVGIcon BusBusicon = new FlatSVGIcon("raven/thanhtoan/icon/busbus.svg");
         BusBusicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         lbNgayThang.setIcon(BusBusicon);
-        
-        FlatSVGIcon DiemDiicon = new FlatSVGIcon("raven/thanhtoan/icon/diemdi.svg",20, 20);
+
+        FlatSVGIcon DiemDiicon = new FlatSVGIcon("raven/thanhtoan/icon/diemdi.svg", 20, 20);
         DiemDiicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         jb2.setIcon(DiemDiicon);
-        
-        FlatSVGIcon DeimDenicon = new FlatSVGIcon("raven/thanhtoan/icon/diemden.svg",20,20);
+
+        FlatSVGIcon DeimDenicon = new FlatSVGIcon("raven/thanhtoan/icon/diemden.svg", 20, 20);
         DeimDenicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         jb1.setIcon(DeimDenicon);
-        
+
         FlatSVGIcon thanhtoanicon = new FlatSVGIcon("raven/thanhtoan/icon/thanhtoan.svg");
         thanhtoanicon.setColorFilter(new FlatSVGIcon.ColorFilter()
-        .add(Color.decode("#969696"),
-        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
-        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
+                .add(Color.decode("#969696"),
+                        FlatUIUtils.getUIColor("Menu.icon.lightColor", Color.red),
+                        FlatUIUtils.getUIColor("Menu.icon.darkColor", Color.red))
         );
         cmdThanhToan.setIcon(thanhtoanicon);
         cmdThanhToan.setText("Thanh toán");
-        
+
         ImageIcon SoNguoiIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/nguoi.png"));
         Image scaledSoNguoiImage = SoNguoiIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  // hoặc 24x24
         ImageIcon resizedIconSoNguoiIcon = new ImageIcon(scaledSoNguoiImage);
         lbNguoiIcon.setIcon(resizedIconSoNguoiIcon);
         lbNguoiIcon.setText("1");
-        
+
         ImageIcon SoGheIcon = new ImageIcon(getClass().getResource("/raven/thanhtoan/icon/ghe.png"));
         Image scaledSoGheImage = SoGheIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);  // hoặc 24x24
         ImageIcon resizedIconSoGheIcon = new ImageIcon(scaledSoGheImage);
         lbGheIcon.setIcon(resizedIconSoGheIcon);
         lbGheIcon.setText("A1.1");
-        
+
         lbFooter.setText("<html><div style='text-align: center;'>Bạn sẽ sớm nhận được biển số xe, số điện thoại tài xế và dể dàng thay đổi điển đón trả sau khi đặt</div></html>");
         //      Set Panel khi nhấn button chi tiết
-        
+
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
 
-
-        this.removeAll(); 
+        this.removeAll();
         panelThanhToan1.setBounds(0, 0, 1096, 752);
         layeredPane.add(panelThanhToan1, JLayeredPane.DEFAULT_LAYER);
 
@@ -238,7 +240,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         PanelChiTiet.setVisible(false);
         int formWidth = 1096;
         int formHeight = 752;
-        int detailWidth = 390; 
+        int detailWidth = 390;
         int detailHeight = 620;
         PanelChiTiet.setBounds(formWidth - detailWidth - 10, 22, detailWidth, detailHeight);
         layeredPane.add(PanelChiTiet, JLayeredPane.PALETTE_LAYER);
@@ -253,78 +255,82 @@ public class ThanhToanForm extends javax.swing.JPanel {
 
         this.revalidate();
         this.repaint();
-        
-    cmdThanhToan.addActionListener(new java.awt.event.ActionListener() {
-    @Override
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-        if (!Rb1.isSelected() && !Rb2.isSelected() && !Rb3.isSelected() && !Rb4.isSelected() && !Rb5.isSelected()) {
-            javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
-                    "Vui lòng chọn một phương thức thanh toán trước khi tiếp tục!",
-                    "Lỗi",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        } else {
-            try {
-                // Tạo đối tượng DatCho
-                DatCho datCho = new DatCho();
-                TTChuyenDiDAO ttChuyenDiDAO = new TTChuyenDiDAO();
-                TTChuyenDi xe = ttChuyenDiDAO.getTripDetails(maXe);
 
-                if (xe != null) {
-                    // Thiết lập các thuộc tính cho DatCho
-                    // Xóa dòng này vì MaDatCho là IDENTITY và sẽ do cơ sở dữ liệu tự tạo
-                    // datCho.setMaDatCho(0); // Dòng này gây lỗi, đã xóa
-                    datCho.setTrangThai("đang chờ xác nhận");
-                    datCho.setNgayDat(new Date(new java.util.Date().getTime())); // Ngày hiện tại: 19/05/2025
-                    datCho.setGioDat(new Time(new java.util.Date().getTime())); // Giờ hiện tại: 14:47
-                    datCho.setDiemDi(xe.getDiemDi());
-                    datCho.setDiemDen(xe.getDiemDen());
-                    datCho.setNgayGioKhoiHanh(new Date(xe.getNgayKhoiHanh().getTime()));
-                    datCho.setSoGheDat(1); // Mặc định 1 ghế
-                    datCho.setGiaVe(basePrice);
-                    datCho.setMaNguoiDung(maNguoiDung); // Sử dụng MaNguoiDung từ session
-                    datCho.setMaXe(maXe);
-                    datCho.setTenHanhKhach(tenNguoiDi);
-                    datCho.setSoDienThoaiLienLac(sdt);
-                    datCho.setEmailLienLac(email);
+        cmdThanhToan.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (!Rb1.isSelected() && !Rb2.isSelected() && !Rb3.isSelected() && !Rb4.isSelected() && !Rb5.isSelected()) {
+                    javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                            "Vui lòng chọn một phương thức thanh toán trước khi tiếp tục!",
+                            "Lỗi",
+                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        // Tạo đối tượng DatCho
+                        DatCho datCho = new DatCho();
+                        TTChuyenDiDAO ttChuyenDiDAO = new TTChuyenDiDAO();
+                        TTChuyenDi xe = ttChuyenDiDAO.getTripDetails(maXe);
 
-                    // Gọi DatChoService để lưu vào DB
-                    DatChoService datChoService = new DatChoService();
-                    boolean success = datChoService.createDatCho(datCho);
+                        if (xe != null) {
+                            // Thiết lập các thuộc tính cho DatCho
+                            // Xóa dòng này vì MaDatCho là IDENTITY và sẽ do cơ sở dữ liệu tự tạo
+                            // datCho.setMaDatCho(0); // Dòng này gây lỗi, đã xóa
+                            datCho.setTrangThai("đang chờ xác nhận");
+                            datCho.setNgayDat(new Date(new java.util.Date().getTime())); // Ngày hiện tại: 19/05/2025
+                            datCho.setGioDat(new Time(new java.util.Date().getTime())); // Giờ hiện tại: 14:47
+                            datCho.setDiemDi(xe.getDiemDi());
+                            datCho.setDiemDen(xe.getDiemDen());
+                            datCho.setNgayGioKhoiHanh(new Date(xe.getNgayKhoiHanh().getTime()));
+                            datCho.setSoGheDat(1); // Mặc định 1 ghế
+                            datCho.setGiaVe(basePrice);
+                            datCho.setMaNguoiDung(maNguoiDung); // Sử dụng MaNguoiDung từ session
+                            datCho.setMaXe(maXe);
+                            datCho.setTenHanhKhach(tenNguoiDi);
+                            datCho.setSoDienThoaiLienLac(sdt);
+                            datCho.setEmailLienLac(email);
 
-                    if (success) {
-                        javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
-                                "Thanh toán thành công! Đặt chỗ đã được ghi nhận.",
-                                "Thông báo",
-                                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                            // Gọi DatChoService để lưu vào DB
+                            DatChoService datChoService = new DatChoService();
+                            boolean success = datChoService.createDatCho(datCho);
 
-                        // Quay lại StationForm sau khi thanh toán thành công
-                        if (previousForm != null) {
-                            Application.showForm(previousForm);
+                            if (success) {
+                                javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                                        "Thanh toán thành công! Đặt chỗ đã được ghi nhận.",
+                                        "Thông báo",
+                                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                                XeService xesv = new XeService();
+                                xesv.setGheTrong(maXe);
+//                                BusTicketForm btf = new BusTicketForm();
+//                                btf.setjLabel8(xesv.setGheTrong(maXe));
+
+                                // Quay lại StationForm sau khi thanh toán thành công
+                                if (previousForm != null) {
+                                    Application.showForm(previousForm);
+                                }
+                            } else {
+                                javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
+                                        "Lỗi khi ghi nhận đặt chỗ. Vui lòng thử lại!",
+                                        "Lỗi",
+                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                            }
                         }
-                    } else {
+                    } catch (SQLException ex) {
                         javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
-                                "Lỗi khi ghi nhận đặt chỗ. Vui lòng thử lại!",
+                                "Lỗi kết nối cơ sở dữ liệu: " + ex.getMessage(),
                                 "Lỗi",
                                 javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
                 }
-            } catch (SQLException ex) {
-                javax.swing.JOptionPane.showMessageDialog(ThanhToanForm.this,
-                        "Lỗi kết nối cơ sở dữ liệu: " + ex.getMessage(),
-                        "Lỗi",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-        }
-    }
-});
-    
+        });
+
 // Cập nhật lại giá vé dựa trên totalCost đã truyền vào
-    lbGiaVe.setText(String.format("%,dđ", basePrice));
-   }
-    private void updateBasePriceOnly() {
         lbGiaVe.setText(String.format("%,dđ", basePrice));
     }
 
+    private void updateBasePriceOnly() {
+        lbGiaVe.setText(String.format("%,dđ", basePrice));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1067,7 +1073,7 @@ public class ThanhToanForm extends javax.swing.JPanel {
         if (previousForm != null) {
             Application.showForm(new PanelNhapTTDatVe(maXe, previousForm));
 
-    }
+        }
     }//GEN-LAST:event_cmdChinhSuaActionPerformed
 
 
